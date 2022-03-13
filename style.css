@@ -1,0 +1,66 @@
+body {
+    color: #393939;
+    font-family: sans-serif;
+    letter-spacing: 0.05em;
+    margin: 20px;
+}
+.container {
+    width: 900px;
+    display: -webkit-flex;
+    display: flex;
+}
+.main {
+    display: block;
+    width: 660px;
+    min-width: 660px;
+    margin-right: 20px;
+}
+.sidebar {
+    width: 220px;
+}
+.sidebar .item {
+    position: sticky;
+    top: 20px;
+    z-index: 1;
+}
+p {
+    margin: 0 0 0.5em;
+}
+p.contact {
+    font-size: small;
+}
+ol.ref {
+    counter-reset: li;
+    padding-left: 2em;
+}
+ol.ref>li {
+    position: relative;
+    list-style: none;
+}
+ol.ref>li:before{
+    position: absolute;
+    left: -2em;
+    counter-increment: li;
+    content: '['counter(li)']';
+}
+pre {
+    background: #f0f0f0;
+    padding: 1em;
+    margin: 1em 5px 1em 0;
+}
+pre.console {
+    color: #f0f0f0;
+    background: #393939;
+}
+div.prop {
+    border: 2px solid #393939;
+    padding: 1em;
+    margin: 1em 5px 1em 0;
+}
+div.prop>div.header {
+    font-weight: bold;
+    margin-bottom: 0.5em;
+}
+div.proof {
+    border: 2px dashed #393939;
+}

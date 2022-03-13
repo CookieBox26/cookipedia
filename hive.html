@@ -1,0 +1,158 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Hive</title>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({tex2jax: {inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true}});
+</script>
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="style.css">
+<script src="funcs.js"></script>
+</head>
+<body onload="init()">
+<div class="container">
+<main class="main">
+<h1>Hive</h1>
+
+
+<h3>参考文献</h3>
+<ol class="ref">
+    <li>https://cwiki.apache.org/confluence/display/hive/Languagemanual+udf</li>
+</ol>
+<br/>
+
+
+<h3>トイデータを定義する</h3>
+各データを配列として定義し、さらに全データを配列に束ね、LATERAL VIEW で各データを各レコードに展開し、インデックスで各列の値をとっているだけである。
+<pre>
+WITH tenki AS (
+    SELECT
+        data[0] AS toshi,
+        data[1] AS tenki1,
+        data[2] AS tenki2,
+        data[3] AS tenki3
+    FROM
+    (
+        SELECT
+            ARRAY(
+                ARRAY("札幌", "晴", "雪", "晴"),
+                ARRAY("東京", "晴", "曇", "曇"),
+                ARRAY("京都", "曇", "雪", "晴")
+            ) AS data_
+    ) x
+    LATERAL VIEW EXPLODE(data_) lv AS data
+)
+
+SELECT * FROM tenki;
+</pre>
+<pre class="console">
++--------------+---------------+---------------+---------------+--+
+| tenki.toshi  | tenki.tenki1  | tenki.tenki2  | tenki.tenki3  |
++--------------+---------------+---------------+---------------+--+
+| 札幌         | 晴            | 雪            | 晴            |
+| 東京         | 晴            | 曇            | 曇            |
+| 京都         | 曇            | 雪            | 晴            |
++--------------+---------------+---------------+---------------+--+
+</pre>
+<br/>
+
+
+<h3>各レコードの V1～V3 列の値のユニークセットをとる</h3>
+COLLECT_SET は aggregate function なので、V1～V3 列を同名の列にしておいて集計する必要がある。
+<pre>
+SELECT
+    toshi,
+    COLLECT_SET(tenki0)
+FROM
+(
+    SELECT toshi, tenki1 AS tenki0 FROM tenki
+    UNION ALL
+    SELECT toshi, tenki2 AS tenki0 FROM tenki
+    UNION ALL
+    SELECT toshi, tenki3 AS tenki0 FROM tenki
+) x
+GROUP BY
+    toshi
+;
+</pre>
+<pre class="console">
++--------+------------------+--+
+| toshi  |      _c1         |
++--------+------------------+--+
+| 京都   | ["曇","晴","雪"] |
+| 札幌   | ["晴","雪"]      |
+| 東京   | ["晴","曇"]      |
++--------+------------------+--+
+</pre>
+以下でも同じである。記述量は少ないが Hive にさせている処理は多い。
+<pre>
+SELECT
+    toshi,
+    COLLECT_SET(tenki0)
+FROM
+(
+    SELECT
+        toshi, 
+        ARRAY(tenki1, tenki2, tenki3) AS tenkis
+    FROM tenki
+) x
+LATERAL VIEW EXPLODE(tenkis) lv AS tenki0
+GROUP BY
+    toshi
+;
+</pre>
+<pre class="console">
++--------+------------------+--+
+| toshi  |      _c1         |
++--------+------------------+--+
+| 京都   | ["曇","雪","晴"] |
+| 札幌   | ["晴","雪"]      |
+| 東京   | ["晴","曇"]      |
++--------+------------------+--+
+</pre>
+<br/>
+
+
+<h3>ひらがなをカタカナにする</h3>
+無理やりである。
+<pre>
+SELECT
+    translate(
+        'びっぐさんだーまうんてん',
+        CONCAT(
+            'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほ',
+            'まみむめもやゆよらりるれろわゐゑをんゔがぎぐげござじずぜぞ',
+            'だぢづでどばびぶべぼぱぴぷぺぽぁぃぅぇぉっゃゅょゎ'
+        ),
+        CONCAT(
+            'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホ',
+            'マミムメモヤユヨラリルレロワヰヱヲンヴガギグゲゴザジズゼゾ',
+            'ダヂヅデドバビブベボパピプペポァィゥェォッャュョヮ'
+        )
+    )
+;
+</pre>
+<pre class="console">
++---------------+--+
+|      _c0      |
++---------------+--+
+| ビッグサンダーマウンテン  |
++---------------+--+
+</pre>
+<br/>
+
+
+</main>
+    <div class="sidebar">
+        <div class="item">
+            <p><a href="#">このページの一番上に戻る</a></p>
+            <p><a href="index.html">インデックスに戻る</a></p>
+            <p class="contact"></p>
+            <br/>
+            <div id="headers"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

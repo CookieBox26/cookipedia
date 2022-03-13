@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Python</title>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({tex2jax: {inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true}});
+</script>
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="style.css">
+<script src="funcs.js"></script>
+</head>
+<body onload="init()">
+<div class="container">
+<main class="main">
+<h1>Python</h1>
+
+
+<h3>参考文献</h3>
+<ol class="ref">
+    <li>https://docs.python.org/ja/3/library/datetime.html</li>
+    <ul>
+        <li>#strftime-strptime-behavior に strptime() の書式コードがある。</li>
+    </ul>
+</ol>
+<br/>
+
+
+<h3>文字列を datetime 型に変換しユニックス秒に変換する</h3>
+datetime.datetime.strptime() で datetime 型にできる。timestamp() メソッドでユニックス秒にできる。タイムゾーン情報をパースしないと datetime 型は自分のタイムゾーンについて未熟になる。その場合でも timestamp() メソッドではシステムのタイムゾーンが適用される。タイムゾーン情報をパースさせれば datetime 型は自分のタイムゾーンを認識する。日本時間の1時より協定世界時の1時の方が未来である。
+<pre>
+import datetime
+
+s = '2022-03-13 01:23:45'
+dt = datetime.datetime.strptime(s, '%Y-%m-%d %H:%M:%S')  # naive
+ts = dt.timestamp()  # ここでローカル時刻として UNIX 秒化される
+print(dt, dt.tzinfo)
+print(ts)
+print(datetime.datetime.fromtimestamp(ts))
+
+s = '2022-03-13 01:23:45+09:00'
+dt = datetime.datetime.strptime(s, '%Y-%m-%d %H:%M:%S%z')  # aware
+ts = dt.timestamp()
+print(dt, dt.tzinfo, dt.tzinfo.utcoffset(dt))
+print(ts)
+print(datetime.datetime.fromtimestamp(ts))
+
+s = '2022-03-13 01:23:45+00:00'
+dt = datetime.datetime.strptime(s, '%Y-%m-%d %H:%M:%S%z')  # aware
+ts = dt.timestamp()
+print(dt, dt.tzinfo, dt.tzinfo.utcoffset(dt))
+print(ts)
+print(datetime.datetime.fromtimestamp(ts))
+</pre>
+<pre class="console">
+2022-03-13 01:23:45 None
+1647102225.0
+2022-03-13 01:23:45
+
+2022-03-13 01:23:45+09:00 UTC+09:00 9:00:00
+1647102225.0
+2022-03-13 01:23:45
+
+2022-03-13 01:23:45+00:00 UTC 0:00:00
+1647134625.0
+2022-03-13 10:23:45
+</pre>
+上のコードに示しているように datetime.datetime.fromtimestamp() でユニックス秒から datetime 型を復元できるが、このとき明示的にタイムゾーンを指定しないと datetime 型は自分のタイムゾーンについて未熟になる。
+<pre>
+ts = 1647102225.0
+
+dt = datetime.datetime.fromtimestamp(ts)
+print(dt, dt.tzinfo)
+
+dt = datetime.datetime.fromtimestamp(ts, datetime.timezone(datetime.timedelta(hours=9)))
+print(dt, dt.tzinfo)
+
+dt = datetime.datetime.fromtimestamp(ts, datetime.timezone(datetime.timedelta(hours=0)))
+print(dt, dt.tzinfo)
+</pre>
+<pre class="console">
+2022-03-13 01:23:45 None
+
+2022-03-13 01:23:45+09:00 UTC+09:00
+
+2022-03-12 16:23:45+00:00 UTC
+</pre>
+<br/>
+
+
+</main>
+    <div class="sidebar">
+        <div class="item">
+            <p><a href="#">このページの一番上に戻る</a></p>
+            <p><a href="index.html">インデックスに戻る</a></p>
+            <p class="contact"></p>
+            <br/>
+            <div id="headers"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
