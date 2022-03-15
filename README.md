@@ -1,3 +1,3 @@
-# memo
+# Cookipedia
 
-https://cookiebox26.github.io/memo/index.html
+https://cookiebox26.github.io/cookipedia/index.html

@@ -1,21 +1,20 @@
-function createIndex() {
-    var index = '';
-    var allHeaders = document.getElementsByTagName('h3');
+function createSidebar() {
+    var gitHub = '<a href="https://github.com/CookieBox26/memo/issues">Issues</a>';
+    var message = '何かありましたら ' + gitHub + ' までご連絡ください';
+
+    var index = '<h5>このページの小見出し一覧</h5>';
+    var allHeaders = document.getElementsByTagName('h2');
     for (var i=0; i<allHeaders.length; ++i) {
         index += '<p><a href="#head' + String(i) + '">' + allHeaders[i].textContent + '</a></p>';
         allHeaders[i].innerHTML += '<a id="head' + String(i) + '"></a>';
     }
-    document.getElementById('headers').innerHTML = index;
-}
-function contact() {
-    var gitHub = '<a href="https://github.com/CookieBox26/memo/issues">Issues</a>';
-    var message = 'お気付きの点がありましたら ' + gitHub + ' までご連絡ください。';
-    var allContacts = document.getElementsByClassName('contact');
-    for (var i=0; i<allContacts.length; ++i) {
-        allContacts[i].innerHTML += message;
-    }
+
+    var content = '<p class="contact">' + message + '</p><br/>';
+    content += '<p><a href="#">このページの一番上に戻る</a></p>';
+    content += '<p><a href="index.html">メインページに戻る</a></p><br/>';
+    content += '<div id="headers">' + index + '</div>';
+    document.getElementById('sidebar-item').innerHTML += content;
 }
 function init() {
-    contact();
-    createIndex();
+    createSidebar();
 }

@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Python</title>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({tex2jax: {inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true}});
@@ -12,11 +13,14 @@ MathJax.Hub.Config({tex2jax: {inlineMath: [ ['$','$'], ["\\(","\\)"] ], processE
 </head>
 <body onload="init()">
 <div class="container">
+<div class="sidebar">
+    <div class="item" id="sidebar-item"></div>
+</div>
 <main class="main">
 <h1>Python</h1>
 
 
-<h3>参考文献</h3>
+<h2>参考文献</h2>
 <ol class="ref">
     <li>https://docs.python.org/ja/3/library/datetime.html</li>
     <ul>
@@ -26,8 +30,8 @@ MathJax.Hub.Config({tex2jax: {inlineMath: [ ['$','$'], ["\\(","\\)"] ], processE
 <br/>
 
 
-<h3>文字列を datetime 型に変換しユニックス秒に変換する</h3>
-datetime.datetime.strptime() で datetime 型にできる。timestamp() メソッドでユニックス秒にできる。タイムゾーン情報をパースしないと datetime 型は自分のタイムゾーンについて未熟になる。その場合でも timestamp() メソッドではシステムのタイムゾーンが適用される。タイムゾーン情報をパースさせれば datetime 型は自分のタイムゾーンを認識する。日本時間の1時より協定世界時の1時の方が未来である。
+<h2>文字列を datetime 型に変換しユニックス秒に変換する</h2>
+datetime.datetime.strptime() で datetime 型にできる。timestamp() メソッドでユニックス秒にできる。タイムゾーン情報をパースしないと datetime 型は自分のタイムゾーンについて無知になる。その場合でも timestamp() メソッドではシステムのタイムゾーンが適用される。タイムゾーン情報をパースさせれば datetime 型は自分のタイムゾーンを認識する。日本時間の1時より協定世界時の1時の方が未来である。
 <pre>
 import datetime
 
@@ -65,7 +69,7 @@ print(datetime.datetime.fromtimestamp(ts))
 1647134625.0
 2022-03-13 10:23:45
 </pre>
-上のコードに示しているように datetime.datetime.fromtimestamp() でユニックス秒から datetime 型を復元できるが、このとき明示的にタイムゾーンを指定しないと datetime 型は自分のタイムゾーンについて未熟になる。
+上のコードに示しているように datetime.datetime.fromtimestamp() でユニックス秒から datetime 型を復元できるが、このとき明示的にタイムゾーンを指定しないと datetime 型は自分のタイムゾーンについて無知になる。
 <pre>
 ts = 1647102225.0
 
@@ -89,15 +93,7 @@ print(dt, dt.tzinfo)
 
 
 </main>
-    <div class="sidebar">
-        <div class="item">
-            <p><a href="#">このページの一番上に戻る</a></p>
-            <p><a href="index.html">インデックスに戻る</a></p>
-            <p class="contact"></p>
-            <br/>
-            <div id="headers"></div>
-        </div>
-    </div>
+
 </div>
 </body>
 </html>

@@ -1,22 +1,48 @@
 body {
     color: #393939;
     font-family: sans-serif;
-    letter-spacing: 0.05em;
-    margin: 20px;
+    letter-spacing: 0.03em;
+    margin: 0;
+    background: #f9f9f9;
+}
+a {
+    color: #0073a8;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+a:visited {
+    color: #0073a8;
+}
+h1, h2 {
+    font-weight: normal;
+    border-bottom: 1px solid darkgray;
 }
 .container {
-    width: 900px;
+    width: 1000px;
     display: -webkit-flex;
     display: flex;
 }
 .main {
     display: block;
-    width: 660px;
-    min-width: 660px;
-    margin-right: 20px;
+    width: 800px;
+    margin: 15px 0;
+    padding: 0 20px 20px;
+    background: #ffffff;
+    border: 1px solid darkgray;
 }
 .sidebar {
-    width: 220px;
+    padding: 20px;
+    width: 200px;
+    font-size: 90%;
+    word-break: break-all;
+}
+.sidebar h5 {
+    font-weight: normal;
+    border-bottom: 1px solid darkgray;
+    margin-bottom: 1.0em;
+    font-size: 100%;
 }
 .sidebar .item {
     position: sticky;
@@ -25,9 +51,6 @@ body {
 }
 p {
     margin: 0 0 0.5em;
-}
-p.contact {
-    font-size: small;
 }
 ol.ref {
     counter-reset: li;
@@ -63,4 +86,31 @@ div.prop>div.header {
 }
 div.proof {
     border: 2px dashed #393939;
+}
+@media screen and (max-width: 640px) {
+    body {
+        /* URLだけ禁則処理するのが望ましいがさしあたり */
+        word-break: break-all;
+    }
+    .container {
+        max-width: 100%;
+        display: -webkit-flex;
+        display: flex;
+    }
+    .main {
+        margin: 15px 5px;
+    }
+    .sidebar {
+        display: none;
+    }
+    pre {
+        white-space: pre;
+        white-space: pre-wrap;
+        white-space: pre-line;
+        white-space: -pre-wrap;
+        white-space: -o-pre-wrap;
+        white-space: -moz-pre-wrap;
+        white-space: -hp-pre-wrap;
+        word-wrap: break-word;
+    }
 }
