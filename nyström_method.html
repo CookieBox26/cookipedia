@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nyström 近似</title>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({tex2jax: {inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true}});
+</script>
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="style.css">
+<script src="funcs.js"></script>
+</head>
+<body onload="init()">
+<div class="container">
+<div class="sidebar">
+<div class="item" id="sidebar-item"></div>
+</div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>Nyström 近似</h1>
+<p>カーネル法における<b>グラム行列の Nyström 近似</b>（ニストローム近似<a class="note" href="#note1">[注釈1]</a>）とは、グラム行列の固有値分解を近似的に求めたもの（またはそこからさらに絶対値の大きい一部の固有値と対応する固有ベクトルだけ取ってさらに低ランクにしたもの）であると思われる。</p>
+<p>グラム行列の固有値分解があれば好きなだけ低ランク近似することができ、グラム行列の逆行列計算の計算量を削減できるが、固有値分解に $\mathcal{O}(n^3)$ の計算量がかかるため普通に固有値分解するのでは本末転倒になる。そこで、「グラム行列の固有ベクトルが正定値カーネルで定まる積分作用素の固有値問題の数値解になる」という積分方程式の数値解法としての Nyström 法の結果を利用し、固有値分解を近似的に求めて計算量を削減したのが Nyström 近似となっているはずである。</p>
+<p>具体的には、グラム行列 $K \in \mathbb{R}^{n \times n}$ の固有値 $\lambda_{1}^{(n)}, \cdots, \lambda_{n}^{(n)}$ と固有ベクトル $u_{1}^{(n)}, \cdots, u_{n}^{(n)}$ を $\tilde{\lambda}_{1}^{(n)}, \cdots, \tilde{\lambda}_{m}^{(n)}$ と $\tilde{u}_{1}^{(n)}, \cdots, \tilde{u}_{m}^{(n)}$ で近似する。この代用の固有値と固有ベクトルを、適当な $m$ 個のサンプルに対するグラム行列の固有値 $\lambda_{1}^{(m)}, \cdots, \lambda_{m}^{(m)}$ と固有ベクトル $u_{1}^{(m)}, \cdots, u_{m}^{(m)}$ から計算する。
+<div style="overflow: auto">
+$$
+\begin{align}
+K &\approx \begin{pmatrix}
+  \tilde{u}_{1,1}^{(n)}  & \cdots & \tilde{u}_{m,1}^{(n)} \\
+  \tilde{u}_{1,2}^{(n)}  & \cdots & \tilde{u}_{m,2}^{(n)} \\
+  \vdots                 & \ddots & \vdots \\
+  \tilde{u}_{1,n}^{(n)}  & \cdots & \tilde{u}_{m,n}^{(n)} \\
+\end{pmatrix}
+\begin{pmatrix}
+  \tilde{\lambda}_{1}^{(n)}  & 0 & \cdots &  0 \\
+  0  & \tilde{\lambda}_{2}^{(n)} & \cdots & 0 \\
+  \vdots  & \vdots  & \ddots & \vdots \\
+  0  & 0 & \cdots & \tilde{\lambda}_{m}^{(n)} \\
+\end{pmatrix}
+\begin{pmatrix}
+  \tilde{u}_{1,1}^{(n)} & \tilde{u}_{1,2}^{(n)} & \cdots & \tilde{u}_{1,n}^{(n)} \\
+  \vdots                 & \vdots  & \ddots & \vdots \\
+  \tilde{u}_{m,1}^{(n)} & \tilde{u}_{m,2}^{(n)} & \cdots & \tilde{u}_{m,n}^{(n)} \\
+\end{pmatrix} \\
+&= \begin{pmatrix}
+  \tilde{u}_{1}^{(n)}  & \cdots & \tilde{u}_{m}^{(n)} \\
+\end{pmatrix}
+\begin{pmatrix}
+  \tilde{\lambda}_{1}^{(n)} \tilde{u}_{1}^{(n) \top}  \\
+  \vdots \\
+  \tilde{\lambda}_{m}^{(n)} \tilde{u}_{m}^{(n) \top}  \\
+\end{pmatrix}
+ \\
+&=  \sum_{j=1}^{m} \tilde{\lambda}_{j}^{(n)} \tilde{u}_{j}^{(n)}  \tilde{u}_{j}^{(n) \top} 
+\end{align}
+$$
+</div>
+</p>
+
+
+<h2>参考文献</h2>
+<ol class="ref">
+    <li>福水 健次. カーネル法入門. 朝倉書店, 2010.</li>
+    <li>Christopher Williams, Matthias Seeger. Using the Nyström Method to Speed Up Kernel Machines. In NIPS 2000.</li>
+</ol>
+
+
+<h2>概要</h2>
+カーネル法ではデータ $X_1, \cdots, X_n$ から得られるグラム行列 $K$ を用いてデータを分析する。ここで $k(\cdot, \cdot)$ は採用した正定値カーネルである。
+
+<div style="overflow: auto">
+$$
+K = \begin{pmatrix}
+  k(X_1, X_1) & k(X_1, X_2) & \cdots & k(X_1, X_n) \\
+  k(X_2, X_1) & k(X_2, X_2) & \cdots & k(X_2, X_n) \\
+  \vdots & \vdots & \ddots & \vdots \\
+  k(X_n, X_1) & k(X_n, X_2) & \cdots & k(X_n, X_n) \\
+\end{pmatrix}
+$$
+</div>
+<p>例えばカーネルリッジ回帰では $K + \lambda I_n$ の逆行列が必要だが、もし $K = BDC$（ $B \in \mathbb{R}^{n \times m},$ $C \in \mathbb{R}^{m \times m},$ $D \in \mathbb{R}^{m \times n},$ $m < n$ ）の形の低ランク近似表現があれば、Sherman-Morrison-Woodbury の公式<a class="note" href="#note2">[注釈2]</a>により逆行列を計算すべき行列のサイズが $m \times m$ になり、計算量が削減できる。</p>
+<p>そのような低ランク近似表現の一つに固有値分解して絶対値の大きいいくつかの固有値とそれに対応する固有ベクトルのみを用いるやり方がある<a class="note" href="#note3">[注釈3]</a>。しかし、固有値分解には $\mathcal{O}(n^3)$ の計算量がかかるため、普通に固有値分解するのでは計算量を削減する目的としては本末転倒になる。</p>
+<br/>
+
+
+
+<h2>注釈</h2>
+<ol class="note">
+    <li id="note1">Nyström 氏の名前にこれといった仮名表記はみうけられないが、自分は<a href="https://cookie-box.hatenablog.com/entry/2022/03/16/013608">インターネットで調べた結果</a>、「ルンゲクッタ-ニストローム法」で表記がみられる「ニストローム」を採用する。</li>
+    <li id="note2"><a href="https://cookie-box.hatenablog.com/entry/2018/12/14/023016">雑記： Schur 補行列と Sherman-Morrison-Woodbury の公式とカルマンフィルタとガウス過程回帰の整理 - クッキーの日記</a></li>
+    <li id="note3">これはメモだが、グラム行列は対称行列なので直交行列で対角化可能であり、また、半正定値であるので固有値はすべて非負である。</li>
+</ol>
+<br/>
+
+
+</div>
+</main>
+</div>
+</body>
+</html>
