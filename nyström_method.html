@@ -20,9 +20,9 @@ MathJax.Hub.Config({tex2jax: {inlineMath: [ ['$','$'], ["\\(","\\)"] ], processE
 <div id="smartphone-header"></div>
 <div class="item">
 <h1>Nyström 近似</h1>
-<p>カーネル法における<b>グラム行列の Nyström 近似</b>（ニストローム近似<a class="note" href="#note1">[注釈1]</a>）とは、グラム行列の固有値分解を近似的に求めたもの（またはそこからさらに絶対値の大きい一部の固有値と対応する固有ベクトルだけ取ってさらに低ランクにしたもの）であると思われる。</p>
-<p>グラム行列の固有値分解があれば好きなだけ低ランク近似することができ、グラム行列の逆行列計算の計算量を削減できるが、固有値分解に $\mathcal{O}(n^3)$ の計算量がかかるため普通に固有値分解するのでは本末転倒になる。そこで、「グラム行列の固有ベクトルが正定値カーネルで定まる積分作用素の固有値問題の数値解になる」という積分方程式の数値解法としての Nyström 法の結果を利用し、固有値分解を近似的に求めて計算量を削減したのが Nyström 近似となっているはずである。</p>
-<p>具体的には、グラム行列 $K \in \mathbb{R}^{n \times n}$ の固有値 $\lambda_{1}^{(n)}, \cdots, \lambda_{n}^{(n)}$ と固有ベクトル $u_{1}^{(n)}, \cdots, u_{n}^{(n)}$ を $\tilde{\lambda}_{1}^{(n)}, \cdots, \tilde{\lambda}_{m}^{(n)}$ と $\tilde{u}_{1}^{(n)}, \cdots, \tilde{u}_{m}^{(n)}$ で近似する。この代用の固有値と固有ベクトルを、適当な $m$ 個のサンプルに対するグラム行列の固有値 $\lambda_{1}^{(m)}, \cdots, \lambda_{m}^{(m)}$ と固有ベクトル $u_{1}^{(m)}, \cdots, u_{m}^{(m)}$ から計算する。
+<p>カーネル法における<b>グラム行列の Nyström 近似</b>（ニストローム近似<a class="note" href="#note1">[注釈1]</a>）とは、<span class="u">グラム行列の固有値分解を、一部のサンプルに対応するグラム行列の固有値分解から近似的に求めたもの（またはそこからさらに絶対値の小さい固有値を切り捨てて低ランクにしたもの）</span>である、と思われる。</p>
+<p>固有値分解があればグラム行列を好きなだけ低ランクに近似することができ、グラム行列の逆行列計算の計算量を削減できる。が、固有値分解に $\mathcal{O}(n^3)$ の計算量がかかるため普通に固有値分解するのでは本末転倒になる。そこで、「グラム行列の固有ベクトルが正定値カーネルで定まる積分作用素の固有値問題の数値解になる」という<b>積分方程式の数値解法としての Nyström 法</b>の結果を利用し、固有値分解を近似的に求めたものが Nyström 近似となっている。</p>
+<p>具体的には、グラム行列 $K \in \mathbb{R}^{n \times n}$ の固有値 $\lambda_{1}^{(n)}, \cdots, \lambda_{n}^{(n)}$ と固有ベクトル $u_{1}^{(n)}, \cdots, u_{n}^{(n)}$ を $\tilde{\lambda}_{1}^{(n)}, \cdots, \tilde{\lambda}_{m}^{(n)}$ と $\tilde{u}_{1}^{(n)}, \cdots, \tilde{u}_{m}^{(n)}$ で近似する。この代用の固有値と固有ベクトルを、適当な $m$ 個のサンプルに対するグラム行列の固有値 $\lambda_{1}^{(m)}, \cdots, \lambda_{m}^{(m)}$ と固有ベクトル $u_{1}^{(m)}, \cdots, u_{m}^{(m)}$ から計算する。このとき固有値分解の近似は以下のようになる。最後の和を $m$ 未満で打ち切ってもよい。
 <div style="overflow: auto">
 $$
 \begin{align}
@@ -62,12 +62,18 @@ $$
 <h2>参考文献</h2>
 <ol class="ref">
     <li>福水 健次. カーネル法入門. 朝倉書店, 2010.</li>
+    <ul>
+    <li>カーネル法の書籍である。</li>
+    </ul>
     <li>Christopher Williams, Matthias Seeger. Using the Nyström Method to Speed Up Kernel Machines. In NIPS 2000.</li>
+    <ul>
+    <li>グラム行列の Nyström 近似の原論文である。</li>
+    </ul>
 </ol>
 
 
 <h2>概要</h2>
-カーネル法ではデータ $X_1, \cdots, X_n$ から得られるグラム行列 $K$ を用いてデータを分析する。ここで $k(\cdot, \cdot)$ は採用した正定値カーネルである。
+カーネル法ではデータ $X_1, \cdots, X_n$ から得られるグラム行列 $K$ を通してデータを分析する。ここで $k(\cdot, \cdot)$ は採用した正定値カーネルである。
 
 <div style="overflow: auto">
 $$
@@ -79,10 +85,39 @@ K = \begin{pmatrix}
 \end{pmatrix}
 $$
 </div>
-<p>例えばカーネルリッジ回帰では $K + \lambda I_n$ の逆行列が必要だが、もし $K = BDC$（ $B \in \mathbb{R}^{n \times m},$ $C \in \mathbb{R}^{m \times m},$ $D \in \mathbb{R}^{m \times n},$ $m < n$ ）の形の低ランク近似表現があれば、Sherman-Morrison-Woodbury の公式<a class="note" href="#note2">[注釈2]</a>により逆行列を計算すべき行列のサイズが $m \times m$ になり、計算量が削減できる。</p>
-<p>そのような低ランク近似表現の一つに固有値分解して絶対値の大きいいくつかの固有値とそれに対応する固有ベクトルのみを用いるやり方がある<a class="note" href="#note3">[注釈3]</a>。しかし、固有値分解には $\mathcal{O}(n^3)$ の計算量がかかるため、普通に固有値分解するのでは計算量を削減する目的としては本末転倒になる。</p>
+<p>例えばカーネルリッジ回帰では回帰係数に $K + \lambda I_n$ の逆行列が含まれるため、$n$ が大きいと計算量が大きくなり、何らかの計算量削減方法が必要になってくる。</p>
+<p>一案として、カルマンフィルタを思い出すと、もし $K = BDC$ $( B \in \mathbb{R}^{n \times m},$ $C \in \mathbb{R}^{m \times m},$ $D \in \mathbb{R}^{m \times n},$ $m < n )$ の形の低ランク近似があれば、Sherman-Morrison-Woodbury の公式<a class="note" href="#note2">[注釈2]</a>により逆行列を計算すべき行列のサイズが $m \times m$ にできるとわかる。しかし、グラム行列はカルマンフィルタの分散共分散行列とは違い、自ら $K = BDC$ の形をしていない。固有値分解<a class="note" href="#note3">[注釈3]</a>して絶対値の小さい固有値を切り捨てればこの形にできるが、固有値分解には $\mathcal{O}(n^3)$ の計算量がかかるため、普通に固有値分解するのでは計算量を削減する目的としては本末転倒になる。</p>
+<p>より小さい計算量で近似的にグラム行列の固有値分解を得るにはどうすればよいだろうか。グラム行列を固有値分解するとは以下の $\lambda_{1}^{(n)}, \cdots, \lambda_{n}^{(n)}, u_{1}^{(n)}, \cdots, u_{n}^{(n)}$ を求めることに他ならない。
+<div style="overflow: auto">
+$$
+k(X_i, X_j) =  \sum_{l=1}^{n} \lambda_{l}^{(n)} u_{l, i}^{(n)}  u_{l, j}^{(n)}
+\tag{1}
+$$
+</div>
+他方、正定値カーネル $k(\cdot, \cdot)$ は Mercer の定理を満たすので、可算個の固有関数 $\psi_l(\cdot)$ を用いて以下のように表現できる。ここで固有関数 $\psi_l(\cdot)$ は $\int \psi_l(x) \psi_{l'}(x) p(x) dx = \delta_{l, l'}$ を満たす。
+<div style="overflow: auto">
+$$
+k(x, y) =  \sum_{l=1}^{\infty} \gamma_{l} \psi_{l}(x) \psi_{l}(y)
+\tag{2}
+$$
+</div>
+式 $(1)$ と式 $(2)$ は似ている。式 $(1)$ は、式 $(2)$ を、データ $X_1, \cdots, X_n$ 上だけで数値近似したようなものにもみえる。これを確かめるために式 $(2)$ を $\psi_l(\cdot)$ のみの方程式にしよう。両辺に $\psi_l(x)$ をかけて入力空間全体で積分することで以下の積分方程式になる。
+<div style="overflow: auto">
+$$
+\int k(x, y) \psi_{l}(x) p(x) dx = \gamma_{l} \psi_{l}(y)
+\tag{3}
+$$
+</div>
+<!--
+<div style="overflow: auto">
+$$
+\frac{1}{n} \sum_{i=1}^n k(X_i, y) \psi_{l}(X_i) = \gamma_{l} \psi_{l}(y)
+\tag{3}
+$$
+</div>
+-->
+</p>
 <br/>
-
 
 
 <h2>注釈</h2>
