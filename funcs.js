@@ -3,9 +3,15 @@ function createSidebar() {
     var message = '何かありましたら ' + gitHub + ' までご連絡ください';
 
     var index = '<h5>このページの小見出し一覧</h5>';
-    var allHeaders = document.getElementsByTagName('h2');
+    var allHeaders = document.querySelectorAll('h2, h3');
     for (var i=0; i<allHeaders.length; ++i) {
-        index += '<p><a href="#head' + String(i) + '">' + allHeaders[i].textContent + '</a></p>';
+        index += '<p class="';
+        if (allHeaders[i].tagName == 'H3') {
+            index += 'indent';
+        }
+        index += '">';
+        index += '<a href="#head' + String(i) + '">';
+        index += allHeaders[i].textContent + '</a></p>';
         allHeaders[i].innerHTML += '<a id="head' + String(i) + '"></a>';
     }
 
