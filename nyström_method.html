@@ -65,7 +65,7 @@ $$
     <ul>
     <li>カーネル法の書籍である。</li>
     </ul>
-    <li>Christopher Williams, Matthias Seeger. Using the Nyström Method to Speed Up Kernel Machines. In NIPS 2000.</li>
+    <li>Christopher Williams, Matthias Seeger. Using the Nyström Method to Speed Up Kernel Machines. In NIPS 2000.<a class="note" href="https://proceedings.neurips.cc/paper/2000/hash/19de10adbaa1b2ee13f77f679fa1483a-Abstract.html">[link]</a></li>
     <ul>
     <li>グラム行列の Nyström 近似の原論文である。丁寧で読みやすい。</li>
     </ul>
@@ -154,6 +154,9 @@ $$
 $$
 </div>
 </p>
+
+<h3>グラム行列の Nyström 近似の性質</h3>
+<p>$K$ の $a$ 行目までと $b$ 列目までをとった行列を $K_{a, b}$ とする。また、$K_{m, m}$ が正則であるとする。このとき $\tilde{K} = K_{n, m} {K_{m,m}}^{-1} K_{n, m}^{\top}$ の関係があり、$\tilde{K}$ は右下 $(n-m) \times (n-m)$ ブロックを除き $K$ と一致する。右下ブロックは $K_{n-m, n-m} - K_{n-m, m}{K_{m,m}}^{-1}K_{n-m, m}^{\top}$ の差分があるが、これは $K$ が正則であれば「$K$ の $K_{m,m}$ に対するシューア補行列」とよばれる行列である [2]。</p>
 <!--
 <ul>
 <li></li>
@@ -161,6 +164,13 @@ $$
 -->
 <br/>
 
+<h2>Transformer への計算量削減への応用</h2>
+https://proceedings.neurips.cc/paper/2021/file/10a7cdd970fe135cf4f7bb55c0e3b59f-Paper.pdf
+
+<h3>セルフアテンションのカーネル化</h3>
+https://speakerdeck.com/cookiebox26/zui-jin-falsetransformerguan-lian-falselun-wen-kara?slide=7
+<br/>
+<br/>
 
 <h2>注釈</h2>
 <ol class="note">
