@@ -22,41 +22,43 @@ MathJax.Hub.Config({tex2jax: {inlineMath: [ ['$','$'], ["\\(","\\)"] ], processE
 <h1>Nyström 近似</h1>
 <p>カーネル法における<b>グラム行列の Nyström 近似</b>（ニストローム近似<a class="note" href="#note1">[注釈1]</a>）とは、<span class="u">グラム行列の固有値分解を、一部のサンプルに対応するグラム行列の固有値分解から近似的に求めたもの（またはそこからさらに絶対値の小さい固有値を切り捨てて低ランクにしたもの）</span>である、と思われる。</p>
 <p>固有値分解があればグラム行列を好きなだけ低ランクに近似することができ、グラム行列の逆行列計算の計算量を削減できる。が、固有値分解に $\mathcal{O}(n^3)$ の計算量がかかるため普通に固有値分解するのでは本末転倒になる。そこで、「グラム行列の固有ベクトルが正定値カーネルで定まる積分作用素の固有値問題の数値解になる」という<b>積分方程式の数値解法としての Nyström 法</b>の結果を利用し、固有値分解を近似的に求めたものが Nyström 近似となっている。</p>
-<p>具体的には、グラム行列 $K \in \mathbb{R}^{n \times n}$ の固有値 $\lambda_{1}^{(n)}, \cdots, \lambda_{n}^{(n)}$ と固有ベクトル $u_{1}^{(n)}, \cdots, u_{n}^{(n)}$ を $\tilde{\lambda}_{1}^{(n)}, \cdots, \tilde{\lambda}_{m}^{(n)}$ と $\tilde{u}_{1}^{(n)}, \cdots, \tilde{u}_{m}^{(n)}$ で近似する。この代用の固有値と固有ベクトルを、適当な $m$ 個のサンプルに対するグラム行列の固有値 $\lambda_{1}^{(m)}, \cdots, \lambda_{m}^{(m)}$ と固有ベクトル $u_{1}^{(m)}, \cdots, u_{m}^{(m)}$ から計算する。このとき固有値分解の近似は以下のようになる。最後の和を $m$ 未満で打ち切ってもよい。
+<p>具体的には、グラム行列 $K^{(n)} \in \mathbb{R}^{n \times n}$ の固有値 $\lambda_{1}^{(n)}, \cdots, \lambda_{n}^{(n)}$ と固有ベクトル $u_{1}^{(n)}, \cdots, u_{n}^{(n)}$ を、$m$ 個の部分データに対するグラム行列 $K^{(m)}$ の固有値 $\lambda_{1}^{(m)}, \cdots, \lambda_{m}^{(m)}$ と固有ベクトル $u_{1}^{(m)}, \cdots, u_{m}^{(m)}$ を利用して近似した $\tilde{\lambda}_{1}^{(n,m)}, \cdots, \tilde{\lambda}_{m}^{(n,m)}$ と $\tilde{u}_{1}^{(n,m)}, \cdots, \tilde{u}_{m}^{(n,m)}$ で代用する（右肩の $(n,m)$ は $n$ 次元の固有値分解を $m$ 次元の固有値分解で近似したという意味）。このとき固有値分解の近似は以下のようになる。最後の和を $m$ 未満で打ち切ってもよい。
 <div style="overflow: auto">
 $$
 \begin{align}
-K &\approx \begin{pmatrix}
-  \tilde{u}_{1,1}^{(n)}  & \cdots & \tilde{u}_{m,1}^{(n)} \\
-  \tilde{u}_{1,2}^{(n)}  & \cdots & \tilde{u}_{m,2}^{(n)} \\
+\tilde{K}^{(n,m)} &\approx \begin{pmatrix}
+  \tilde{u}_{1,1}^{(n,m)}  & \cdots & \tilde{u}_{m,1}^{(n,m)} \\
+  \tilde{u}_{1,2}^{(n,m)}  & \cdots & \tilde{u}_{m,2}^{(n,m)} \\
   \vdots                 & \ddots & \vdots \\
-  \tilde{u}_{1,n}^{(n)}  & \cdots & \tilde{u}_{m,n}^{(n)} \\
+  \tilde{u}_{1,n}^{(n,m)}  & \cdots & \tilde{u}_{m,n}^{(n,m)} \\
 \end{pmatrix}
 \begin{pmatrix}
-  \tilde{\lambda}_{1}^{(n)}  & 0 & \cdots &  0 \\
-  0  & \tilde{\lambda}_{2}^{(n)} & \cdots & 0 \\
+  \tilde{\lambda}_{1}^{(n,m)}  & 0 & \cdots &  0 \\
+  0  & \tilde{\lambda}_{2}^{(n,m)} & \cdots & 0 \\
   \vdots  & \vdots  & \ddots & \vdots \\
-  0  & 0 & \cdots & \tilde{\lambda}_{m}^{(n)} \\
+  0  & 0 & \cdots & \tilde{\lambda}_{m}^{(n,m)} \\
 \end{pmatrix}
 \begin{pmatrix}
-  \tilde{u}_{1,1}^{(n)} & \tilde{u}_{1,2}^{(n)} & \cdots & \tilde{u}_{1,n}^{(n)} \\
+  \tilde{u}_{1,1}^{(n,m)} & \tilde{u}_{1,2}^{(n,m)} & \cdots & \tilde{u}_{1,n}^{(n,m)} \\
   \vdots                 & \vdots  & \ddots & \vdots \\
-  \tilde{u}_{m,1}^{(n)} & \tilde{u}_{m,2}^{(n)} & \cdots & \tilde{u}_{m,n}^{(n)} \\
+  \tilde{u}_{m,1}^{(n,m)} & \tilde{u}_{m,2}^{(n,m)} & \cdots & \tilde{u}_{m,n}^{(n,m)} \\
 \end{pmatrix} \\
-&= \begin{pmatrix}
-  \tilde{u}_{1}^{(n)}  & \cdots & \tilde{u}_{m}^{(n)} \\
-\end{pmatrix}
-\begin{pmatrix}
-  \tilde{\lambda}_{1}^{(n)} \tilde{u}_{1}^{(n) \top}  \\
-  \vdots \\
-  \tilde{\lambda}_{m}^{(n)} \tilde{u}_{m}^{(n) \top}  \\
-\end{pmatrix}
- \\
-&=  \sum_{l=1}^{m} \tilde{\lambda}_{l}^{(n)} \tilde{u}_{l}^{(n)}  \tilde{u}_{l}^{(n) \top} 
+&=  \sum_{l=1}^{m} \tilde{\lambda}_{l}^{(n,m)} \tilde{u}_{l}^{(n,m)}  \tilde{u}_{l}^{(n,m) \top} 
 \end{align}
 $$
 </div>
 </p>
+<!--
+&= \begin{pmatrix}
+  \tilde{u}_{1}^{(n,m)}  & \cdots & \tilde{u}_{m}^{(n,m)} \\
+\end{pmatrix}
+\begin{pmatrix}
+  \tilde{\lambda}_{1}^{(n,m)} \tilde{u}_{1}^{(n,m) \top}  \\
+  \vdots \\
+  \tilde{\lambda}_{m}^{(n,m)} \tilde{u}_{m}^{(n,m) \top}  \\
+\end{pmatrix}
+ \\
+-->
 
 
 <h2>参考文献</h2>
@@ -73,11 +75,11 @@ $$
 
 
 <h2>Nyström 近似</h2>
-カーネル法ではデータ $X_1, \cdots, X_n$ から得られるグラム行列 $K$ を通してデータを分析する。ここで $k(\cdot, \cdot)$ は採用した正定値カーネルである。
+カーネル法ではデータ $X_1, \cdots, X_n$ から得られるグラム行列 $K^{(n)}$ を通してデータを分析する。ここで $k(\cdot, \cdot)$ は採用した正定値カーネルである。
 
 <div style="overflow: auto">
 $$
-K = \begin{pmatrix}
+K^{(n)} = \begin{pmatrix}
   k(X_1, X_1) & k(X_1, X_2) & \cdots & k(X_1, X_n) \\
   k(X_2, X_1) & k(X_2, X_2) & \cdots & k(X_2, X_n) \\
   \vdots & \vdots & \ddots & \vdots \\
@@ -85,11 +87,11 @@ K = \begin{pmatrix}
 \end{pmatrix}
 $$
 </div>
-<p>例えばカーネルリッジ回帰では回帰係数に $K + \lambda I_n$ の逆行列が含まれるため、$n$ が大きいと計算量が大きくなり、何らかの計算量削減方法が必要になってくる。</p>
-<p>一案として、カルマンフィルタを思い出すと、もし $K = BDC$ $( B \in \mathbb{R}^{n \times m},$ $C \in \mathbb{R}^{m \times m},$ $D \in \mathbb{R}^{m \times n},$ $m < n )$ の形の低ランク近似があれば、Sherman-Morrison-Woodbury の公式<a class="note" href="#note2">[注釈2]</a>により逆行列を計算すべき行列のサイズが $m \times m$ にできるとわかる。しかし、グラム行列はカルマンフィルタの分散共分散行列とは違い、自ら $K = BDC$ の形をしていない。固有値分解<a class="note" href="#note3">[注釈3]</a>して絶対値の小さい固有値を切り捨てればこの形にできるが、固有値分解には $\mathcal{O}(n^3)$ の計算量がかかるため、普通に固有値分解するのでは計算量を削減する目的としては本末転倒になる。</p>
+<p>例えばカーネルリッジ回帰では回帰係数に $K^{(n)} + \lambda I_n$ の逆行列が含まれるため、$n$ が大きいと計算量が大きくなり、何らかの計算量削減方法が必要になってくる。</p>
+<p>一案として、カルマンフィルタを思い出すと、もし $K^{(n)} = BDC$ $( B \in \mathbb{R}^{n \times m},$ $C \in \mathbb{R}^{m \times m},$ $D \in \mathbb{R}^{m \times n},$ $m < n )$ の形の低ランク近似があれば、Sherman-Morrison-Woodbury の公式<a class="note" href="#note2">[注釈2]</a>により逆行列を計算すべき行列のサイズが $m \times m$ にできるとわかる。しかし、グラム行列はカルマンフィルタの分散共分散行列とは違い、自ら $K^{(n)} = BDC$ の形をしていない。固有値分解<a class="note" href="#note3">[注釈3]</a>して絶対値の小さい固有値を切り捨てればこの形にできるが、固有値分解には $\mathcal{O}(n^3)$ の計算量がかかるため、普通に固有値分解するのでは計算量を削減する目的としては本末転倒になる。</p>
 
 <h3>グラム行列の固有ベクトルと正定値カーネルの固有関数の関係</h3>
-<p>より小さい計算量で近似的にグラム行列 $K$ の固有値分解を得るにはどうすればよいだろうか。$K$ を固有値分解するとは以下の $\lambda_{1}^{(n)}, \cdots, \lambda_{n}^{(n)}, u_{1}^{(n)}, \cdots, u_{n}^{(n)}$ を求めることに他ならない。なお、以降固有ベクトル $u_{1}^{(n)}, \cdots, u_{n}^{(n)}$ は単位固有ベクトルとする。
+<p>より小さい計算量で近似的にグラム行列 $K^{(n)}$ の固有値分解を得るにはどうすればよいだろうか。$K^{(n)}$ を固有値分解するとは以下の $\lambda_{1}^{(n)}, \cdots, \lambda_{n}^{(n)}, u_{1}^{(n)}, \cdots, u_{n}^{(n)}$ を求めることに他ならない。<br/>なお、以降固有ベクトル $u_{1}^{(n)}, \cdots, u_{n}^{(n)}$ は単位固有ベクトルとする。
 <div style="overflow: auto">
 $$
 k(X_i, X_j) =  \sum_{l=1}^{n} \lambda_{l}^{(n)} u_{l, i}^{(n)}  u_{l, j}^{(n)}
@@ -110,65 +112,55 @@ $$
 \tag{3}
 $$
 </div>
-この式 $(3)$ は「等質な第二種フレドホルム積分方程式」というクラスの積分方程式であり、このクラスの積分方程式を、「積分を $n$ 個の代表点における値の重み付き和に近似」して解く数値解法を <b>Nyström 法</b>という、はずである。つまり、式 $(3)$ を以下の式 $(4)$ に数値近似して、この $y$ に $X_j$ を代入した $n$ 個の連立方程式 $(5)$ を解き、固有値の近似 $\tilde{\gamma}_l$ と $n$ 個の代表点の上の固有関数の値の近似 $\tilde{\psi}_l(X_j)$ を得る（方程式の数 $n$ に対し未知変数の数が $n+1$ なので自由度があり、$n$ 個の固有値と対応する固有関数が得られることになる）。
+この式 $(3)$ は「等質な第二種フレドホルム積分方程式」というクラスの積分方程式であり、このクラスの積分方程式を、「積分を $n$ 個の代表点における値の重み付き和に近似」して解く数値解法を <b>Nyström 法</b>という、はずである。つまり、式 $(3)$ を以下の式 $(4)$ に数値近似して、この $y$ に $X_j$ を代入した $n$ 個の連立方程式 $(5)$ を解き、固有値の近似 $\tilde{\gamma}_l^{(n)}$ と $n$ 個の代表点の上の固有関数の値の近似 $\tilde{\psi}_l^{(n)}(X_j)$ を得る（方程式の数 $n$ に対し未知変数の数が $n+1$ なので自由度があり、$n$ 個の固有値と対応する固有関数が得られることになる）。
 <div style="overflow: auto">
 $$
-\frac{1}{n} \sum_{i=1}^n k(X_i, y) \tilde{\psi}_{l}(X_i) = \tilde{\gamma}_{l} \tilde{\psi}_{l}(y)
+\frac{1}{n} \sum_{i=1}^n k(X_i, y) \tilde{\psi}_{l}^{(n)}(X_i) = \tilde{\gamma}_{l}^{(n)} \tilde{\psi}_{l}(y)
 \tag{4}
 $$
 $$
-\frac{1}{n} \sum_{i=1}^n k(X_i, X_j) \tilde{\psi}_{l}(X_i) = \tilde{\gamma}_{l} \tilde{\psi}_{l}(X_j)
+\frac{1}{n} \sum_{i=1}^n k(X_i, X_j) \tilde{\psi}_{l}^{(n)}(X_i) = \tilde{\gamma}_{l}^{(n)} \tilde{\psi}_{l}(X_j)
 \tag{5}
 $$
 </div>
-そして式 $(5)$ は $1/n$ のファクターを除いて $K$ の固有値分解に他ならない。両者の関係は
+そして式 $(5)$ は $1/n$ のファクターを除いて $K^{(n)}$ の固有値分解に他ならない。両者の関係は
 <div style="overflow: auto">
 $$
-\tilde{\gamma}_{l} = (1/n) \lambda_{l}^{(n)} , \; \; \tilde{\psi}_{l}(X_j) = \sqrt{n} u_{l, j}^{(n)}
+\tilde{\gamma}_{l}^{(n)} = (1/n) \lambda_{l}^{(n)} , \; \; \tilde{\psi}_{l}^{(n)}(X_j) = \sqrt{n} u_{l, j}^{(n)}
 \tag{6}
 $$
 </div>
-となる。後者は固有関数の直交性からの要請 $(1/n)\sum_{i=1}^n \tilde{\psi}_{l}(X_i)^2 = 1$ によった。このとき未知の点 $y$ における固有関数の値の近似を得るには、$(6)$ を $(4)$ に代入し直せばよい。$y$ を含めて固有値分解をし直す必要はない（計算量が許すならば固有値分解し直してもよいが）。
+となる。後者は固有関数の直交性からの要請 $(1/n)\sum_{i=1}^n \tilde{\psi}_{l}^{(n)}(X_i)^2 = 1$ によった。このとき未知の点 $y$ における固有関数の値の近似を得るには、$(6)$ を $(4)$ に代入し直せばよい。$y$ を含めて固有値分解をし直す必要はない（計算量が許すならば固有値分解し直してもよいが）。
 <div style="overflow: auto">
 $$
-\tilde{\psi}_{l}(y) = \frac{\sqrt{n}}{\lambda_{l}^{(n)}} \sum_{i=1}^n k(X_i, y) u_{l, j}^{(n)}
+\tilde{\psi}_{l}^{(n)}(y) = \frac{\sqrt{n}}{\lambda_{l}^{(n)}} \sum_{i=1}^n k(X_i, y) u_{l, i}^{(n)}
 \tag{7}
 $$
 </div>
 </p>
 
 <h3>グラム行列の固有値分解の近似</h3>
-<p>式 $(6)$ より、グラム行列 $K$ の固有値分解はスケールファクターを除いて正定値カーネルの固有値及びデータ点上の固有関数の値を近似していることがわかった。また、式 $(7)$ より、$K$ の固有値分解から未知の点における固有関数の値を近似できることもわかった（$n$ 個まで）。</p>
-<p>式 $(7)$ を踏まえて式 $(6)$ を逆向きに使おう。手元のデータから適当な $m$ 個をサンプリングしてそれに対応するグラム行列 $K^{(m)}$ を固有値分解し、式 $(7)$ により未知の点における固有関数の値を $m$ 個得る。それを「手元のデータ全体を使った想定の」式 $(6)$ に代入することで手元のデータ全体に対するグラム行列 $K$ の固有値分解を近似するのである。
+<p>式 $(6)$ より、グラム行列 $K^{(n)}$ の固有値と固有ベクトルはスケールファクターを除いて正定値カーネルの固有値及びデータ点上の固有関数の値を近似していることがわかった。また、式 $(7)$ より、未知の点における固有関数の値を近似できることもわかった（$n$ 個まで）。</p>
+<p>式 $(6)$ を逆向きに使おう。固有関数の値を固有値と固有ベクトルで近似するのではなく、固有値と固有ベクトルを固有関数の値で近似する。と固有関数の値がわからないので、手元のデータから $m$ 個をサンプリングして式 $(7)$ で近似するのである。
 <div style="overflow: auto">
 $$
-\tilde{\lambda}_{l}^{(n)} = n \tilde{\tilde{\gamma}}_{l} = \frac{n}{m} \lambda_{l}^{(m)} , \; \; \tilde{u}_{l, j}^{(n)} = \frac{\tilde{\tilde{\psi}}_{l}(X_j)}{\sqrt{n}} = \frac{1}{\lambda_{l}^{(m)}} \sqrt{\frac{m}{n}} \sum_{i=1}^m k(X_i, y) u_{l, j}^{(m)}
-\tag{8}
+\tilde{\lambda}_{l}^{(n, m)} = n \tilde{\gamma}_{l}^{(m)} = \frac{n}{m} \lambda_{l}^{(m)} , \; \; \tilde{u}_{l, j}^{(n, m)} = \frac{\tilde{\psi}_{l}^{(m)}(X_j)}{\sqrt{n}} = \frac{1}{\lambda_{l}^{(m)}} \sqrt{\frac{m}{n}} \sum_{i=1}^m k(X_i, X_j) u_{l, i}^{(m)}
 $$
 </div>
 </p>
-<p>無論この方法では $m$ 個の固有値と固有ベクトルしか得られない。しかし、$K$ の固有値のうち絶対値が特に大きいものが $m$ 個以内であるならば、以下は $K$ のよい近似になるはずである。
+<p>無論この方法では $m$ 個の固有値と固有ベクトルしか得られない。しかし、$K^{(n)}$ の固有値のうち絶対値が特に大きいものが $m$ 個以内であるならば、以下は $K^{(n)}$ のよい近似になるはずである。
 <div style="overflow: auto">
 $$
-\tilde{K} = \sum_{l=1}^{m} \tilde{\lambda}_{l}^{(n)} \tilde{u}_{l}^{(n)}  \tilde{u}_{l}^{(n) \top} 
+\tilde{K}^{(n,m)} = \sum_{l=1}^{m} \tilde{\lambda}_{l}^{(n,m)} \tilde{u}_{l}^{(n,m)}  \tilde{u}_{l}^{(n,m) \top} 
 $$
 </div>
 </p>
 
+<!--
 <h3>グラム行列の Nyström 近似の性質</h3>
 <p>$K$ の $a$ 行目までと $b$ 列目までをとった行列を $K_{a, b}$ とする。また、$K_{m, m}$ が正則であるとする。このとき $\tilde{K} = K_{n, m} {K_{m,m}}^{-1} K_{n, m}^{\top}$ の関係があり、$\tilde{K}$ は右下 $(n-m) \times (n-m)$ ブロックを除き $K$ と一致する。右下ブロックは $K_{n-m, n-m} - K_{n-m, m}{K_{m,m}}^{-1}K_{n-m, m}^{\top}$ の差分があるが、これは $K$ が正則であれば「$K$ の $K_{m,m}$ に対するシューア補行列」とよばれる行列である [2]。</p>
-<!--
-<ul>
-<li></li>
-</ul>
 -->
-<br/>
 
-<h2>Transformer への計算量削減への応用</h2>
-https://proceedings.neurips.cc/paper/2021/file/10a7cdd970fe135cf4f7bb55c0e3b59f-Paper.pdf
-
-<h3>セルフアテンションのカーネル化</h3>
-https://speakerdeck.com/cookiebox26/zui-jin-falsetransformerguan-lian-falselun-wen-kara?slide=7
 <br/>
 <br/>
 
