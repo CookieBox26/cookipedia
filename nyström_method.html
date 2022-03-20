@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Nyström 近似</title>
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({tex2jax: {inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true}});
+<script src="mathjax-config.js" defer></script>
+<script type="text/javascript" id="MathJax-script" defer
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
 </script>
-<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="style.css">
 <script src="funcs.js"></script>
 </head>
@@ -69,7 +69,7 @@ $$
     </ul>
     <li>Christopher Williams, Matthias Seeger. Using the Nyström Method to Speed Up Kernel Machines. In NIPS 2000.<a class="note" href="https://proceedings.neurips.cc/paper/2000/hash/19de10adbaa1b2ee13f77f679fa1483a-Abstract.html">[link]</a></li>
     <ul>
-    <li>グラム行列の Nyström 近似の原論文である。丁寧で読みやすい。</li>
+    <li>グラム行列の Nyström 近似の原論文である。</li>
     </ul>
 </ol>
 
@@ -156,12 +156,8 @@ $$
 </div>
 </p>
 
-<!--
 <h3>グラム行列の Nyström 近似の性質</h3>
-<p>$K$ の $a$ 行目までと $b$ 列目までをとった行列を $K_{a, b}$ とする。また、$K_{m, m}$ が正則であるとする。このとき $\tilde{K} = K_{n, m} {K_{m,m}}^{-1} K_{n, m}^{\top}$ の関係があり、$\tilde{K}$ は右下 $(n-m) \times (n-m)$ ブロックを除き $K$ と一致する。右下ブロックは $K_{n-m, n-m} - K_{n-m, m}{K_{m,m}}^{-1}K_{n-m, m}^{\top}$ の差分があるが、これは $K$ が正則であれば「$K$ の $K_{m,m}$ に対するシューア補行列」とよばれる行列である [2]。</p>
--->
-
-<br/>
+<p>$K^{(n)}$ の $a$ 行目までかつ $b$ 列目までをとった行列を $K_{a, b}^{(n)}$ とする。また、$K_{m, m}^{(n)} = K^{(m)}$ が正則であるとする。このとき $\tilde{K}^{(n,m)} = K_{n, m}^{(n)} {K_{m,m}^{(n)}}^{-1} K_{n, m}^{(n,m) \top}$ の関係があり、$\tilde{K}^{(n,m)}$ は右下 $(n-m) \times (n-m)$ ブロックを除き $K^{(n)}$ と一致する [2] <a class="note" href="#note4">[注釈4]</a>。</p>
 <br/>
 
 <h2>注釈</h2>
@@ -169,6 +165,7 @@ $$
     <li id="note1">Nyström 氏の名前にこれが決定版といった仮名表記はみうけられないが、筆者は<a href="https://cookie-box.hatenablog.com/entry/2022/03/16/013608">インターネットで調べた結果</a>、「ルンゲクッタ-ニストローム法」で表記がみられる「ニストローム」を採用する。</li>
     <li id="note2"><a href="https://cookie-box.hatenablog.com/entry/2018/12/14/023016">雑記： Schur 補行列と Sherman-Morrison-Woodbury の公式とカルマンフィルタとガウス過程回帰の整理 - クッキーの日記</a></li>
     <li id="note3">これはメモだが、グラム行列は対称行列なので直交行列で対角化可能であり、また、半正定値であるので固有値はすべて非負である。</li>
+    <li id="note4"><a href="https://cookie-box.hatenablog.com/entry/2022/03/19/235631">雑記 - クッキーの日記</a></li>
 </ol>
 <br/>
 
