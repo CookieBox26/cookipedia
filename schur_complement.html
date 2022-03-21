@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>シューア補行列</title>
+<title>シューア補行列 - Cookipedia</title>
 <script src="mathjax-config.js" defer></script>
 <script type="text/javascript" id="MathJax-script" defer
   src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
@@ -19,7 +19,7 @@
 <main class="main">
 <div id="smartphone-header"></div>
 <div class="item">
-<h1>シューア補行列</h1>
+<h1 class="entity">シューア補行列</h1>
 <p>$A \in \mathbb{C}^{n \times n}, $ $B \in \mathbb{C}^{n \times m}, $ $C \in \mathbb{C}^{m \times n}, $ $D \in \mathbb{C}^{m \times m}, $ $M = \begin{pmatrix} A & B \\ C & D \end{pmatrix}$ とする。このとき、
 
 <ul>
@@ -96,6 +96,7 @@ $$
 </ol>
 <br/>
 
+
 <h2>線形ガウスモデルのベイズ推定におけるシューア補行列</h2>
 <p>ベイズ推定では観測 $y$ を得た下での状態 $x$ の事後共分散に興味がある。状態 $x$ の事後共分散とは、状態 $x$ と観測 $y$ の同時分布の $y$ を固定して $x$ の共分散のみを取り出したものといえる。$x \in \mathbb{R}^n$ と $y \in \mathbb{R}^m$ の同時分布が多変量正規分布にしたがう場合、同時密度関数は以下のようになる。
 <div style="overflow: auto">
@@ -114,6 +115,7 @@ $$
 </div>
 この共分散行列 $\begin{pmatrix} V & VH^\top \\ HV & HVH^\top + R \end{pmatrix}$ の右下 $m \times m$ ブロックに対するシューア補行列は $V - V H^{\top} (H V H^{\top} + R)^{-1} HV$ である。もっとも、同時分布を考えなくともカルマンフィルタの条件付き分布はベイズの定理よりただちに $(V^{-1} + H^{\top} R^{-1} H)^{-1}$ となり、これに Sherman-Morrison-Woodbury の公式を適用しても同じ結果になる。</p>
 <br/>
+
 
 <h2>グラム行列の Nyström 近似におけるシューア補行列</h2>
 <p>グラム行列 $K^{(n+m)}$ の左上 $n \times n$ ブロックに関するシューア補行列が、グラム行列の Nyström 近似 $\tilde{K}^{(n+m,n)}$ の右下 $m \times m$ ブロックの近似誤差になっている [4]。</p>
@@ -143,7 +145,6 @@ $$
 $$
 </div>
 </li>
-
 <li id="note2">$M$ を LDU 分解するには以下を $M$ の区分けと比較する。[注釈1] の $X, Y, Z, W$ とは異なる。
 <div style="overflow: auto">
 $$
@@ -159,10 +160,6 @@ $M$ の逆行列を得るには [注釈1] と同様である。
 </ol>
 <br/>
 
-<h2>関連記事</h2>
-<ul>
-    <li><a href="nyström_method.html">Nyström 近似</a></li>
-</ul>
 
 </div>
 </main>
