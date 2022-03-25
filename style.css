@@ -126,6 +126,9 @@ div.prop>div.header {
 div.proof {
     border: 2px dashed #393939;
 }
+span.index-ts {
+    font-size: 88%;
+}
 @media screen and (max-width: 640px) {
     body {
         /* URLだけ禁則処理解除するのが望ましいがさしあたり */
