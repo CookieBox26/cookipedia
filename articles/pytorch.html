@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PyTorch - Cookipedia</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<script src="../funcs.js"></script>
+</head>
+<body onload="init()">
+<div class="container">
+<div class="sidebar">
+<div class="item" id="sidebar-item"></div>
+</div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>PyTorch</h1>
+
+<h2>参考文献</h2>
+<ol class="ref">
+    <li>Start Locally | PyTorch. https://pytorch.org/get-started/locally/（2022年3月26日参照）.</li>
+    <li>[PyTorch] Windows10 + Pipenv で PyTorch(GPU)を導入する - Qiita. https://qiita.com/Haaamaaaaa/items/69b30d1dbbfcea834a9d（2022年3月26日参照）.</li>
+</ol>
+<br/>
+
+
+<h2>インストール</h2>
+<p>
+「Stable(1.11.0)」「Windows」「Pip」「Python」 「CUDA 11.3」を選択すると以下のコマンドでインストールするように出てくるのでこのコマンドを実行する [1]。
+<pre class="console">
+pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
+</pre>
+そうするとインストールされる。
+<pre>
+import torch
+print(torch.__version__)
+print(torch.cuda.is_available())
+</pre>
+<pre class="console">
+1.11.0+cu113
+True
+</pre>
+ただ pip3 を pipenv に変えても一向にインストールされない（回線が遅いだけでなければ）。
+</p>
+<p>
+なので参考文献 [2] に倣って、wheel の URL を直接指定するとインストールできる。
+<pre class="console">
+pipenv install "https://download.pytorch.org/whl/cu113/torch-1.11.0%2Bcu113-cp310-cp310-win_amd64.whl"
+</pre>
+</p>
+<br/>
+
+
+<h3>CPU 版と GPU 版の違い</h3>
+<p>
+CPU 版と GPU 版で以下の実行結果が異なるのがわかる。これは CPU 版と GPU 版ではより低レイヤーでソートアルゴリズムが異なることに起因していると自分は推測しているが不明である。
+<pre>
+import torch
+x = torch.tensor([0.3, 0.2, 0.1, 0.4, 0.5])
+print(x.topk(3, sorted=False))
+</pre>
+<pre class="console">
+# GPU
+torch.return_types.topk(
+values=tensor([0.5000, 0.4000, 0.3000]),
+indices=tensor([4, 3, 0]))
+</pre>
+<pre class="console">
+# CPU
+torch.return_types.topk(
+values=tensor([0.4000, 0.5000, 0.3000]),
+indices=tensor([3, 4, 0]))
+</pre>
+</p>
+<br/>
+
+</div>
+</main>
+</div>
+</body>
+</html>

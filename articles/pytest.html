@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pytest - Cookipedia</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<script src="../funcs.js"></script>
+</head>
+<body onload="init()">
+<div class="container">
+<div class="sidebar">
+<div class="item" id="sidebar-item"></div>
+</div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>pytest</h1>
+
+<h2>参考文献</h2>
+<ol class="ref">
+    <li>https://docs.pytest.org/en/7.1.x/</li>
+    <ul>
+    <li>https://docs.pytest.org/en/7.1.x/reference/reference.html#command-line-flags</li>
+    </ul>
+</ol>
+<br/>
+
+
+<h2>Warning の出力の抑制</h2>
+Warning の出力を抑制したいとき、ドキュメントによると --no-summary で抑制できるとのことだが古い版の pytest だとこれが通らなかった。しかし --disable-warnings は通った。
+<pre class="console">
+pytest --no-summary
+pytest --disable-warnings
+</pre>
+<br/>
+
+</div>
+</main>
+</div>
+</body>
+</html>

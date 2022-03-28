@@ -99,11 +99,20 @@ ol.note>li {
     position: relative;
     list-style: none;
 }
-ol.note>li:before{
+ol.note>li:before {
     position: absolute;
     left: -4.5em;
     counter-increment: li;
     content: '[注釈'counter(li)']';
+}
+div.categories {
+    border: 1px solid darkgray;
+    background: #f9f9f9;
+    margin: 0.5em 5px 0.5em 0;
+    padding: 0.5em;
+}
+div.categories:before {
+    content: 'カテゴリ： ';
 }
 pre {
     background: #f0f0f0;
