@@ -1,0 +1,148 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>コレスキー分解 - Cookipedia</title>
+<script src="../mathjax-config.js" defer></script>
+<script type="text/javascript" id="MathJax-script" defer
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<script src="../funcs.js"></script>
+</head>
+<body onload="init()">
+<div class="container">
+<div class="sidebar">
+<div class="item" id="sidebar-item"></div>
+</div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>コレスキー分解</h1>
+<p>コレスキー分解（Cholesky decomposition）とは、<u>半正定値エルミート行列を下三角行列とその共役転置行列の積に分解すること</u>である。このような分解は常に存在し、かつ、下三角行列の対角成分を非負実数にできる。
+<div style="overflow: auto">
+$$
+\begin{align}
+&
+\begin{pmatrix}
+a_{1,1} & a_{1,2} & \cdots & a_{1, n} \\
+\overline{a_{1,2}} & a_{2,2} & \cdots & a_{2, n} \\
+\vdots  &\vdots   & \ddots & \vdots \\
+\overline{a_{1,n}} & \overline{a_{2,n}} & \cdots  & a_{n, n} \\
+\end{pmatrix}
+=
+\begin{pmatrix}
+r_{1,1} & 0 & \cdots & 0 \\
+r_{1,2} & r_{2,2} & \cdots & 0 \\
+\vdots  &\vdots   & \ddots & \vdots \\
+r_{1,n} & r_{2,n} & \cdots  & r_{n, n} \\
+\end{pmatrix}
+\begin{pmatrix}
+r_{1,1} & \overline{r_{1,2}} & \cdots & \overline{r_{1, n}} \\
+0 & r_{2,2} & \cdots & \overline{r_{2, n}} \\
+\vdots  &\vdots   & \ddots & \vdots \\
+0 & 0 & \cdots  & r_{n, n} \\
+\end{pmatrix}
+\end{align}
+$$
+</div>
+元の行列が実対称行列の場合は、下三角行列とその転置行列の積への分解が存在する。
+<div style="overflow: auto">
+$$
+\begin{align}
+&
+\begin{pmatrix}
+a_{1,1} & a_{1,2} & \cdots & a_{1, n} \\
+a_{1,2} & a_{2,2} & \cdots & a_{2, n} \\
+\vdots  &\vdots   & \ddots & \vdots \\
+a_{1,n} & a_{2,n} & \cdots  & a_{n, n} \\
+\end{pmatrix}
+=
+\begin{pmatrix}
+r_{1,1} & 0 & \cdots & 0 \\
+r_{1,2} & r_{2,2} & \cdots & 0 \\
+\vdots  &\vdots   & \ddots & \vdots \\
+r_{1,n} & r_{2,n} & \cdots  & r_{n, n} \\
+\end{pmatrix}
+\begin{pmatrix}
+r_{1,1} & r_{1,2} & \cdots & r_{1, n} \\
+0 & r_{2,2} & \cdots & r_{2, n} \\
+\vdots  &\vdots   & \ddots & \vdots \\
+0 & 0 & \cdots  & r_{n, n} \\
+\end{pmatrix}
+
+\end{align}
+$$
+</div>
+また、元の行列が正定値の場合は、下三角行列の対角成分が正の実数にでき、かつ、そのような分解が一意に定まる。
+</p>
+<br/>
+
+
+<h2>参考文献</h2>
+<ol class="ref">
+    <li>Cholesky decomposition - Wikipedia. <a href="https://en.wikipedia.org/wiki/Cholesky_decomposition">https://ja.wikipedia.org/wiki/QR%E5%88%86%E8%A7%A3</a>（2022年3月29日参照）.</li>
+    <!--
+    <ul>
+    <li>。</li>
+    </ul>
+    -->
+</ol>
+<br/>
+
+
+<h2>コレスキ―分解を得る方法</h2>
+参考文献 [1] の例を numpy の関数で得ると以下である。
+<pre>
+import numpy as np
+
+A = np.array([
+    [  4,  12, -16],
+    [ 12,  37, -43],
+    [-16, -43,  98]
+])
+R = np.linalg.cholesky(A)
+print(R)
+</pre>
+<pre class="console">
+[[ 2.  0.  0.]
+ [ 6.  1.  0.]
+ [-8.  5.  3.]]
+</pre>
+<br/>
+
+
+<!--
+<h2>関連記事</h2>
+<ul>
+    <li><a href="nyström_method.html">Nyström 近似</a></li>
+</ul>
+-->
+
+<!--
+
+
+<h2>注釈</h2>
+<ol class="note">
+<li id="note1">
+</li>
+</ol>
+<br/>
+-->
+
+<h2>関連記事</h2>
+<ul>
+    <li><a href="schur_complement.html">シューア補行列</a></li>
+</ul>
+<br/>
+
+<div class="categories">
+<a href="../categories/category_matrix.html">行列</a>
+</div>
+
+</div>
+</main>
+</div>
+</body>
+</html>

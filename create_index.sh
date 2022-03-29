@@ -1,10 +1,12 @@
 #!/bin/bash
 
 # カテゴリ一覧をここにかく
+# ※ ダブルクオテーションはエスケープすること
 # ※ 各記事のカテゴリリンクもこれに同期しないとカテゴリ一覧に吸い上げできない
 # ※ カテゴリを廃止してここから削除した場合にカテゴリページ削除やカテゴリリンク削除はなされない
 categories="
 href=\"../categories/category_matrix.html\">行列 
+href=\"../categories/category_neurips_2021.html\">NeurIPS&nbsp;2021 
 "
 categories="$categories"
 
@@ -26,10 +28,12 @@ function create_categories() {
         # そのカテゴリに紐づく記事が収集されたときだけカテゴリページを生成する
         if [[ -n $index ]]; then
             category_title=${category#*>}
+            category_title=${category_title//&/\\&}  # sed の置換先からアンパサンドを排除
             category_url=${category#*category_}
             category_url=${category_url%.html*}
             sed -e "s@{{CATEGORY_TITLE}}@$category_title@" categories/category_template.html > categories/category_${category_url}.html
             sed -i -e "s@{{CATEGORY_ARTICLE_LIST}}@$index@" categories/category_${category_url}.html
+            sed -i -e "s@</li>@</li>\n@g" categories/category_${category_url}.html
         fi
     done
 }
@@ -48,6 +52,7 @@ function create() {
         title=`grep -e "<h1>" "$filepath"`
         title=${title#*<h1>}
         title=${title%</h1>*}
+        title=${title//&/\\&}  # sed の置換先からアンパサンドを排除
 
         # 最終更新日付を取得する
         # git status コマンドの結果が空でないならファイルのタイムスタンプを,
