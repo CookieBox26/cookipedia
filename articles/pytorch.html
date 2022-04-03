@@ -32,7 +32,7 @@
 pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
 </pre>
 そうするとインストールされる。
-<pre>
+<pre class="python">
 import torch
 print(torch.__version__)
 print(torch.cuda.is_available())
@@ -55,7 +55,7 @@ pipenv install "https://download.pytorch.org/whl/cu113/torch-1.11.0%2Bcu113-cp31
 <h3>CPU 版と GPU 版の違い</h3>
 <p>
 CPU 版と GPU 版で以下の実行結果が異なるのがわかる。これは CPU 版と GPU 版ではより低レイヤーでソートアルゴリズムが異なることに起因していると自分は推測しているが不明である。
-<pre>
+<pre class="python">
 import torch
 x = torch.tensor([0.3, 0.2, 0.1, 0.4, 0.5])
 print(x.topk(3, sorted=False))
@@ -71,6 +71,46 @@ indices=tensor([4, 3, 0]))
 torch.return_types.topk(
 values=tensor([0.4000, 0.5000, 0.3000]),
 indices=tensor([3, 4, 0]))
+</pre>
+</p>
+<br/>
+
+
+<h2>関数</h2>
+<h3>torch.nn.LayerNorm</h3>
+<p>
+<pre class="python">
+import torch
+from torch import nn
+import math
+
+
+class TestLayerNorm:
+    """ torch.nn.LayerNorm： テンソルを指定の範囲で標準化した後
+    各要素に重みとバイアスを適用する（重みとバイアスの適用はオプショナル）．
+    重みとバイアスを適用する場合はそれらが学習対象になる．
+    """
+
+    def test_values(self):
+        """ LayerNorm の結果を検算する． "test"
+        """
+        # 適当なテンソルをつくる． class 
+        # 2つの3語文（各単語は4次元に埋め込まれている）が入ったバッチのイメージ．
+        x = torch.tensor([[[1., 2., 3., 4.],      # 1文目の1単語目
+                           [5., 6., 7., 8.],      # 1文目の2単語目
+                           [9., 10., 11., 12.]],  # 1文目の3単語目
+                          [[1., 2., 1., 2.],      # 2文目の1単語目
+                           [-1., -2., -1., -2.],  # 2文目の2単語目
+                           [1., 2., 1., 2.]]])    # 2文目の3単語目
+        assert x.size() == torch.Size([2, 3, 4])
+
+        # ---------- 例1. 単語レベルの正規化 ----------
+
+        # 単語レベルで正規化するとしたらこう．
+        model = nn.LayerNorm(normalized_shape=4, eps=1e-12, elementwise_affine=True)
+
+x = 'apple'
+x = "It takes all the running you can do, to keep in the same place."
 </pre>
 </p>
 <br/>

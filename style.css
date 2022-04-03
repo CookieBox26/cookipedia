@@ -120,13 +120,38 @@ div.categories:before {
     content: 'カテゴリ： ';
 }
 pre {
-    background: #f0f0f0;
+    color: #303030;
+    background: #f3f3f3; // #f0f0f0;
     padding: 1em;
     margin: 1em 5px 1em 0;
 }
 pre.console {
-    color: #f0f0f0;
+    color: #f3f3f3;
     background: #393939;
+}
+pre span.keyword {
+    color: #0073a8;
+    font-weight: bold;
+}
+pre span.builtin {
+    color: #0073a8;
+}
+pre span.numeric {
+    color: #0073a8;
+}
+pre span.literal {
+    color: #c53d43;
+}
+pre span.literal>span {
+    color: #c53d43;
+    font-weight: normal;
+}
+pre span.comment {
+    color: #37a34a;
+}
+pre span.comment>span {
+    color: #37a34a;
+    font-weight: normal;
 }
 div.prop {
     border: 2px solid #393939;
