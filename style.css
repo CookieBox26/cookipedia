@@ -120,8 +120,8 @@ div.categories:before {
     content: 'カテゴリ： ';
 }
 pre {
-    color: #303030;
-    background: #f3f3f3; // #f0f0f0;
+    color: #151515;
+    background: #f7f6fb;
     padding: 1em;
     margin: 1em 5px 1em 0;
 }
@@ -130,27 +130,23 @@ pre.console {
     background: #393939;
 }
 pre span.keyword {
-    color: #0073a8;
+    color: #4753a2;
     font-weight: bold;
 }
 pre span.builtin {
-    color: #0073a8;
+    color: #4753a2;
 }
 pre span.numeric {
-    color: #0073a8;
+    color: #26499d;
 }
-pre span.literal {
-    color: #c53d43;
-}
+pre span.literal,
 pre span.literal>span {
-    color: #c53d43;
+    color: #a50082;
     font-weight: normal;
 }
-pre span.comment {
-    color: #37a34a;
-}
+pre span.comment,
 pre span.comment>span {
-    color: #37a34a;
+    color: #918fb3;
     font-weight: normal;
 }
 div.prop {
@@ -202,5 +198,10 @@ span.index-ts {
         white-space: -moz-pre-wrap;
         white-space: -hp-pre-wrap;
         word-wrap: break-word;
+    }
+    pre.python {
+        white-space: pre;
+        word-wrap: normal;
+        overflow: auto;
     }
 }
