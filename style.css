@@ -5,19 +5,19 @@ body {
     margin: 0;
     background: #f9f9f9;
 }
-a {
-    color: #0073a8;
+a, a:visited {
+    color: #0068b7;
     text-decoration: none;
 }
 a:hover {
     text-decoration: underline;
 }
-a:visited {
-    color: #0073a8;
-}
 a.note {
     vertical-align: super;
     font-size: 0.75em;
+}
+a.break {
+    word-break: break-all;
 }
 span.break {
     word-break: break-all;
@@ -141,7 +141,7 @@ pre span.numeric {
 }
 pre span.literal,
 pre span.literal>span {
-    color: #a50082;
+    color: #8324b3;
     font-weight: normal;
 }
 pre span.comment,
@@ -192,14 +192,6 @@ span.index-ts {
         display: none;
     }
     pre {
-        white-space: pre-wrap;
-        white-space: -pre-wrap;
-        white-space: -o-pre-wrap;
-        white-space: -moz-pre-wrap;
-        white-space: -hp-pre-wrap;
-        word-wrap: break-word;
-    }
-    pre.python {
         white-space: pre;
         word-wrap: normal;
         overflow: auto;

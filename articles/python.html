@@ -30,7 +30,7 @@
 
 <h2>文字列を datetime 型に変換しユニックス秒に変換する</h2>
 datetime.datetime.strptime() で datetime 型にできる。timestamp() メソッドでユニックス秒にできる。タイムゾーン情報をパースしないと datetime 型は自分のタイムゾーンについて無知になる。その場合でも timestamp() メソッドではシステムのタイムゾーンが適用される。タイムゾーン情報をパースさせれば datetime 型は自分のタイムゾーンを認識する。日本時間の1時より協定世界時の1時の方が未来である。
-<pre>
+<pre class="python">
 import datetime
 
 s = '2022-03-13 01:23:45'
@@ -68,7 +68,7 @@ print(datetime.datetime.fromtimestamp(ts))
 2022-03-13 10:23:45
 </pre>
 上のコードに示しているように datetime.datetime.fromtimestamp() でユニックス秒から datetime 型を復元できるが、このとき明示的にタイムゾーンを指定しないと datetime 型は自分のタイムゾーンについて無知になる。
-<pre>
+<pre class="python">
 ts = 1647102225.0
 
 dt = datetime.datetime.fromtimestamp(ts)

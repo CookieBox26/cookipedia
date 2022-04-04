@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>置換積分 - Cookipedia</title>
+<script src="../mathjax-config.js" defer></script>
+<script type="text/javascript" id="MathJax-script" defer
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<script src="../funcs.js"></script>
+</head>
+<body onload="init()">
+<div class="container">
+<div class="sidebar">
+<div class="item" id="sidebar-item"></div>
+</div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>置換積分</h1>
+<p>$U$ を $\mathbb{R}^n$ 上の開集合とする。$\varphi: U \to \mathbb{R}^n$ を単射で偏微分可能で偏導関数 $\varphi_{u_1}, \cdots, \varphi_{u_n}$ が連続で任意の $\mathbf{u} \in U$ においてヤコビアン ${\rm det} (D \varphi)(\mathbf{u})$ が $0$ でない関数とする。<div style="overflow: auto">
+$$
+(v_1,\cdots,v_n) = \varphi(u_1,\cdots,u_n)
+$$
+$$
+{\rm det} (D \varphi)(\mathbf{u}) = \begin{vmatrix}
+\frac{\partial \varphi_1(\mathbf{u})}{\partial u_1} & \cdots & \frac{\partial \varphi_1(\mathbf{u})}{\partial u_n} \\
+\vdots & \ddots & \vdots \\
+\frac{\partial \varphi_n(\mathbf{u})}{\partial u_1} & \cdots & \frac{\partial \varphi_n(\mathbf{u})}{\partial u_n} \\
+\end{vmatrix}
+$$
+</div></p>
+
+<p>このとき、連続関数 $f: \mathbb{R}^n \to \mathbb{R}$ が ${\rm supp}(f) \subset \varphi(U)$ であるならば以下が成り立つ [1]。
+<div style="overflow: auto">
+$$
+\int_{\varphi(U)}f(\mathbf{v})d\mathbf{v} = \int_U f\bigl( \varphi(\mathbf{u}) \bigr) \bigl| {\rm det} (D \varphi)(\mathbf{u}) \bigr|d\mathbf{u}
+$$
+</div>
+</p>
+統計学においては確率密度関数が $f(\mathbf{v})$ である確率ベクトル $\mathbf{v}$ を、$\mathbf{u} = \psi(\mathbf{v})$ と変換したときの変換後の確率密度関数 $g(\mathbf{u})$ を知りたいことがよくある。この変換 $\psi$ が逆関数 $\varphi$ をもち、かつ $\varphi, \, f$ が上記の条件を満たすならば $g(\mathbf{u})$ は以下となることがわかる。
+<div style="overflow: auto">
+$$
+g(\mathbf{u}) = f\bigl( \varphi(\mathbf{u}) \bigr) \bigl| {\rm det} (D \varphi)(\mathbf{u}) \bigr|
+$$
+</div>
+例えば標準正規分布にしたがう $v$ を $u = 2v$ と変換しよう。このとき $\varphi(u) = u/2$ になり、$g(u)$ は分散が $2^2$ の正規分布になる。$|1/2|$ を乗じないと確率密度関数の積分が $2$ になってしまう。
+<div style="overflow: auto">
+$$
+g(u) = \frac{1}{\sqrt{2\pi}} \exp \left( - \frac{(u/2)^2}{2}\right) \left| \frac{1}{2} \right|
+= \frac{1}{\sqrt{2\pi 2^2}} \exp \left( - \frac{u^2}{2\cdot 2^2}\right)
+$$
+</div>
+<br/>
+
+
+<h2>参考文献</h2>
+<ol class="ref">
+    <li>Integration by substitution - Wikipedia. <a class="break" href="https://en.wikipedia.org/wiki/Integration_by_substitution#Substitution_for_multiple_variables">https://en.wikipedia.org/wiki/Integration_by_substitution#Substitution_for_multiple_variables</a>（2022年4月4日参照）.</li>
+    <ul>
+    <li>重積分の置換積分について成り立つ定理がある。</li>
+    </ul>
+</ol>
+<br/>
+
+
+<!--
+<h2>関連記事</h2>
+<ul>
+    <li><a href="nyström_method.html">Nyström 近似</a></li>
+</ul>
+
+
+
+<h2>QR 分解を得る方法</h2>
+参考文献 [1] と同じ行列に numpy.linalg.qr を適用すると以下である。素直にグラムシュミット直交化を適用するときと比べ $Q$ の符号が反転しているが理由は調べていないのでわからない。
+-->
+
+</div>
+</main>
+</div>
+</body>
+</html>

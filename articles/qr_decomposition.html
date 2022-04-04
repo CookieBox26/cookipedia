@@ -114,7 +114,7 @@ $$
 
 <h2>QR 分解を得る方法</h2>
 参考文献 [1] と同じ行列に numpy.linalg.qr を適用すると以下である。素直にグラムシュミット直交化を適用するときと比べ $Q$ の符号が反転しているが理由は調べていないのでわからない。
-<pre>
+<pre class="python">
 import numpy as np
 
 A = np.array([
@@ -140,7 +140,7 @@ print(R)
 
 <h3>グラムシュミットの直交化法による方法</h3>
 グラムシュミットの直交化法をする関数がないのだろうかと思ったがそれこそが numpy.linalg.qr とのことである。
-<pre>
+<pre class="python">
 def qr(A):
     A = A.astype(np.float64)
     m, n = A.shape
@@ -211,7 +211,7 @@ r_{2,2} & r_{2,3} & \cdots & r_{2, n} \\
 \end{align}
 $$
 </div>
-<pre>
+<pre class="python">
 def qr(A):
     m, n = A.shape  # ただし m = n を想定
     Q = None
