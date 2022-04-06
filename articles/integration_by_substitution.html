@@ -37,22 +37,24 @@ $$
 <div style="overflow: auto">
 $$
 \int_{\varphi(U)}f(\mathbf{v})d\mathbf{v} = \int_U f\bigl( \varphi(\mathbf{u}) \bigr) \bigl| {\rm det} (D \varphi)(\mathbf{u}) \bigr|d\mathbf{u}
+\tag{1}
 $$
 </div>
 </p>
-統計学においては確率密度関数が $f(\mathbf{v})$ である確率ベクトル $\mathbf{v}$ を、$\mathbf{u} = \psi(\mathbf{v})$ と変換したときの変換後の確率密度関数 $g(\mathbf{u})$ を知りたいことがよくある。この変換 $\psi$ が逆関数 $\varphi$ をもち、かつ $\varphi, \, f$ が上記の条件を満たすならば $g(\mathbf{u})$ は以下となることがわかる。
+ところで統計学においては、確率密度関数が $f(\mathbf{v})$ である確率ベクトル $\mathbf{v}$ を $\mathbf{u} = \psi(\mathbf{v})$ と変換したときの変換後の確率密度関数 $g(\mathbf{u})$ を知りたいことがある。この変換 $\psi$ が逆関数 $\varphi$ をもち、かつ $\varphi, \, f$ が上記の条件を満たすならば、$(1)$ より $g(\mathbf{u})$ は以下となることがわかる。
 <div style="overflow: auto">
 $$
 g(\mathbf{u}) = f\bigl( \varphi(\mathbf{u}) \bigr) \bigl| {\rm det} (D \varphi)(\mathbf{u}) \bigr|
 $$
 </div>
-例えば標準正規分布にしたがう $v$ を $u = 2v$ と変換しよう。このとき $\varphi(u) = u/2$ になり、$g(u)$ は分散が $2^2$ の正規分布になる。$|1/2|$ を乗じないと確率密度関数の積分が $2$ になってしまう。
+例えば標準正規分布にしたがう $v$ を $u = 2v$ と変換しよう。このとき $\varphi(u) = u/2$ になり、$g(u)$ は分散が $2^2$ の正規分布の確率密度関数になる。$\bigl| {\rm det} (D \varphi)(\mathbf{u}) \bigr|$ に相当する $|1/2|$ を乗じなければ確率密度関数の積分が $2$ になってしまうことがわかる。
 <div style="overflow: auto">
 $$
 g(u) = \frac{1}{\sqrt{2\pi}} \exp \left( - \frac{(u/2)^2}{2}\right) \left| \frac{1}{2} \right|
 = \frac{1}{\sqrt{2\pi 2^2}} \exp \left( - \frac{u^2}{2\cdot 2^2}\right)
 $$
 </div>
+このとき、元の確率変数 $v$ を $U$ からやってきたものと考えている。
 <br/>
 
 
