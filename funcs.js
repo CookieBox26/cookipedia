@@ -1,5 +1,5 @@
 function createSidebar() {
-    var gitHub = '<a href="https://github.com/CookieBox26/memo/issues">Issues</a>';
+    var gitHub = '<a href="https://github.com/CookieBox26/cookipedia/issues">Issues</a>';
     var message = '何かありましたら ' + gitHub + ' までご連絡ください';
 
     var index = '<h5>このページの小見出し一覧</h5>';
