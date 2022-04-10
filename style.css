@@ -38,6 +38,7 @@ div.long-title>h1 {
     width: 1000px;
     display: -webkit-flex;
     display: flex;
+    align-items: flex-start;  /* 規定値の stretch から変更し高さを揃えない */
 }
 .main {
     margin: 0;
@@ -52,24 +53,20 @@ div.long-title>h1 {
     border: 1px solid darkgray;
     font-size: 98%;
 }
-#smartphone-header {
+div#smartphone-header {
     display: none;
 }
-.sidebar {
-    margin: 0;
-    padding: 0;
+div#sidebar {
+    box-sizing: border-box;  /* 指定サイズ内でパディングを取るよう指示 */
     flex-basis: 225px;
     max-width: 225px;
-}
-.sidebar .item {
-    margin: 0;
-    padding: 20px;
-    position: sticky;
     top: 0;
+    position: sticky;
+    padding: 20px;
     font-size: 90%;
     word-break: break-all;
 }
-.sidebar .item h5 {
+div#sidebar h5 {
     font-weight: normal;
     border-bottom: 1px solid darkgray;
     margin-bottom: 1.0em;
@@ -184,11 +181,11 @@ span.index-ts {
     .main .item {
         margin: 0 0 15px;
     }
-    #smartphone-header {
+    div#smartphone-header {
         display: block;
         padding: 10px 20px 5px;
     }
-    .sidebar {
+    div#sidebar {
         display: none;
     }
     pre {

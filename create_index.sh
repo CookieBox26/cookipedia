@@ -62,6 +62,7 @@ function create_category_files() {
     for category in "${categories[@]}"; do
         category_title=${category#*=}
         category_url=${category%=*}
+        n_index=0
         index=""
         for filepath in articles/*.html; do
             category_=`grep $category_url "$filepath"`
@@ -76,6 +77,7 @@ function create_category_files() {
             title=${title%</h1>*}
             index_="<li><a href=\"../"${filepath}"\">"${title}"</a></li>"
             index=${index}${index_}
+            n_index=$((n_index+1))
         done
         # そのカテゴリに紐づく記事が収集されたときだけカテゴリページを生成する
         if [[ -n $index ]]; then
@@ -83,6 +85,7 @@ function create_category_files() {
             sed -e "s@{{CATEGORY_TITLE}}@$category_title@" categories/category_template.html > ${category_url}
             sed -i -e "s@{{CATEGORY_ARTICLE_LIST}}@$index@" ${category_url}
             sed -i -e "s@</li>@</li>\n@g" ${category_url}
+            sed -i -e "s@{{NUM_OF_ARTICLES}}@$n_index@"  ${category_url}
         fi
     done
 }
@@ -92,6 +95,7 @@ function create_index() {
     # 指定されたディレクトリ以下の全ページへのリンク列を生成する
     # 生成結果は $index に格納する
     echo -e "\n===== "${1}"以下のページ一覧 ====="
+    n_index=0
     index=""
     for filepath in $1; do
         # _template が付くファイルはスキップ
@@ -118,6 +122,7 @@ function create_index() {
         index_="<li><a href=\""${filepath}"\">"${title}"</a><span class=\"index-ts\">（最終更新日 "${ts}"）</span></li>"
         echo $index_
         index=${index}${index_}
+        n_index=$((n_index+1))
     done
 }
 
@@ -130,8 +135,10 @@ create_category_files
 
 create_index "categories/*.html"
 sed -e "s@{{CATEGORY_LIST}}@$index@" index_template.html > index.html
+sed -i -e "s@{{NUM_OF_CATEGORIES}}@$n_index@" index.html
 
 create_index "articles/*.html"
 sed -i -e "s@{{ARTICLE_LIST}}@$index@" index.html
+sed -i -e "s@{{NUM_OF_ARTICLES}}@$n_index@" index.html
 
 sed -i -e "s@</li>@</li>\n@g" index.html

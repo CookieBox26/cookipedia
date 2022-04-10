@@ -13,9 +13,7 @@
 </head>
 <body onload="init()">
 <div class="container">
-<div class="sidebar">
-<div class="item" id="sidebar-item"></div>
-</div>
+<div id="sidebar"></div>
 <main class="main">
 <div id="smartphone-header"></div>
 <div class="item">
@@ -99,7 +97,7 @@ $$
 
 <h2>コレスキ―分解を得る方法</h2>
 参考文献 [1] の例を numpy の関数で得ると以下である。
-<pre>
+<pre class="python">
 import numpy as np
 
 A = np.array([
@@ -118,29 +116,12 @@ print(R)
 <br/>
 
 
-<!--
-<h2>関連記事</h2>
-<ul>
-    <li><a href="nyström_method.html">Nyström 近似</a></li>
-</ul>
--->
-
-<!--
-
-
-<h2>注釈</h2>
-<ol class="note">
-<li id="note1">
-</li>
-</ol>
-<br/>
--->
-
 <h2>関連記事</h2>
 <ul>
     <li><a href="schur_complement.html">シューア補行列</a></li>
 </ul>
 <br/>
+
 
 <div class="categories">
 <a href="../categories/category_matrix.html">行列</a>

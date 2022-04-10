@@ -19,7 +19,7 @@ function createSidebar() {
     var back = '<a href="../index.html">メインページに戻る</a>';
     content += '<p><a href="#">このページの一番上に戻る</a></p><p>' + back + '</p><br/>';
     content += '<div id="headers">' + index + '</div>';
-    document.getElementById('sidebar-item').innerHTML += content;
+    document.getElementById('sidebar').innerHTML += content;
     document.getElementById('smartphone-header').innerHTML += back;
 }
 
