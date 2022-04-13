@@ -27,8 +27,7 @@ function collect_categories() {
         category=`grep "/categories/category_" "$filepath"`
         if [[ -z $category ]]; then
             continue
-        fi
-        if [[ ${category:0:2} != "<a" ]]; then
+        elif [[ ${category:0:2} != "<a" ]]; then
             continue
         fi
         category=${category//<a href=\"..\// }
@@ -68,8 +67,7 @@ function create_category_files() {
             category_=`grep $category_url "$filepath"`
             if [[ -z $category_ ]]; then
                 continue
-            fi
-            if [[ ${category_:0:2} != "<a" ]]; then
+            elif [[ ${category_:0:2} != "<a" ]]; then
                 continue
             fi
             title=`grep "<h1>" "$filepath"`
