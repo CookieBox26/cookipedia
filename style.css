@@ -75,6 +75,9 @@ div#sidebar h5 {
 p {
     margin: 0 0 0.5em;
 }
+p>ul, p>ol {
+    margin: 0.3em 0;
+}
 p.indent {
     padding-left: 1em;
 }
