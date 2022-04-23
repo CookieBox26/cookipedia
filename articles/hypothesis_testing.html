@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>仮説検定 - Cookipedia</title>
+<script src="../mathjax-config.js" defer></script>
+<script type="text/javascript" id="MathJax-script" defer
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<script src="../funcs.js"></script>
+</head>
+<body onload="init()">
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>仮説検定</h1>
+<p><b>仮説検定</b>（hypothesis testing）とは、<u>標本にもとづいて母集団に関する命題を検証する活動</u>のことである、と思われる。「検証する」とはふわっとした言葉だが、母集団全体が手元にあるのではないので「証明する」ことはできない。何かしらの方法で母集団の性質を推測し、「どうもこの命題は真（偽）のようである」と判断することしかできないのである。</p>
+<p>業界用語で、検証する命題のことを「帰無仮説」といい、それを偽のようであると判断することを「帰無仮説を棄却する」というのは世間でよく目にする通りである。</p>
+<p>より具体的に、仮説検定においては母集団はパラメトリックな確率分布 $f(x;\theta)$ で記述されることは決め打ち、検証すべき命題（帰無仮説）は $H_0: \theta \in \Theta_0$ の形式にする。つまり、$H_0$ が偽のときは $H_1: \theta \in \Theta_0^C$ が真であることになる。
+</p>
+<p>であれば、標本 $X$ 全体の集合 $\mathcal{X}$ から集合 $\mathcal{R}=\{$ 帰無仮説を棄却する$, \,$ 帰無仮説を棄却しない $\}$ への写像が必要になる。が、通常は $H_0: \theta \in \Theta_0$ が真のときによく知られた分布にしたがうような統計量 $T(X)$ をまず構成し、そこから  $\mathcal{R}$ への写像を扱うのは世間でよく目にする通りである。
+<br/>
+
+    <!--
+<h2>参考文献</h2>
+<ol class="ref">
+    <li>Cholesky decomposition - Wikipedia. <a href="https://en.wikipedia.org/wiki/Cholesky_decomposition">https://ja.wikipedia.org/wiki/QR%E5%88%86%E8%A7%A3</a>（2022年3月29日参照）.</li>
+
+    <ul>
+    <li>。</li>
+    </ul>
+
+</ol>
+<br/>
+    -->
+
+
+
+</div>
+</main>
+</div>
+</body>
+</html>
