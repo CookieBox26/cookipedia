@@ -31,7 +31,7 @@ h(\beta) &= \sum_{i=1}^n (y_i - \beta^\top x_i)^2 \\
 \end{align*}
 $$
 </div>
-この偏微分が $0$ に等しいことから、回帰係数の最小 2 乗推定量 $\hat{\beta}$ は以下となる。2 行目から 3 行目への変形で連立方程式を行列に束ねる操作は <a href="#note1">[注釈1]</a> を参照してほしい。
+この偏微分が $0$ に等しいことから、回帰係数の最小 2 乗推定量 $\hat{\beta}$ は以下となる。ただし $X$ は各行が 1 つの観測データの説明変数ベクトルであるような行列であり、$Y$ は各成分が 1 つの観測データの応答変数であるような縦ベクトルである。2 行目から 3 行目への変形で連立方程式を行列に束ねる操作は <a href="#note1">[注釈1]</a> を参照してほしい。
 <div style="overflow: auto">
 $$
 \begin{align*}
@@ -71,12 +71,11 @@ $$
 \begin{align*}
 & \sum_{i=1}^n (y_i - \hat{\alpha} - \hat{\beta}^\top x_i) = 0 \\
 \Leftrightarrow \quad & n \hat{\alpha} = \sum_{i=1}^n  y_i - \sum_{i=1}^n \hat{\beta}^\top x_i \\
-\Leftrightarrow \quad & \hat{\alpha} = \overline{y} - \frac{1}{n}\sum_{i=1}^n \hat{\beta}^\top (x_i - \overline{x}) - \hat{\beta}^\top \overline{x} \\
 \Leftrightarrow \quad & \hat{\alpha} = \overline{y} - \hat{\beta}^\top \overline{x} \\
 \end{align*}
 $$
 </div>
-これに加えて、回帰係数に関する偏微分から以下が導かれる。
+これに加えて、回帰係数に関する偏微分から以下が導かれる。ただし $\tilde{X}$ は $X$ の各行から全観測データの説明変数ベクトルの平均ベクトルを差し引いた行列であり、$\tilde{Y}$ は $Y$ の各成分から全観測データの応答変数の平均値を差し引いた縦ベクトルである。
 <div style="overflow: auto">
 $$
 \begin{align*}
@@ -84,8 +83,8 @@ $$
 \Leftrightarrow \quad & \sum_{i=1}^n x_{i, j} (y_i - \overline{y} + \hat{\beta}^\top \overline{x} - \hat{\beta}^\top x_i) = 0 &\quad (j = 1, \cdots, m) \\
 \Leftrightarrow \quad & \sum_{i=1}^n x_{i, j} \hat{\beta}^\top (x_i - \overline{x}) = \sum_{i=1}^n x_{i, j} (y_i - \overline{y}) &\quad (j = 1, \cdots, m) \\
 \Leftrightarrow \quad & \sum_{i=1}^n (x_{i, j} - \overline{x}_j) \hat{\beta}^\top (x_i - \overline{x}) = \sum_{i=1}^n (x_{i, j} - \overline{x}_j) (y_i - \overline{y}) &\quad (j = 1, \cdots, m) \\
-\Leftrightarrow \quad & (X - \overline{X})^\top (X - \overline{X}) \hat{\beta} = (X - \overline{X})^\top (Y - \overline{Y}) \\
-\Leftrightarrow \quad & \hat{\beta} = \bigl( (X - \overline{X})^\top (X - \overline{X}) \bigr)^{-1} (X - \overline{X})^\top (Y - \overline{Y})
+\Leftrightarrow \quad & \tilde{X}^\top \tilde{X} \hat{\beta} = \tilde{X}^\top \tilde{Y} \\
+\Leftrightarrow \quad & \hat{\beta} = (\tilde{X}^\top \tilde{X})^{-1} \tilde{X}^\top \tilde{Y}
 \end{align*}
 $$
 </div>
@@ -102,7 +101,7 @@ $$
 <h2>注釈</h2>
 <ol class="note">
 <li id="note1">
-まず、正方行列とベクトルの積は以下である。なので逆に、$\sum_{i=1}^n a_{j,i} b_i$ なるものを $j$ の順に縦に並べてベクトルにしたものは、正方行列とベクトルの積で $Ab$ とかける。
+まず、正方行列とベクトルの積は以下である。なので逆に、$\sum_{i=1}^n a_{j,i} b_i$ なるものを $j$ の順に縦に並べてベクトルにしたものは、行列とベクトルの積で $Ab$ とかける。
 <div style="overflow: auto">
 $$
 \begin{align}
@@ -111,14 +110,14 @@ Ab =
 a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\
 a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\
 \vdots & \vdots & \ddots & \vdots \\
-a_{n,1} & a_{n,2} & \cdots & a_{n,n} \\
+a_{m,1} & a_{m,2} & \cdots & a_{n,n} \\
 \end{pmatrix}
 \begin{pmatrix}
 b_{1} \\ b_{2} \\ \vdots \\ b_{n}
 \end{pmatrix}
 =
 \begin{pmatrix}
-\sum_{i=1}^n a_{1,i} b_{i} \\ \sum_{i=1}^n a_{2,i} b_{i} \\ \vdots \\ \sum_{i=1}^n a_{n,i} b_{i}
+\sum_{i=1}^n a_{1,i} b_{i} \\ \sum_{i=1}^n a_{2,i} b_{i} \\ \vdots \\ \sum_{i=1}^n a_{m,i} b_{i}
 \end{pmatrix}
 \end{align}
 $$
@@ -129,10 +128,10 @@ $$
 \begin{align}
 B = 
 \begin{pmatrix}
-b_{1,1} & b_{1,2} & \cdots & b_{1,n} \\
-b_{2,1} & b_{2,2} & \cdots & b_{2,n} \\
+b_{1,1} & b_{1,2} & \cdots & b_{1,m} \\
+b_{2,1} & b_{2,2} & \cdots & b_{2,m} \\
 \vdots & \vdots & \ddots & \vdots \\
-b_{n,1} & b_{n,2} & \cdots & b_{n,n} \\
+b_{n,1} & b_{n,2} & \cdots & b_{n,m} \\
 \end{pmatrix}
 =
 \begin{pmatrix}
@@ -158,14 +157,14 @@ AB\beta =
 a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\
 a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\
 \vdots & \vdots & \ddots & \vdots \\
-a_{n,1} & a_{n,2} & \cdots & a_{n,n} \\
+a_{m,1} & a_{m,2} & \cdots & a_{n,n} \\
 \end{pmatrix}
 \begin{pmatrix}
 \beta^\top b_{1} \\ \beta^\top b_{2} \\ \vdots \\ \beta^\top b_{n}
 \end{pmatrix}
 =
 \begin{pmatrix}
-\sum_{i=1}^n a_{1,i} \beta^\top b_{i} \\ \sum_{i=1}^n a_{2,i} \beta^\top b_{i} \\ \vdots \\ \sum_{i=1}^n a_{n,i} \beta^\top b_{i}
+\sum_{i=1}^n a_{1,i} \beta^\top b_{i} \\ \sum_{i=1}^n a_{2,i} \beta^\top b_{i} \\ \vdots \\ \sum_{i=1}^n a_{m,i} \beta^\top b_{i}
 \end{pmatrix}
 \end{align}
 $$
