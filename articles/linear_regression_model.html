@@ -1,0 +1,239 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>線形回帰モデル - Cookipedia</title>
+<script src="../mathjax-config.js" defer></script>
+<script type="text/javascript" id="MathJax-script" defer
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<script src="../funcs.js"></script>
+</head>
+<body onload="init()">
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>線形回帰モデル</h1>
+<p>線形回帰モデルは直線で説明しようとするモデルである。$y_i = \alpha + \beta^\top x_i + u_i$ $(i = 1, \cdots, n)$ であらわされる。直線で説明できない部分は誤差項 $u_i$ に押し付けられることになる。なお、$\{u_i\}_{i=1}^n$ はいわゆるホワイトノイズであることが仮定されるというか、$\{u_i\}_{i=1}^n$ がホワイトノイズにならないようなデータであったら線形回帰モデルが適切ではない可能性がある。
+</p>
+
+<h3>切片がないときの最小 2 乗推定量</h3>
+<p>$\{x_i\}_{i=1}^n$ と $\{y_i\}_{i=1}^n$ を平均が $0$ になるように中心化すれば切片を考えなくてよい。中心化するわけでなくても信念のうえで切片を考えないこともあるかもしれない。ともかく、切片 $\alpha$ がないときには、誤差 2 乗和と、その回帰係数 $\beta$ に関する偏微分は以下となる。
+<div style="overflow: auto">
+$$
+\begin{align*}
+h(\beta) &= \sum_{i=1}^n (y_i - \beta^\top x_i)^2 \\
+\frac{\partial h(\beta)}{\partial \beta_j} &= -2 \sum_{i=1}^n x_{i, j} (y_i - \beta^\top x_i) \quad (j = 1, \cdots, m) \\
+\end{align*}
+$$
+</div>
+この偏微分が $0$ に等しいことから、回帰係数の最小 2 乗推定量 $\hat{\beta}$ は以下となる。2 行目から 3 行目への変形で連立方程式を行列に束ねる操作は <a href="#note1">[注釈1]</a> を参照してほしい。
+<div style="overflow: auto">
+$$
+\begin{align*}
+& \sum_{i=1}^n x_{i, j} (y_i - \hat{\beta}^\top x_i) = 0 &\quad (j = 1, \cdots, m) \\
+\Leftrightarrow \quad & \sum_{i=1}^n x_{i, j} \hat{\beta}^\top x_i = \sum_{i=1}^n x_{i, j} y_i &\quad (j = 1, \cdots, m) \\
+\Leftrightarrow \quad & X^\top X \hat{\beta} = X^\top Y \\
+\Leftrightarrow \quad & \hat{\beta} =(X^\top X)^{-1} X^\top Y \tag{1}
+\end{align*}
+$$
+</div>
+なお、入力データの次元 $m$ が $1$ のときは、方程式は 1 本のみであり、$(1)$ の両辺はベクトルではなくスカラーになり、逆行列は単に逆数になり、以下となる。
+<div style="overflow: auto">
+$$
+\begin{align*}
+\hat{\beta} = \frac{\sum_{i=1}^n x_{i} y_i }{\sum_{i=1}^n x_{i}^2 } \tag{1'}
+\end{align*}
+$$
+</div>
+$(1)$ は $X^\top X$ が正則でなければ定まらない。$X^\top X$ が正則であることは、$X$ の $m$ 本の列ベクトルが線形独立である（$m$ 次元線形空間を張れる）ことと同値である<a class="note" href="#note2">[注釈2]</a>。入力データの次元 $m$ が $1$ のときは、$(1')$ からもわかるが、すべての入力データが $0$ でない限りはすべての入力データを並べたベクトルで 1 次元線形空間が張れるので最小 2 乗推定量が定まる。すべての入力データが $0$ のときにだけは最小 2 乗推定ができないが、最小 2 乗推定というか何の推定もできないと思われる。
+</p>
+
+
+<h3>切片があるときの最小 2 乗推定量</h3>
+<p>切片 $\alpha$ があるときは誤差 2 乗和、回帰係数に関する偏微分、切片に関する偏微分は以下になる。
+<div style="overflow: auto">
+$$
+\begin{align*}
+h(\alpha, \beta) &= \sum_{i=1}^n (y_i - \alpha - \beta^\top x_i)^2 \\
+\frac{\partial h(\alpha, \beta)}{\partial \beta_j} &= -2 \sum_{i=1}^n x_{i, j} (y_i - \alpha - \beta^\top x_i) \quad (j = 1, \cdots, m) \\
+\frac{\partial h(\alpha, \beta)}{\partial \alpha} &= -2 \sum_{i=1}^n (y_i - \alpha - \beta^\top x_i)
+\end{align*}
+$$
+</div>
+回帰係数と切片の最小 2 乗推定量ではこれらの偏微分が $0$ に等しい。まず、切片に関する偏微分から以下の関係式が導かれる。
+<div style="overflow: auto">
+$$
+\begin{align*}
+& \sum_{i=1}^n (y_i - \hat{\alpha} - \hat{\beta}^\top x_i) = 0 \\
+\Leftrightarrow \quad & n \hat{\alpha} = \sum_{i=1}^n  y_i - \sum_{i=1}^n \hat{\beta}^\top x_i \\
+\Leftrightarrow \quad & \hat{\alpha} = \overline{y} - \frac{1}{n}\sum_{i=1}^n \hat{\beta}^\top (x_i - \overline{x}) - \hat{\beta}^\top \overline{x} \\
+\Leftrightarrow \quad & \hat{\alpha} = \overline{y} - \hat{\beta}^\top \overline{x} \\
+\end{align*}
+$$
+</div>
+これに加えて、回帰係数に関する偏微分から以下が導かれる。
+<div style="overflow: auto">
+$$
+\begin{align*}
+& \sum_{i=1}^n x_{i, j} (y_i - \hat{\alpha} - \hat{\beta}^\top x_i) = 0 &\quad (j = 1, \cdots, m) \\
+\Leftrightarrow \quad & \sum_{i=1}^n x_{i, j} (y_i - \overline{y} + \hat{\beta}^\top \overline{x} - \hat{\beta}^\top x_i) = 0 &\quad (j = 1, \cdots, m) \\
+\Leftrightarrow \quad & \sum_{i=1}^n x_{i, j} \hat{\beta}^\top (x_i - \overline{x}) = \sum_{i=1}^n x_{i, j} (y_i - \overline{y}) &\quad (j = 1, \cdots, m) \\
+\Leftrightarrow \quad & \sum_{i=1}^n (x_{i, j} - \overline{x}_j) \hat{\beta}^\top (x_i - \overline{x}) = \sum_{i=1}^n (x_{i, j} - \overline{x}_j) (y_i - \overline{y}) &\quad (j = 1, \cdots, m) \\
+\Leftrightarrow \quad & (X - \overline{X})^\top (X - \overline{X}) \hat{\beta} = (X - \overline{X})^\top (Y - \overline{Y}) \\
+\Leftrightarrow \quad & \hat{\beta} = \bigl( (X - \overline{X})^\top (X - \overline{X}) \bigr)^{-1} (X - \overline{X})^\top (Y - \overline{Y})
+\end{align*}
+$$
+</div>
+なお、入力データの次元 $m$ が $1$ のときは、単に以下となる。
+<div style="overflow: auto">
+$$
+\hat{\beta} = \frac{\sum_{i=1}^n (x_i - \overline{x}) (y_i - \overline{y})}{\sum_{i=1}^n  (x_i - \overline{x})^2}, \quad
+\hat{\alpha} = \overline{y} - \frac{\sum_{i=1}^n (x_i - \overline{x}) (y_i - \overline{y})}{\sum_{i=1}^n  (x_i - \overline{x})^2} \overline{x}
+$$
+</div>
+</p>
+
+
+<h2>注釈</h2>
+<ol class="note">
+<li id="note1">
+まず、正方行列とベクトルの積は以下である。なので逆に、$\sum_{i=1}^n a_{j,i} b_i$ なるものを $j$ の順に縦に並べてベクトルにしたものは、正方行列とベクトルの積で $Ab$ とかける。
+<div style="overflow: auto">
+$$
+\begin{align}
+Ab = 
+\begin{pmatrix}
+a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\
+a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\
+\vdots & \vdots & \ddots & \vdots \\
+a_{n,1} & a_{n,2} & \cdots & a_{n,n} \\
+\end{pmatrix}
+\begin{pmatrix}
+b_{1} \\ b_{2} \\ \vdots \\ b_{n}
+\end{pmatrix}
+=
+\begin{pmatrix}
+\sum_{i=1}^n a_{1,i} b_{i} \\ \sum_{i=1}^n a_{2,i} b_{i} \\ \vdots \\ \sum_{i=1}^n a_{n,i} b_{i}
+\end{pmatrix}
+\end{align}
+$$
+</div>
+他方、$\sum_{i=1}^n a_{j,i} \beta^\top b_i$ なるものを縦に並べるとどうなるか考える。考えると $AB\beta$ である。
+<div style="overflow: auto">
+$$
+\begin{align}
+B = 
+\begin{pmatrix}
+b_{1,1} & b_{1,2} & \cdots & b_{1,n} \\
+b_{2,1} & b_{2,2} & \cdots & b_{2,n} \\
+\vdots & \vdots & \ddots & \vdots \\
+b_{n,1} & b_{n,2} & \cdots & b_{n,n} \\
+\end{pmatrix}
+=
+\begin{pmatrix}
+b_{1}^\top \\ b_{2}^\top \\ \vdots \\ b_{n}^\top
+\end{pmatrix}, \quad
+B \beta = 
+\begin{pmatrix}
+b_{1}^\top \beta \\ b_{2}^\top \beta \\ \vdots \\ b_{n}^\top \beta
+\end{pmatrix}
+= 
+\begin{pmatrix}
+\beta^\top b_{1} \\ \beta^\top b_{2} \\ \vdots \\ \beta^\top b_{n}
+\end{pmatrix}
+\end{align}
+$$
+</div>
+
+<div style="overflow: auto">
+$$
+\begin{align}
+AB\beta = 
+\begin{pmatrix}
+a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\
+a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\
+\vdots & \vdots & \ddots & \vdots \\
+a_{n,1} & a_{n,2} & \cdots & a_{n,n} \\
+\end{pmatrix}
+\begin{pmatrix}
+\beta^\top b_{1} \\ \beta^\top b_{2} \\ \vdots \\ \beta^\top b_{n}
+\end{pmatrix}
+=
+\begin{pmatrix}
+\sum_{i=1}^n a_{1,i} \beta^\top b_{i} \\ \sum_{i=1}^n a_{2,i} \beta^\top b_{i} \\ \vdots \\ \sum_{i=1}^n a_{n,i} \beta^\top b_{i}
+\end{pmatrix}
+\end{align}
+$$
+</div>
+また、行列積をかき下すと以下である。
+<div style="overflow: auto">
+$$
+\begin{align}
+AB &= 
+\begin{pmatrix}
+a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\
+a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\
+\vdots & \vdots & \ddots & \vdots \\
+a_{m,1} & a_{m,2} & \cdots & a_{m,n} \\
+\end{pmatrix}
+\begin{pmatrix}
+b_{1,1} & b_{1,2} & \cdots & b_{1,l} \\
+b_{2,1} & b_{2,2} & \cdots & b_{2,l} \\
+\vdots & \vdots & \ddots & \vdots \\
+b_{n,1} & b_{n,2} & \cdots & b_{n,l} \\
+\end{pmatrix}
+\\
+&=
+\begin{pmatrix}
+\sum_{i=1}^n a_{1,i} b_{i,1} & \sum_{i=1}^n a_{1,i} b_{i,2} & \cdots & \sum_{i=1}^n a_{1,i} b_{i,l} \\
+\sum_{i=1}^n a_{2,i} b_{i,1} & \sum_{i=1}^n a_{2,i} b_{i,2} & \cdots & \sum_{i=1}^n a_{2,i} b_{i,l} \\
+\vdots & \vdots & \ddots & \vdots \\
+\sum_{i=1}^n a_{m,i} b_{i,1} & \sum_{i=1}^n a_{m,i} b_{i,2} & \cdots & \sum_{i=1}^n a_{m,i} b_{i,l}
+\end{pmatrix}
+\end{align}
+$$
+</div>
+データ行列 $X$ の、転置とそれ自身との積は以下である。
+<div style="overflow: auto">
+$$
+\begin{align}
+X^\top X &= 
+\begin{pmatrix}
+x_{1,1} & x_{2,1} & \cdots & x_{n,1} \\
+x_{1,2} & x_{2,2} & \cdots & x_{n,2} \\
+\vdots & \vdots & \ddots & \vdots \\
+x_{1,m} & x_{2,m} & \cdots & x_{n,m} \\
+\end{pmatrix}
+\begin{pmatrix}
+x_{1,1} & x_{1,2} & \cdots & x_{1,m} \\
+x_{2,1} & x_{2,2} & \cdots & x_{2,m} \\
+\vdots & \vdots & \ddots & \vdots \\
+x_{n,1} & x_{n,2} & \cdots & x_{n,m} \\
+\end{pmatrix}
+\\
+&=
+\begin{pmatrix}
+\sum_{i=1}^n x_{i,1}^2 & \sum_{i=1}^n x_{i,1}x_{i,2} & \cdots & \sum_{i=1}^n x_{i,1}x_{i,m} \\
+\sum_{i=1}^n x_{i,1}x_{i,2} & \sum_{i=1}^n x_{i,2}^2 & \cdots & \sum_{i=1}^n x_{i,2}x_{i,m} \\
+\vdots & \vdots & \ddots & \vdots \\
+\sum_{i=1}^n x_{i,1}x_{i,m}^2 & \sum_{i=1}^n x_{i,2}x_{i,m} & \cdots & \sum_{i=1}^n x_{i,m}^2
+\end{pmatrix}
+\end{align}
+$$
+</div>
+</li>
+<li id="note2"><a href="https://cookie-box.hatenablog.com/entry/2022/05/05/235837">雑記： 線形回帰モデルが最小 2 乗推定できるにはデータ行列の各列が線形独立 - クッキーの日記</a>
+</li>
+</ol>
+
+
+</div>
+</main>
+</div>
+</body>
+</html>
