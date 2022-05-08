@@ -110,13 +110,12 @@ function create_index() {
         # 最終更新日付を取得する
         # git status コマンドの結果が空でないならファイルのタイムスタンプを,
         # git status コマンドの結果が空なら git log の最終更新日を参照する
-        # status=`git status -s "$filepath"`
-        # if [[ -n $status ]]; then
-        #     ts=`date "+%Y-%m-%d" -r "$filepath"`
-        # else
-        #     ts=`git log -1 --format="%ad" --date=short "$filepath"`
-        # fi
-        ts=`git log -1 --format="%ad" --date=short "$filepath"`
+        status=`git status -s "$filepath"`
+        if [[ -n $status ]]; then
+            ts=`date "+%Y-%m-%d" -r "$filepath"`
+        else
+            ts=`git log -1 --format="%ad" --date=short "$filepath"`
+        fi
 
         index_="<li><a href=\""${filepath}"\">"${title}"</a><span class=\"index-ts\">（最終更新日 "${ts}"）</span></li>"
         echo $index_
