@@ -26,6 +26,9 @@
 <ol class="ref">
     <li>Yifan Chen, Qi Zeng, Heng Ji, Yun Yang. Skyformer: Remodel Self-Attention with Gaussian Kernel and Nyström Method. In NeurIPS 2021. <a class="note" href="https://proceedings.neurips.cc/paper/2021/hash/10a7cdd970fe135cf4f7bb55c0e3b59f-Abstract.html">[Proceedings]</a></li>
     <li><a href="https://github.com/pkuzengqi/Skyformer">https://github.com/pkuzengqi/Skyformer</a>（2022年3月29日参照）.</li>
+    <ul>
+    <li>モデルの実装のリポジトリである。動くコードがあるのと共に、プレ処理済み Long Range Arena へのリンクがある。</li>
+    </ul>
     <li>福水 健次. カーネル法入門. 朝倉書店, 2010.</li>
     <ul>
     <li>15ページ（初版第7刷）に正定値カーネルの例がある。</li>
@@ -36,6 +39,34 @@
     </ul>
 </ol>
 <br/>
+
+
+<h2>アイデア</h2>
+<p>正定値カーネルでもなければ対称でもないソフトマックスによるセルフアテンションを、ガウシアンカーネルに置き換えて対称行列に拡張してカーネル法の土俵に持ち込んだ上で Nyström 近似を適用している。</p>
+
+
+<h3>近似誤差の議論</h3>
+<p>元のセルフアテンション行列とそれを近似したセルフアテンション行列の差の行列のスペクトルノルムが上から抑えられることを示している（Theorem 2）。</p>
+
+<h2>コード</h2>
+リポジトリ [2] をクローンして以下を実行することができる。
+<pre class="python">
+from models.model_LRA import ModelForSC, ModelForSCDual
+from config import Config
+
+model_config = Config["lra-text"]["model"]
+model_config["mixed_precision"] = True
+model_config["attn_type"] = "softmax"
+model = ModelForSC(model_config)
+print(model)
+
+import torch
+
+x = torch.tensor([[0, 1, 2, 3, 4]])
+label = torch.tensor([0])
+y = model(x, None, label)
+print(y)
+</pre>
 
 
 <div class="categories">
