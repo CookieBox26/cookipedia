@@ -164,6 +164,11 @@ div.proof {
 span.index-ts {
     font-size: 88%;
 }
+ul.ref-list>li {
+    margin: 0 0 0.5em;
+    list-style: none;
+    text-indent: -2em;
+}
 @media screen and (max-width: 640px) {
     body {
         /* URLだけ禁則処理解除するのが望ましいがさしあたり */
