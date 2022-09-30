@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Non-stationary Transformers: Rethinking the Stationarity in Time Series Forecasting - Cookipedia</title>
+<script src="../mathjax-config.js" defer></script>
+<script type="text/javascript" id="MathJax-script" defer
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<script src="../funcs.js"></script>
+</head>
+<body onload="init()">
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item long-title">
+<h1>Non-stationary Transformers: Rethinking the Stationarity in Time Series Forecasting</h1>
+<p><b>Non-stationary Transformers: Rethinking the Stationarity in Time Series Forecasting</b> [1] とは、Transformer を非定常な時系列の予測に対応させるべく、Transformer に下記 2 点の改修（"Series Stationarization", "De-stationary Attention"）をした研究である。<ol>
+<li>Transformer を適用させる前後に正規化・逆正規化を設置する（これによって、プレ処理で定常時系列にしておく必要がなくなり、また、スケールファクターを内部で活用できる）。</li>
+<li>正規化時のスケールファクターに応じてセルフアテンションの重みを調整する。</li>
+</ol>
+この提案モデル Non-stationary Transformers は、時系列予測のベンチマークデータ（Electricity, ETT, Exchange, ILI, Traffic, Weather 等）で、Transformer, Informer, Reformer などの既存モデルに対して MSE を大幅に（47～49%）削減した。</p>
+<p>なお、本研究は <a href="https://nips.cc/Conferences/2022/Schedule">NeurIPS 2022 accepted papers</a> にあるので NeurIPS 2022 で発表されるはずであるが、以下の記述は 2022年9月30日時点の arXiv 版に基づく。</p>
+<br/>
+
+<h2>参考文献</h2>
+<ol class="ref">
+    <li>Yong Liu, Haixu Wu, Jianmin Wang, Mingsheng Long. Non-stationary Transformers: Rethinking the Stationarity in Time Series Forecasting.<a class="note" href="https://arxiv.org/abs/2205.14415">[arXiv]</a></li>
+    <ul><li>Non-stationary Transformers の原論文である。</li></ul>
+    <li>Taesung Kim, Jinhee Kim, Yunwon Tae, Cheonbok Park, Jang-Ho Choi, Jaegul Choo. Reversible Instance Normalization for Accurate Time-Series Forecasting against Distribution Shift. in <i>ICLR 2022.</i><a class="note" href="https://openreview.net/forum?id=cGDAkQo1C0p">[OpenRevew.net]</a></li>
+    <ul><li>ICLR 2022 で発表された研究であり、Non-stationary Transformers と趣旨が同じで、非定常時系列に対処するためにやはりスケールファクターを差し引いて差し戻す枠組みである。かつ、スケールファクターを差し引いた後に訓練可能なスケールファクターでスケールした系列を学習することが特徴である（RevIN： 可逆な2段階正規化）。これはセルフアテンションに何かするものではないので、系列モデルであれば何にでも適用できる枠組みである。Non-stationary Transformers は RevIN + Transformer に対して優位性があることを示している。</li></ul>
+</ol>
+<br/>
+
+<h2>提案モデル Non-stationary Transformers</h2>
+<p>Transformer は遠く離れた過去の値への依存性も学習できる点が自然言語のみならず時系列の予測にも有利だが、データの分布の平均 and/or 分散が時間変化していくような非定常な時系列の予測には弱い<a class="note" href="#note1">[注釈1]</a>。このような問題に対処する常套手段として、プレ処理（今回は正規化）で予め系列を定常にしておくことが多いが、これは原系列の情報を損ね、本来は異なる状況を同一視してしまうことにつながる。そうなると、爆発的な変化などの予測が結局難しくなる。</p>
+<p>予測性能が損なわれないようにしたいが、非定常系列もよく予測したい。そこで、Transformer に下記 2 点の改修をする。
+
+<h3>Series Stationarization</h3>
+Transfomrer の適用前後に以下の処理を行うことで、Transformer を通る際は定常な系列にする。
+<ul>
+<li>Transformer の適用前に、$S \times C$ 次元の入力データを平均 0、分散 1 になるように変換する（$S$ は系列長、$C$ は変数の数）。 $x_i' = (x_i - \mu_x) / \sigma_x$</li>
+<li>Transformer の適用後に逆変換する。 $\hat{y}_i' = \sigma_x (y_i' - \mu_x)$</li>
+</ul>
+
+<h3>De-stationary Attention</h3>
+定常化された系列にセルフアテンションを計算することで Outlier 領域に外れることは回避できるが、これでは結局原系列の非定常性を予測に反映できない。そこで、セルフアテンションの重みを以下のように修正することで原系列に対するセルフアテンションを近似することを試みる。ただし、係数 $\tau = \exp \bigl( {\rm MLP}(\sigma_x, x) \bigr)$ とバイアス $\Delta = {\rm MLP}(\mu_x, x)$ はスケールファクターから学習する。
+<div style="overflow: auto">
+$$
+{\rm Attn}(Q', K', V', \tau, \Delta) = {\rm Softmax} \left( \frac{\tau Q' K' ^\top + 1 \Delta^\top }{\sqrt{d_k}} \right) V'
+$$
+</div>
+なお、上式の形の係数とバイアスで近似することの正当性は、原系列 $x$ をそのまま $Q, K$ に変換して計算したときのセルフアテンションを、定常化された $x'$ に対する $Q', K'$ の式でかくと (5) 式になることに起因する<a class="note" href="#note2">[注釈2]</a>。
+</p>
+<br/>
+
+<h2>検証実験</h2>
+<p>時系列予測のベンチマークデータである Electricity, ETT, Exchange, ILI, Traffic, Weather の予測タスクで既存モデルと比較している。Table 1 には各データが非定常であることを示すために各データの ADF 検定統計量が併記されている。Table 2, 3 には既存の時系列予測モデルとの比較がある。Table 4 には Transformer との比較があり、Series Stationarization + De-stationary Attention の有効性を実証的に示している。Table 5 では RevIN + Transformer に対する優位性も示すとともに、Series Stationarization だけではやはり不十分で、De-stationary Attention まで適用することで予測性能が向上することを示している。</p>
+<br/>
+
+<h2>注釈</h2>
+<ol class="note">
+    <li id="note1">自然言語などに比べ時系列は Outlier 領域に出て行きやすいということを含意していると思われる。系列モデルであっても CNN や RNN は Transformer と違って相対位置間の関連を学習するので値のレンジが外れたときにも相対位置間の関連がある程度保たれていれば予測が破壊されにくいのではないかと思われる。</li>
+    <li id="note2">(5) 式は近似的にではなく厳密に成り立っている式なので、律儀にこれを学習すると Outlier 問題から解放されないはずである。定常化された系列間の依存性を $Q', K'$ が学習し、非定常性の分の調整を $\tau, \Delta$ に切り離すことに意味がある。</li>
+</ol>
+<br/>
+
+
+<div class="categories">
+<a href="../categories/category_transformer.html">Transformer</a>
+</div>
+
+</div>
+</main>
+</div>
+</body>
+</html>

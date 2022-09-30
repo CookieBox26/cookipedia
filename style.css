@@ -1,9 +1,9 @@
 body {
-    color: #393939;
+    color: #303030;
     font-family: sans-serif;
     letter-spacing: 0.03em;
     margin: 0;
-    background: #f9f9f9;
+    background: #f3f3f3;
 }
 a, a:visited {
     color: #0068b7;
@@ -112,7 +112,7 @@ ol.note>li:before {
 }
 div.categories {
     border: 1px solid darkgray;
-    background: #f9f9f9;
+    background: #f3f3f3;
     margin: 0.5em 5px 0.5em 0;
     padding: 0.5em;
 }
@@ -127,7 +127,7 @@ pre {
 }
 pre.console {
     color: #f3f3f3;
-    background: #393939;
+    background: #303030;
 }
 pre span.keyword {
     color: #4753a2;
@@ -150,7 +150,7 @@ pre span.comment>span {
     font-weight: normal;
 }
 div.prop {
-    border: 2px solid #393939;
+    border: 2px solid #303030;
     padding: 1em;
     margin: 1em 5px 1em 0;
 }
@@ -159,7 +159,7 @@ div.prop>div.header {
     margin-bottom: 0.5em;
 }
 div.proof {
-    border: 2px dashed #393939;
+    border: 2px dashed #303030;
 }
 span.index-ts {
     font-size: 88%;
