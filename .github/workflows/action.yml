@@ -9,7 +9,9 @@ jobs:
       with:
         fetch-depth: 0
     - name: Create Index
-      run: ./create_index.sh
+      run: |
+        git update-index --chmod=+x ./create_index.sh
+        ./create_index.sh
     - name: Commit and Push
       run: |
         if ! git diff --exit-code --quiet
