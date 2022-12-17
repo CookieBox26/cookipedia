@@ -10,7 +10,6 @@ jobs:
         fetch-depth: 0
     - name: Create Index
       run: |
-        git update-index --chmod=+x ./create_index.sh
         ./create_index.sh
     - name: Commit and Push
       run: |
