@@ -77,6 +77,7 @@ function create_category_files() {
             index=${index}${index_}
             n_index=$((n_index+1))
         done
+
         # そのカテゴリに紐づく記事が収集されたときだけカテゴリページを生成する
         if [[ -n $index ]]; then
             category_title=${category_title//&/\\&}  # sed の置換先のアンパサンドをエスケープ
@@ -92,20 +93,35 @@ function create_category_files() {
 function create_index() {
     # 指定されたディレクトリ以下の全ページへのリンク列を生成する
     # 生成結果は $index に格納する
-    echo -e "\n===== "${1}"以下のページ一覧 ====="
-    n_index=0
-    index=""
+    # ページ数は $n_index に格納する
+    display_ts=$2  # 最終更新日を表示するか
+
+    # 先に各ファイルの記事タイトルを抽出する（記事タイトルでソートするため）
+    articles=""
     for filepath in $1; do
         # _template が付くファイルはスキップ
         if [[ $filepath =~ .*_template.html ]]; then
             continue
         fi
-
         # 記事タイトルを抽出する
         title=`grep "<h1>" "$filepath"`
         title=${title#*<h1>}
         title=${title%</h1>*}
+        title=${title// /　}  # 空白があると上手くいかないので一旦全角に
         title=${title//&/\\&}  # sed の置換先のアンパサンドをエスケープ
+        articles=${articles}${title}"="${filepath}" "
+    done
+    articles=($articles)
+    articles=($(for v in "${articles[@]}"; do echo "$v"; done | sort -u ))
+
+    # 改めて各記事のリンクを書き出す
+    echo -e "\n===== "${1}"以下のページ一覧 ====="
+    n_index=0
+    index=""
+    for article in "${articles[@]}"; do
+        title=${article%=*}
+        title=${title//　/ }
+        filepath=${article#*=}
 
         # 最終更新日付を取得する
         # git status コマンドの結果が空でないならファイルのタイムスタンプを,
@@ -116,10 +132,12 @@ function create_index() {
         else
             ts=`git log -1 --format="%ad" --date=short "$filepath"`
         fi
-
-        index_="<li><a href=\""${filepath}"\">"${title}"</a><span class=\"index-ts\">（最終更新日 "${ts}"）</span></li>"
+        index_="<a href=\""${filepath}"\">"${title}"</a>"
+        if [[ $display_ts = "1" ]]; then
+            index_=${index_}"<span class=\"index-ts\">（最終更新日 "${ts}"）</span>"
+        fi
         echo $index_
-        index=${index}${index_}
+        index=${index}"<li>"${index_}"</li>"
         n_index=$((n_index+1))
     done
 }
@@ -131,11 +149,11 @@ clear_category_files
 
 create_category_files
 
-create_index "categories/*.html"
+create_index "categories/*.html" 0
 sed -e "s@{{CATEGORY_LIST}}@$index@" index_template.html > index.html
 sed -i -e "s@{{NUM_OF_CATEGORIES}}@$n_index@" index.html
 
-create_index "articles/*.html"
+create_index "articles/*.html" 1
 sed -i -e "s@{{ARTICLE_LIST}}@$index@" index.html
 sed -i -e "s@{{NUM_OF_ARTICLES}}@$n_index@" index.html
 
