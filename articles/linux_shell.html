@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title></title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<script src="../funcs.js"></script>
+</head>
+<body onload="init()">
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>Linux シェル</h1>
+
+<h2>sort</h2>
+<pre class="console">
+#!/bin/sh -eu
+
+# 空白区切りで要素を収集
+fruits="banana"
+fruits=${fruits}" banana"
+fruits=${fruits}" apple"
+fruits=${fruits}" lemon"
+fruits=${fruits}" apple"
+echo ${fruits}
+
+# 配列へ
+fruits=(${fruits})
+echo ${fruits[@]}
+
+# 重複排除しソート
+fruits=($(for v in "${fruits[@]}"; do echo "$v"; done | sort -u ))
+echo ${fruits[@]}
+
+# ループ処理
+for fruit in "${fruits[@]}"; do
+    echo $fruit
+done
+</pre>
+<br/>
+
+</div>
+</main>
+</div>
+</body>
+</html>

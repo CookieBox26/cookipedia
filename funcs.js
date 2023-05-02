@@ -1,3 +1,8 @@
+function prepareTitle() {
+    var title = document.querySelectorAll('h1')[0].textContent;
+    document.title = title + ' - Cookipedia';
+}
+
 function createSidebar() {
     var gitHub = '<a href="https://github.com/CookieBox26/cookipedia/issues">Issues</a>';
     var message = '何かありましたら ' + gitHub + ' までご連絡ください';
@@ -68,6 +73,7 @@ function syntaxHighlight() {
 }
 
 function init() {
+    prepareTitle();
     createSidebar();
     syntaxHighlight();
 }
