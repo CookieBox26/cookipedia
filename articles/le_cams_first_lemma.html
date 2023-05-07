@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title></title>
+<script src="../mathjax-config.js" defer></script>
+<script type="text/javascript" id="MathJax-script" defer
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<script src="../funcs.js"></script>
+</head>
+<body onload="init()">
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>Le Cam の第一補題</h1>
+Le Cam の第一補題とは、以下の補題である。
+
+<div class="prop">
+<div class="header">補題 〈 Le Cam の第一補題 〉</div>
+$P_n, \, Q_n$ を可測空間列 $(\Omega_n, \, \mathcal{A}_n)$ 上の確率測度列とする。このとき、以下は同値である。
+<ol class="none">
+  <li>(1) $Q_n \triangleleft P_n$</li>
+  <li>(2) ある部分列に沿って $dP_n / dQ_n \overset{Q_n}{\rightsquigarrow} U$ ならば $P(U > 0) = 1$ である。</li>
+  <li>(3) ある部分列に沿って $dQ_n / dP_n \overset{P_n}{\rightsquigarrow} V$ ならば $EV = 1$ である。</li>
+  <li>(4) 任意の統計量 $T_n: \Omega_n \mapsto \mathbb{R}^k$ について、$T_n \overset{P_n}{\to} 0$ ならば $T_n \overset{Q_n}{\to} 0$ である。</li>
+</ol>
+</div>
+
+<h2>参考文献</h2>
+<ol class="ref">
+  <li>A. W. van der Vaart. Asymptotic Statistics. Cambridge University Press, 2000.</li>
+</ol>
+
+</div>
+</main>
+</div>
+</body>
+</html>

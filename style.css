@@ -19,6 +19,9 @@ a.note {
 a.break {
     word-break: break-all;
 }
+a.asis::after {
+    content: attr(href);
+}
 span.break {
     word-break: break-all;
 }
@@ -83,7 +86,7 @@ p.indent {
 }
 ol.ref {
     counter-reset: li;
-    padding-left: 2em;
+    padding-left: 2.25em;
 }
 ol.ref>li {
     position: relative;
@@ -91,9 +94,35 @@ ol.ref>li {
 }
 ol.ref>li:before{
     position: absolute;
-    left: -2em;
+    left: -2.25em;
     counter-increment: li;
     content: '['counter(li)']';
+}
+ol.parenthesis {
+    counter-reset: li;
+    padding-left: 2.25em;
+}
+ol.parenthesis>li {
+    position: relative;
+    list-style: none;
+}
+ol.parenthesis>li:before{
+    position: absolute;
+    left: -2.25em;
+    counter-increment: li;
+    content: '('counter(li)')';
+}
+ol.none {
+    counter-reset: li;
+    padding-left: 0;
+}
+ol.none>li {
+    position: relative;
+    list-style: none;
+}
+ol.none>li:before{
+    position: absolute;
+    content: '';
 }
 ol.note {
     counter-reset: li;
@@ -150,16 +179,18 @@ pre span.comment>span {
     font-weight: normal;
 }
 div.prop {
-    border: 2px solid #303030;
-    padding: 1em;
-    margin: 1em 5px 1em 0;
+    border: 1px dotted #303030;
+    padding: 1.25em 1em 1em 1em;
+    margin: 1.25em 0 1.25em 0;
+    position: relative;
 }
 div.prop>div.header {
-    font-weight: bold;
     margin-bottom: 0.5em;
-}
-div.proof {
-    border: 2px dashed #303030;
+    position: absolute;
+    top: -0.75em;
+    background-color: #ffffff;
+    padding: 0 0.5em;
+    font-weight: bold;
 }
 span.index-ts {
     font-size: 88%;
