@@ -20,10 +20,15 @@
 
 
 function collect_categories() {
-    # 全記事からカテゴリ一覧を収集する
+    # 全記事から現在存在するカテゴリを収集する
     # 収集結果は $categories に配列として格納する
+    # category_asymptotic_theory.html=漸近理論 category_matrix.html=行列 ...
     categories=""
     for filepath in articles/*.html; do
+        # _template が付くファイルはスキップ
+        if [[ $filepath =~ .*_template.html ]]; then
+            continue
+        fi
         category=`grep "/categories/category_" "$filepath"`
         if [[ -z $category ]]; then
             continue
@@ -57,7 +62,8 @@ function clear_category_files() {
 
 
 function create_category_files() {
-    # 収集したカテゴリ一覧に基づきカテゴリページを再生成する
+    # 収集したカテゴリのそれぞれに対してそのカテゴリに属する記事を再度集めて
+    # カテゴリページを再生成する
     for category in "${categories[@]}"; do
         category_title=${category#*=}
         category_url=${category%=*}
@@ -78,7 +84,7 @@ function create_category_files() {
             n_index=$((n_index+1))
         done
 
-        # そのカテゴリに紐づく記事が収集されたときだけカテゴリページを生成する
+        # そのカテゴリに属する記事が収集されたときだけカテゴリページを生成する
         if [[ -n $index ]]; then
             category_title=${category_title//&/\\&}  # sed の置換先のアンパサンドをエスケープ
             sed -e "s@{{CATEGORY_TITLE}}@$category_title@" categories/category_template.html > ${category_url}
@@ -142,19 +148,29 @@ function create_index() {
     done
 }
 
-
+# 全記事から現在存在するカテゴリを収集する
+# 収集結果は $categories に配列として格納する
+# category_asymptotic_theory.html=漸近理論 category_matrix.html=行列 ...
 collect_categories
 
+# カテゴリページを一旦全削除する
 clear_category_files
 
+# 収集したカテゴリのそれぞれに対してそのカテゴリに属する記事を再度集めて
+# カテゴリページを再生成する
 create_category_files
 
+# categories/ 以下のページへのリンク列を生成する
 create_index "categories/*.html" 0
+# テンプレートに注入
 sed -e "s@{{CATEGORY_LIST}}@$index@" index_template.html > index.html
 sed -i -e "s@{{NUM_OF_CATEGORIES}}@$n_index@" index.html
 
+# articles/ 以下のページへのリンク列を生成する
 create_index "articles/*.html" 1
+# テンプレートに注入
 sed -i -e "s@{{ARTICLE_LIST}}@$index@" index.html
 sed -i -e "s@{{NUM_OF_ARTICLES}}@$n_index@" index.html
 
+# ブラウザ上の表示に影響ないがソースファイルで改行しておく
 sed -i -e "s@</li>@</li>\n@g" index.html
