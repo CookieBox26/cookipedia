@@ -16,6 +16,7 @@
 <h1>Linux シェル</h1>
 
 <h2>sort</h2>
+
 <pre class="console">
 #!/bin/sh -eu
 
@@ -40,7 +41,25 @@ for fruit in "${fruits[@]}"; do
     echo $fruit
 done
 </pre>
-<br/>
+
+<pre class="console">
+#!/bin/bash
+
+# 以下のメンバーを年齢降順にソート
+members="Taro=engineer@35 Jiro=dentist@30 Saburo=lawyer@25 Shiro=chef@40"
+members=(${members})
+members=($(for v in "${members[@]}"; do echo "$v"; done | sort -u -n -r -k 2 -t @ ))
+echo ${#members[@]}
+
+n=3
+for member in "${members[@]:0:$n}"; do  # 最初の3人だけ表示
+    name=${member%=*}
+    occupation=${member#*=}
+    occupation=${occupation%@*}
+    age=${member#*@}
+    echo $name $occupation $age
+done
+</pre>
 
 </div>
 </main>
