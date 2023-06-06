@@ -105,6 +105,8 @@ function create_index() {
     # 生成結果は $index に格納する
     # ページ数は $n_index に格納する
     display_ts=$2  # 最終更新日を表示するか
+    sort_ts=$3  # 更新日降順ソートにするか
+    n_articles=$4  # 何件まで表示するか (0なら全て)
 
     # 先に各ファイルの記事タイトルを抽出する（記事タイトルでソートするため）
     articles=""
@@ -113,25 +115,13 @@ function create_index() {
         if [[ $filepath =~ .*_template.html ]]; then
             continue
         fi
+
         # 記事タイトルを抽出する
         title=`grep "<h1>" "$filepath"`
         title=${title#*<h1>}
         title=${title%</h1>*}
         title=${title// /　}  # 空白があると上手くいかないので一旦全角に
         title=${title//&/\\&}  # sed の置換先のアンパサンドをエスケープ
-        articles=${articles}${title}"="${filepath}" "
-    done
-    articles=($articles)
-    articles=($(for v in "${articles[@]}"; do echo "$v"; done | sort -u ))
-
-    # 改めて各記事のリンクを書き出す
-    echo -e "\n===== "${1}"以下のページ一覧 ====="
-    n_index=0
-    index=""
-    for article in "${articles[@]}"; do
-        title=${article%=*}
-        title=${title//　/ }
-        filepath=${article#*=}
 
         # 最終更新日付を取得する
         # git status コマンドの結果が空でないならファイルのタイムスタンプを,
@@ -142,6 +132,30 @@ function create_index() {
         else
             ts=`git log -1 --format="%ad" --date=short "$filepath"`
         fi
+        
+        articles=${articles}${title}"="${filepath}"@"${ts}" "
+    done
+    articles=($articles)
+    if [[ $sort_ts = "1" ]]; then
+        articles=($(for v in "${articles[@]}"; do echo "$v"; done | sort -r -k 2 -t @ ))
+    else
+        articles=($(for v in "${articles[@]}"; do echo "$v"; done | sort ))
+    fi
+
+    # 改めて各記事のリンクを書き出す
+    echo -e "\n===== "${1}"以下のページ一覧 ====="
+    n_index=0
+    index=""
+    if [[ $n_articles = "0" ]]; then
+        n_articles=${#articles[@]}
+    fi
+    for article in "${articles[@]:0:$n_articles}"; do
+        title=${article%=*}
+        title=${title//　/ }
+        filepath=${article#*=}
+        filepath=${filepath%@*}
+        ts=${article#*@}
+
         index_="<a href=\""${filepath}"\">"${title}"</a>"
         if [[ $display_ts = "1" ]]; then
             index_=${index_}"<span class=\"index-ts\">（最終更新日 "${ts}"）</span>"
@@ -165,16 +179,20 @@ clear_category_files
 create_category_files
 
 # categories/ 以下のページへのリンク列を生成する
-create_index "categories/*.html" 0
+create_index "categories/*.html" 0 0 0
 # テンプレートに注入
 sed -e "s@{{CATEGORY_LIST}}@$index@" index_template.html > index.html
 sed -i -e "s@{{NUM_OF_CATEGORIES}}@$n_index@" index.html
 
 # articles/ 以下のページへのリンク列を生成する
-create_index "articles/*.html" 1
+create_index "articles/*.html" 1 0 0
 # テンプレートに注入
 sed -i -e "s@{{ARTICLE_LIST}}@$index@" index.html
 sed -i -e "s@{{NUM_OF_ARTICLES}}@$n_index@" index.html
+
+# 更新日が新しい記事
+create_index "articles/*.html" 1 1 5
+sed -i -e "s@{{RECENT_ARTICLE_LIST}}@$index@" index.html
 
 # ブラウザ上の表示に影響ないがソースファイルで改行しておく
 sed -i -e "s@</li>@</li>\n@g" index.html
