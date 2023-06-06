@@ -70,6 +70,10 @@ function create_category_files() {
         n_index=0
         index=""
         for filepath in articles/*.html; do
+            # _template が付くファイルはスキップ
+            if [[ $filepath =~ .*_template.html ]]; then
+                continue
+            fi
             category_=`grep $category_url "$filepath"`
             if [[ -z $category_ ]]; then
                 continue
