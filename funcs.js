@@ -56,6 +56,13 @@ function syntaxHighlight() {
             re.push([/(<br\/>|\s)(abs|all|any|dict|enumerate|len|print|type)(\()/g,
                      '$1<span__builtin__>$2</span>$3']);
         }
+        if (pres[i].classList.contains('html')) {
+            re.push([/(&lt;!--)(.*?)(--&gt;)/g, '<span__comment__>$1$2$3</span>']);
+            re.push([/([^"])(")([^"]*)(")([^"])/g, '$1<span__literal__>$2$3$4</span>$5']);
+            re.push([/([^'])(')([^']*)(')([^'])/g, '$1<span__literal__>$2$3$4</span>$5']);
+            re.push([/(&lt;|\/)(html|head|body|style|div|br)(&gt;|\s|\/)/g,
+                     '$1<span__keyword__>$2</span>$3']);
+        }
         if (re.length == 0) {
             continue;
         }
