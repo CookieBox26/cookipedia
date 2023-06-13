@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title></title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<script src="../funcs.js"></script>
+</head>
+<body onload="init()">
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>CSS フレックスボックスレイアウト</h1>
+
+<pre class="html">
+&lt;html&gt;
+&lt;head&gt;
+&lt;style type="text/css"&gt;
+&lt;!--
+body {
+  margin: 0;
+  background: lightgray;
+}
+div.container {  /* フレックスコンテナ */
+  width: 500px;
+  display: flex;
+  align-items: flex-start;  /* 規定値の stretch から変更し高さを揃えないように */
+  background: lightgreen;
+}
+div.sidebar {  /* フレックスアイテム（サイドバー）*/
+  box-sizing: border-box;  /* 指定サイズ内でパディングを取るよう指示 */
+  flex-basis: 100px;
+  top: 0;
+  position: sticky;
+  padding: 20px;
+  background: mistyrose;
+}
+main.main {  /* フレックスアイテム（メイン）*/
+  flex-basis: 400px;
+  background: powderblue;
+}
+main.main&gt;div.item {
+  margin: 15px 0;
+  padding: 20px;
+  background: white;
+}
+--&gt;
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class="container"&gt;
+  &lt;div class="sidebar"&gt;
+    メインページに戻る
+  &lt;/div&gt;
+  &lt;main class="main"&gt;
+    &lt;div class="item"&gt;
+      ほげほげ&lt;br/&gt;ふがふが&lt;br/&gt;ほげほげ&lt;br/&gt;ふがふが&lt;br/&gt;
+      ほげほげ&lt;br/&gt;ふがふが&lt;br/&gt;ほげほげ&lt;br/&gt;ふがふが&lt;br/&gt;
+      ほげほげ&lt;br/&gt;ふがふが&lt;br/&gt;ほげほげ&lt;br/&gt;ふがふが&lt;br/&gt;
+      ほげほげ&lt;br/&gt;ふがふが&lt;br/&gt;ほげほげ&lt;br/&gt;ふがふが&lt;br/&gt;
+    &lt;/div&gt;
+  &lt;/main&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+</div>
+</main>
+</div>
+</body>
+</html>
