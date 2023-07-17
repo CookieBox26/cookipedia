@@ -120,6 +120,10 @@ function create_index() {
         title=`grep "<h1>" "$filepath"`
         title=${title#*<h1>}
         title=${title%</h1>*}
+        if [ -z "$title" ]; then
+            title=`grep "^# " "$filepath"`
+            title=${title#*\# }
+        fi
         title=${title// /　}  # 空白があると上手くいかないので一旦全角に
         title=${title//&/\\&}  # sed の置換先のアンパサンドをエスケープ
 
