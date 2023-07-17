@@ -185,18 +185,28 @@ create_category_files
 # categories/ 以下のページへのリンク列を生成する
 create_index "categories/*.html" 0 0 0
 # テンプレートに注入
-sed -e "s@{{CATEGORY_LIST}}@$index@" index_template.html > index.html
-sed -i -e "s@{{NUM_OF_CATEGORIES}}@$n_index@" index.html
+sed -e "s@{{CATEGORY_LIST}}@$index@" index_template.html > index_.html
+sed -i -e "s@{{NUM_OF_CATEGORIES}}@$n_index@" index_.html
 
 # articles/ 以下のページへのリンク列を生成する
 create_index "articles/*.html" 1 0 0
 # テンプレートに注入
-sed -i -e "s@{{ARTICLE_LIST}}@$index@" index.html
-sed -i -e "s@{{NUM_OF_ARTICLES}}@$n_index@" index.html
+sed -i -e "s@{{ARTICLE_LIST}}@$index@" index_.html
+sed -i -e "s@{{NUM_OF_ARTICLES}}@$n_index@" index_.html
 
 # 更新日が新しい記事
 create_index "articles/*.html" 1 1 5
-sed -i -e "s@{{RECENT_ARTICLE_LIST}}@$index@" index.html
+sed -i -e "s@{{RECENT_ARTICLE_LIST}}@$index@" index_.html
 
 # ブラウザ上の表示に影響ないがソースファイルで改行しておく
-sed -i -e "s@</li>@</li>\n@g" index.html
+sed -i -e "s@</li>@</li>\n@g" index_.html
+
+# 既存の index.html と行を並べ替えても不一致だったら上書き
+diff <(sort index.html) <(sort index_.html) >/dev/null
+if [ $? -eq 0 ]; then
+    echo -e "\n行を入れ替えると差分がないので上書きしません"
+    rm index_.html
+else
+    echo -e "\n行を入れ替えても差分があるので上書きします"
+    mv index_.html index.html
+fi
