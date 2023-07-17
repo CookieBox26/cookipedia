@@ -143,7 +143,7 @@ function create_index() {
     if [[ $sort_ts = "1" ]]; then
         articles=($(for v in "${articles[@]}"; do echo "$v"; done | sort -r -k 2 -t @ ))
     else
-        articles=($(for v in "${articles[@]}"; do echo "$v"; done | sort ))
+        articles=($(for v in "${articles[@]}"; do echo "$v"; done | sort -f ))
     fi
 
     # 改めて各記事のリンクを書き出す
