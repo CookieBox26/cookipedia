@@ -33,6 +33,9 @@ function syntaxHighlight() {
     for (let i=0; i < pres.length; ++i) {
         let re = [];
         if (pres[i].classList.contains('python')) {
+            // マジックコマンド (が2行続いてもハイライトするために2回置換する苦肉の策)
+            re.push([/(<br\/>)(%[_a-z0-9\s]*)(<br\/>)/g, '$1<span__builtin__>$2</span>$3']);
+            re.push([/(<br\/>)(%[_a-z0-9\s]*)(<br\/>)/g, '$1<span__builtin__>$2</span>$3']);
             // 文字列リテラル
             re.push([/([^"])(")([^"]*)(")([^"])/g, '$1<span__literal__>$2$3$4</span>$5']);
             re.push([/([^'])(')([^']*)(')([^'])/g, '$1<span__literal__>$2$3$4</span>$5']);
@@ -40,37 +43,28 @@ function syntaxHighlight() {
             re.push([/(#.*?)(<br\/>)/g, '<span__comment__>$1</span>$2']);
             re.push([/("""|''')(.*?)("""|''')/g, '<span__comment__>$1$2$3</span>']);
             // 数値
-            re.push([/(<br\/>|\s|\[|\(|\{|=)([+-]?[0-9]+[\.]?[0-9]?(?:[eE][+-]?[0-9]+)?)/g,
-                     '$1<span__numeric__>$2</span>']);
+            re.push([/(<br\/>|\s|\[|\(|\{|=)([+-]?[0-9]+[\.]?[0-9]?(?:[eE][+-]?[0-9]+)?)/g, '$1<span__numeric__>$2</span>']);
             re.push([/(True|False|None)/g, '<span__numeric__>$1</span>']);
             // キーワード
-            re.push([/(<br\/>|\s)(and|as|assert|async|await|break|class)(<br\/>|\s)/g,
-                     '$1<span__keyword__>$2</span>$3']);
-            re.push([/(<br\/>|\s)(continue|def|del|elif|else|except|finally|for)(<br\/>|\s)/g,
-                     '$1<span__keyword__>$2</span>$3']);
-            re.push([/(<br\/>|\s)(from|global|if|import|in|is|lambda|nonlocal|not)(<br\/>|\s)/g,
-                     '$1<span__keyword__>$2</span>$3']);
-            re.push([/(<br\/>|\s)(or|pass|raise|return|try|while|with|yield)(<br\/>|\s)/g,
-                     '$1<span__keyword__>$2</span>$3']);
+            re.push([/(<br\/>|\s)(and|as|assert|async|await|break|class)(<br\/>|\s)/g, '$1<span__keyword__>$2</span>$3']);
+            re.push([/(<br\/>|\s)(continue|def|del|elif|else|except|finally|for)(<br\/>|\s)/g, '$1<span__keyword__>$2</span>$3']);
+            re.push([/(<br\/>|\s)(from|global|if|import|in|is|lambda|nonlocal|not)(<br\/>|\s)/g, '$1<span__keyword__>$2</span>$3']);
+            re.push([/(<br\/>|\s)(or|pass|raise|return|try|while|with|yield)(<br\/>|\s)/g, '$1<span__keyword__>$2</span>$3']);
             // 組み込み関数
-            re.push([/(<br\/>|\s)(abs|all|any|dict|enumerate|len|print|type|int|float)(\()/g,
-                     '$1<span__builtin__>$2</span>$3']);
+            re.push([/(<br\/>|\s)(abs|all|any|dict|enumerate|len|print|type|int|float)(\()/g, '$1<span__builtin__>$2</span>$3']);
         }
         if (pres[i].classList.contains('html')) {
             re.push([/(&lt;!--)(.*?)(--&gt;)/g, '<span__comment__>$1$2$3</span>']);
             re.push([/([^"])(")([^"]*)(")([^"])/g, '$1<span__literal__>$2$3$4</span>$5']);
             re.push([/([^'])(')([^']*)(')([^'])/g, '$1<span__literal__>$2$3$4</span>$5']);
-            re.push([/(&lt;|\/)(html|head|body|style|div|br)(&gt;|\s|\/)/g,
-                     '$1<span__keyword__>$2</span>$3']);
+            re.push([/(&lt;|\/)(html|head|body|style|div|br)(&gt;|\s|\/)/g, '$1<span__keyword__>$2</span>$3']);
         }
         if (pres[i].classList.contains('sh')) {
             re.push([/([^"])(")([^"]*)(")([^"])/g, '$1<span__literal__>$2$3$4</span>$5']);
             re.push([/([^'])(')([^']*)(')([^'])/g, '$1<span__literal__>$2$3$4</span>$5']);
             re.push([/(<br\/>|\s)(#.*?)(<br\/>)/g, '$1<span__comment__>$2</span>$3']);
-            re.push([/(<br\/>|\s)(if|then|else|elif|fi|case|esac|for|select)(<br\/>|\s)/g,
-                     '$1<span__keyword__>$2</span>$3']);
-            re.push([/(<br\/>|\s)(while|until|do|done|in|function|time)(<br\/>|\s)/g,
-                     '$1<span__keyword__>$2</span>$3']);
+            re.push([/(<br\/>|\s)(if|then|else|elif|fi|case|esac|for|select)(<br\/>|\s)/g, '$1<span__keyword__>$2</span>$3']);
+            re.push([/(<br\/>|\s)(while|until|do|done|in|function|time)(<br\/>|\s)/g, '$1<span__keyword__>$2</span>$3']);
             re.push([/(\$\{)([^\}]*)(\})/g, '<span__builtin__>$1$2$3</span>']);
             re.push([/(\$)([^\s\{\(]*)(\s|<br\/>)/g, '<span__builtin__>$1$2$3</span>']);
             re.push([/(\$)(\()/g, '<span__builtin__>$1</span>$2']);
