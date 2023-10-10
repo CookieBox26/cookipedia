@@ -42,49 +42,121 @@ indices=tensor([3, 4, 0]))
 
 <h2>関数・クラス</h2>
 <h3>torch.utils.data.DataLoader</h3>
-データのロード順を制御するには、<pre class="inline">batch_sampler</pre>引数に、各バッチでロードすべきインデックスのリストを返すイテラブルを指定すればよい。
+<pre class="inline">DataLoader</pre>は以下のように使用できる。明示的に<pre class="python inline">suffle=True</pre>としない限りは単に前から順にバッチサイズずつバッチを切り出す。<pre class="python inline">suffle=True</pre>とした場合はエポックごとにリシャッフルされる。
 <pre class="python">
 from torch.utils.data import Dataset, DataLoader
 import pandas as pd
 
 class MyDataset(Dataset):
     def __init__(self, df):
-        self.df = df
+        self.data = df.loc[:, ['x0', 'x1']]
+        self.y = df['y']
+        self.n_sample = len(df)
     def __len__(self):
-        return len(self.df)
-    def __getitem__(self, batch_idx):
-        return self.df.loc[batch_idx, :].values
+        return self.n_sample
+    def __getitem__(self, idx):
+        return self.data.loc[idx, :].values, self.y[idx]
 
 df = pd.DataFrame({
-    'a': [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
-    'b': [1, 11, 21, 31, 41, 51, 61, 71, 81, 91, 101],
-    'c': [2, 12, 22, 32, 42, 52, 62, 72, 82, 92, 102],
+    'x0': [ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9],
+    'x1': [10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
+    'y' : [20, 21, 22, 23, 24, 25, 26, 27, 28, 29],
 })
 dataset = MyDataset(df)
-dataloader = DataLoader(
-    dataset=dataset,
-    batch_sampler=[[0, 1, 4, 5], [2, 3, 6, 7], [8, 9, 10]],
-)
 
-for i_batch, data in enumerate(dataloader):
-    print(f'----- batch {i_batch} -----')
-    print(data)
+batch_size = 4
+dataloader = DataLoader(dataset=dataset, batch_size=batch_size)
+for i_epoch in range(2):
+    print(f'===== epoch {i_epoch} =====')
+    for i_batch, (data, y) in enumerate(dataloader):
+        print(f'----- batch {i_batch} -----')
+        print(data)
+        print(y)
 </pre>
 <pre class="console">
+===== epoch 0 =====
 ----- batch 0 -----
-tensor([[ 0,  1,  2],
-        [10, 11, 12],
-        [40, 41, 42],
-        [50, 51, 52]])
+tensor([[ 0, 10],
+        [ 1, 11],
+        [ 2, 12],
+        [ 3, 13]])
+tensor([20, 21, 22, 23])
 ----- batch 1 -----
-tensor([[20, 21, 22],
-        [30, 31, 32],
-        [60, 61, 62],
-        [70, 71, 72]])
+tensor([[ 4, 14],
+        [ 5, 15],
+        [ 6, 16],
+        [ 7, 17]])
+tensor([24, 25, 26, 27])
 ----- batch 2 -----
-tensor([[ 80,  81,  82],
-        [ 90,  91,  92],
-        [100, 101, 102]])
+tensor([[ 8, 18],
+        [ 9, 19]])
+tensor([28, 29])
+===== epoch 1 =====
+----- batch 0 -----
+tensor([[ 0, 10],
+        [ 1, 11],
+        [ 2, 12],
+        [ 3, 13]])
+tensor([20, 21, 22, 23])
+----- batch 1 -----
+tensor([[ 4, 14],
+        [ 5, 15],
+        [ 6, 16],
+        [ 7, 17]])
+tensor([24, 25, 26, 27])
+----- batch 2 -----
+tensor([[ 8, 18],
+        [ 9, 19]])
+tensor([28, 29])
+</pre>
+バッチの切り出し方を制御するには、<pre class="inline">batch_sampler</pre>引数に各バッチのインデックスのリストを返すイテラブルなオブジェクトを指定すればよい。例えば以下のようにリストで渡してもよい。ただし、これだとすべてのエポックでバッチの括り方もバッチの順序も固定になる。
+<pre class="python">
+dataloader = DataLoader(
+    dataset=dataset,
+    batch_sampler=[[0, 1, 4, 8], [2, 3, 6, 7], [5, 9]],
+)
+for i_epoch in range(2):
+    print(f'===== epoch {i_epoch} =====')
+    for i_batch, (data, y) in enumerate(dataloader):
+        print(f'----- batch {i_batch} -----')
+        print(data)
+        print(y)
+</pre>
+<pre class="console">
+===== epoch 0 =====
+----- batch 0 -----
+tensor([[ 0, 10],
+        [ 1, 11],
+        [ 4, 14],
+        [ 8, 18]])
+tensor([20, 21, 24, 28])
+----- batch 1 -----
+tensor([[ 2, 12],
+        [ 3, 13],
+        [ 6, 16],
+        [ 7, 17]])
+tensor([22, 23, 26, 27])
+----- batch 2 -----
+tensor([[ 5, 15],
+        [ 9, 19]])
+tensor([25, 29])
+===== epoch 1 =====
+----- batch 0 -----
+tensor([[ 0, 10],
+        [ 1, 11],
+        [ 4, 14],
+        [ 8, 18]])
+tensor([20, 21, 24, 28])
+----- batch 1 -----
+tensor([[ 2, 12],
+        [ 3, 13],
+        [ 6, 16],
+        [ 7, 17]])
+tensor([22, 23, 26, 27])
+----- batch 2 -----
+tensor([[ 5, 15],
+        [ 9, 19]])
+tensor([25, 29])
 </pre>
 
 </div>
