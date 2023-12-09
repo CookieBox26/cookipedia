@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title></title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<script src="../funcs.js"></script>
+</head>
+<body onload="init()">
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>pandas</h1>
+
+<h2>Snippets</h2>
+
+<h3>雑然データにする</h3>
+<pre class="python">
+import numpy as np
+import pandas as pd
+
+df_s = pd.DataFrame()
+df_s['a'] = [0.9, 0.8, 0.7]
+df_s['b'] = ['qqq', 'www', 'eee']
+df_s['c'] = ['aaa', 'sss', 'ddd']
+df_s['d'] = [10, 20, 30]
+print(df_s)
+
+n = 3
+target_cols = ['a', 'b', 'c']
+cols_l = [f'{col}_{i + 1}' for i in range(n) for col in target_cols]
+df_l = pd.DataFrame(columns=cols_l)
+df_l.loc[0] = np.concatenate([df_s.loc[i, target_cols].values for i in range(n)])
+print(df_l)
+</pre>
+<pre class="console">
+     a    b    c   d
+0  0.9  qqq  aaa  10
+1  0.8  www  sss  20
+2  0.7  eee  ddd  30
+   a_1  b_1  c_1  a_2  b_2  c_2  a_3  b_3  c_3
+0  0.9  qqq  aaa  0.8  www  sss  0.7  eee  ddd
+</pre>
+
+
+</div>
+</main>
+</div>
+</body>
+</html>

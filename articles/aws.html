@@ -1,0 +1,117 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title></title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<script src="../funcs.js"></script>
+</head>
+<body onload="init()">
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>AWS</h1>
+
+<h2>Tips</h2>
+
+(注意) 以下の記述は VPC や VPC エンドポイントなどをすべて自分で作成していくような記述である。個人アカウントでない場合は運用ルールにしたがい作成済みのものを使用するなどする。
+
+
+<h3>&#x2b50; VPC を作成する</h3>
+
+
+<ul>
+  <li>VPC ダッシュボードに移動し「VPC を作成」をクリックする。特に目的がなければ以下のように設定すれば、IP アドレス 32 個の VPC が作成され、その前半がパブリックサブネット、後半がプライベートサブネットになる (インスタンスは原則プライベートサブネットに作成する)。</li>
+  <ul>
+    <li>作成するリソース： VPC など</li>
+    <li>名前タグ： (好きな名前)</li>
+    <li>IPv4 CIDR： 10.0.0.0/27</li>
+    <li>パブリックサブネットの数 ： 1</li>
+    <li>プライベートサブネットの数 ： 1</li>
+    <li>NAT ゲートウェイ ： 1 AZ 内 / なし</li>
+    <ul><li>NAT ゲートウェイは、プライベートサブネットとインターネット間の直接通信を防ぎ、通信を一元管理するために作成すべきである。ただ、設定画面にあるように NAT ゲートウェイは有料で、何もしていなくても時間課金 ($0.062/h@東京) + データを通信すれば従量課金  ($0.062/GB@東京) があり [1]、インスタンスにインターネットから巨大データを取得するときなどは注意する必要がある。</li>
+    <li>ここで NAT ゲートウェイを作成せずにプライベートサブネット内のインスタンスからのインターネットアクセスを可能にするには、後からプライベートサブネットのルートテーブルに「送信先： 0.0.0.0/0」「ターゲット： インターネットゲートウェイ」を追加する。但しこの方法だと、</li><ul><li>もはやプライベートサブネットではなくなりセキュリティリスクがある。</li><li>この方式では基本的にインスタンスにパブリック IP アドレスを割り当てないとインスタンスからインターネットへのアウトバウンド通信も上手くいかない。2023年12月現在では、インスタンスへのパブリック IP の自動割り当てや、稼働中インスタンスへの Elastic IP の割り当ては無料だが、2024年2月からこれも有料になる (ただ $0.005/h である)。</li></ul>
+    </ul>
+  </ul>
+</ul>
+<h4 style="margin-top: 0; margin-bottom: 0;">参考文献</h4>
+<ol class="ref">
+  <li>料金 - Amazon VPC | AWS. <a class="asis" href="https://aws.amazon.com/jp/vpc/pricing/"></a> (2023年12月9日参照).</li>
+  <li>新着情報 – パブリック IPv4 アドレスの利用に対する新しい料金体系を発表 / Amazon VPC IP Address Manager が Public IP Insights の提供を開始 | Amazon Web Services ブログ. <a class="asis" href="https://aws.amazon.com/jp/blogs/news/new-aws-public-ipv4-address-charge-public-ip-insights/"></a> (2023年12月9日参照).</li>
+</ol><br/>
+
+
+<h3>&#x2b50; インスタンスにセッションマネージャー経由で接続する</h3>
+インスタンスを適当に作成した後に以下の設定をすればセッションマネージャー接続のボタンが押せるようになるはずである (設定の反映には多少タイムラグがある)。
+  <ul>
+    <li>インスタンスの IAM ロールに、「AmazonEC2RoleforSSM」を含む IAM インスタンスプロフィールを割り当てる (まだ IAM インスタンスプロフィールがないなら、誘導にしたがってクイックセットアップすればこのロールを含めるようにできるはずである)。</li>
+    <li>VPC ダッシュボードのサイドバーから「セキュリティグループ」を選択、「セキュリティグループを作成」を押下し、インバウンドルールに、「タイプ：HTTPS」「ソース：インスタンスのセキュリティグループ」を追加する。</li>
+    <li>VPC ダッシュボードのサイドバーから「エンドポイント」を選択し、画面右上の「エンドポイントを作成」を押下し、サービスの検索フォームに .ssm と入力して com.amazonaws.[リージョン名].ssm を探し当て選択する。続けてインスタンスのある VPC とサブネットを選択し、最後に「セキュリティグループ」で先ほど作成したセキュリティグループを選択してエンドポイントを作成する。com.amazonaws.[リージョン名].ssmmessages, com.amazonaws.[リージョン名].ec2, com.amazonaws.[リージョン名].ec2messages に対しても同様に作成する。</li>
+  </ul><br/>
+
+<h3>&#x2b50; インスタンスからインターネットにアウトバウンド接続する</h3>
+インスタンスからインターネットにアウトバウンド接続したい場合 (Ex. Python やそのパッケージのインストール)、以下の設定が必要である。
+  <ul>
+    <li>インスタンスのセキュリティグループのアウトバウンドルールに、「送信先： 0.0.0.0/0」への許可を追加する (自動作成されたセキュリティグループではデフォルトで許可されている)。</li>
+    <li>インスタンスのあるサブネットのルートテーブルに、「送信先： 0.0.0.0/0」「ターゲット：NAT ゲートウェイまたはインターネットゲートウェイ」への許可を追加する。</li>
+    <li>上記の設定で理論上はインターネットにアクセスできる (設定の反映には多少タイムラグがある) はずだが上手くいかない場合、インスタンスにパブリック IP アドレスを割り当てると上手くいく。例えば EC2 ダッシュボードのサイドバーから「Elastic IP」を選択して作成し割り当てることができる。</li>
+  </ul><br/>
+
+<h3>&#x2b50; GPU インスタンスを利用する</h3>
+
+<ul>
+  <li>インスタンス作成時に参考文献 [1] のような AMI (Amazon Machine Image) を選択すると GPU 機械学習環境をプリインストールしてくれる (はずである)。ただし、インスタンスタイプも GPU 系を選択しなければならない。かつ、その AMI がサポートしているインスタンスタイプでなければプリインストールが効かない。[1] の場合、P2 系インスタンスはサポートしていない。</li>
+  <li>サポートされていない組合せでインスタンスを作成してしまった場合でも、Ubuntu AMI であれば [2] の記事にしたがえばコマンド <pre class="inline">nvidia-smi</pre> を通せる (セッションマネージャーから接続している場合、再起動は管理画面から行う)。そうなれば後は [3] にしたがえば PyTorch for CUDA が入る。なお、2023年12月9日現在に [2] の記事にしたがうと CUDA 12.2 が入ってしまい、[3] でサポートされている CUDA 12.1 と食い違ってしまうが、こちらがやや新しい分にはたぶん何とかなる。何とかならなくなったら対処する。</li>
+</ul>
+
+<h4 style="margin-top: 0; margin-bottom: 0;">参考文献</h4>
+<ol class="ref">
+  <li>AWS Deep Learning AMI GPU PyTorch 2.1 (Ubuntu 20.04). <a class="asis" href="https://aws.amazon.com/jp/releasenotes/aws-deep-learning-ami-gpu-pytorch-2-1-ubuntu-20-04/"></a> (2023年12月9日参照).</li>
+  <ul>
+    <li><b>Supported EC2 Instances:</b> P5, P4de, P4d, P3, G5, G3, G4dn <b>(P2 is not supported)</b></li>
+  </ul>
+  <li>EC2のGPUインスタンスにNvidiaドライバーとnvidia-dockerを利用してdockerコンテナ内にpython,cuda,cuDNNを導入する - Qiita#3-gpu環境構築. <a class="asis" href="https://qiita.com/carbscountry/items/dc98de3a2e03af5c9006#3-gpu%E7%92%B0%E5%A2%83%E6%A7%8B%E7%AF%89"></a> (2023年12月9日参照).</li>
+  <li>Start Locally | PyTorch. <a class="asis" href="https://pytorch.org/get-started/locally/"></a> (2023年12月9日参照).</li>
+</ol><br/>
+
+<h3>&#x2b50; 同じサブネット内のインスタンス B からインスタンス A にアクセスする</h3>
+
+<pre class="console">
+# ----- インスタンス B からインスタンス A にアクセスしたいとき -----
+# 以下ではインスタンス A のプライベート IPv4 アドレス： 172.16.0.25
+# 以下ではインスタンス B のプライベート IPv4 アドレス： 172.16.0.21
+
+# (1) インスタンス B に行ってやること
+ssh-keygen -t rsa  # パスフレーズも訊かれるので決める
+cat ~/.ssh/id_rsa.pub  # この内容をコピー
+
+# (2) インスタンス A に行ってやること
+mkdir ~/.ssh/
+vi ~/.ssh/authorized_keys  # ここにペースト
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+
+# (3) インスタンス A の管理画面に行ってやること
+# セキュリティグループのインバウンドルールで
+# - タイプ：SSH
+# - ソース：インスタンス B のプライベート IPv4 アドレス (172.16.0.21/32) 
+# を許可
+
+# (4) インスタンス B に行ってやること
+ssh ssm-user@172.16.0.25  # インスタンス A にアクセスできる
+scp ssm-user@172.16.0.25:~/aaa/bbb/*.npy ~/ccc/ddd/  # インスタンス A からものを取り寄せられる
+</pre>
+<h4 style="margin-top: 0; margin-bottom: 0;">参考文献</h4>
+<ol class="ref">
+  <li>異なるEC2インスタンス間でssh接続する - 箱のプログラミング日記。. <a class="asis" href="https://www.y-hakopro.com/entry/2020/10/31/175820"></a> (2023年12月9日参照).</li>
+</ol><br/>
+
+
+</div>
+</main>
+</div>
+</body>
+</html>
