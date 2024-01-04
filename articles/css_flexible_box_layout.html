@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title></title>
 <link rel="stylesheet" type="text/css" href="../style.css">
+<style type="text/css">
+<!--
+div.container { background: honeydew; }
+div#sidebar { background: mistyrose; }
+main.main { background: lightcyan; }
+-->
+</style>
 <script src="../funcs.js"></script>
 </head>
 <body onload="init()">
@@ -14,7 +21,16 @@
 <div id="smartphone-header"></div>
 <div class="item">
 <h1>CSS フレックスボックスレイアウト</h1>
+CSS のフレックスボックスを用いると、要素を横/縦/複数行に直感的に並べることができる。
+<h2>参考文献</h2>
+<ol class="ref">
+  <li><a class="asis" href="https://developer.mozilla.org/ja/docs/Web/CSS/CSS_flexible_box_layout/Basic_concepts_of_flexbox"></a></li>
+  <li><a class="asis" href="https://developer.mozilla.org/ja/docs/Web/CSS/position"></a></li>
+</ol>
 
+<h2>Examples</h2>
+<h3>サイドバー</h3>
+この Cookipedia はフレックスボックスを用いることでサイドバーとメイン画面を左右に並べている。模式的 (でもなくそのものであるが) には以下である。このページも各要素がわかりやすいように色を付けている。
 <pre class="html">
 &lt;html&gt;
 &lt;head&gt;
@@ -25,24 +41,23 @@ body {
   background: lightgray;
 }
 div.container {  /* フレックスコンテナ */
-  width: 500px;
   display: flex;
-  align-items: flex-start;  /* 規定値の stretch から変更し高さを揃えないように */
-  background: lightgreen;
+  align-items: flex-start;  /* 規定値の stretch から変更し子要素の高さを揃えず上揃えに */
+  background: honeydew;
 }
 div.sidebar {  /* フレックスアイテム（サイドバー）*/
   box-sizing: border-box;  /* 指定サイズ内でパディングを取るよう指示 */
   flex-basis: 100px;
-  top: 0;
   position: sticky;
+  top: 0;
   padding: 20px;
   background: mistyrose;
 }
 main.main {  /* フレックスアイテム（メイン）*/
-  flex-basis: 400px;
-  background: powderblue;
+  flex-basis: 500px;
+  background: lightcyan;
 }
-main.main&gt;div.item {
+main.main>div.item {
   margin: 15px 0;
   padding: 20px;
   background: white;
@@ -67,6 +82,30 @@ main.main&gt;div.item {
 &lt;/body&gt;
 &lt;/html&gt;
 </pre>
+<ul>
+  <li>まずフレックスコンテナを配置する (淡い緑色)。display プロパティの値を flex とすることでフレックスコンテナになる。</li>
+  <ul>
+    <li>flex-direction プロパティで中に配置する要素 (フレックスアイテム) が並ぶ方向を決める。デフォルト値は row なので左から右へ並ぶ (ただしアラビア語環境では逆になる)。</li>
+    <li>align-items プロパティで中に配置する要素の位置と高さをどう揃えるかを決める。 デフォルト値は stretch であり、最も高いフレックスアイテムの高さまで他のアイテムも伸びる。ただし、サイドバーを動かないようにする目的ではサイドバーをメイン画面に合わせて伸ばしてはならないので、ここでは flex-start (上揃え) としている。</li>
+  </ul>
+  <li>次に中に要素 (フレックスアイテム) を配置する。ここではサイドバー (ピンク色) とメイン画面 (水色) を配置している。flex-basis プロパティを設定すると、各要素はこの幅だけとって詰める (コンテナに余白があっても広がらない)。</li>
+  <ul>
+    <li>ここで、ピンク色のサイドバーについては position: sticky; top: 0; とすることで、淡い緑色のコンテナから浮き上がり、画面が切り取るコンテナの上辺から 0 の位置に常に配置される。ただし、コンテナ内にいなければならないので、ピンク色のサイドバーが画面下に x だけはみ出している場合、スクロールしていってコンテナの画面下のはみ出しが x 未満になるタイミングからコンテナと連動してスクロールされることになる。</li>
+  </ul>
+</ul>
+
+<h3>ヘッダーとフッター</h3>
+ヘッダーは左揃え、メイン画面は中央揃え、フッターは右揃えにできる。そうしたいかはさておき。
+<div style="width: 100%; width: 200px; height: 200px; overflow: auto; border: 1px solid darkgray; margin: 0.5em 0;">
+  <div style="display: flex; flex-direction: column; align-items: center;">
+    <div style="align-self: start; background: ivory; padding: 10px; position: sticky; top: 0; border: 1px solid darkgray; border-top: 0; border-left: 0;">ヘッダー</div>
+    <div style="padding: 10px;">
+      ほげほげほげほげ<br/>ふがふがふがふが<br/>ほげほげほげほげ<br/>ふがふがふがふが<br/>
+      ほげほげほげほげ<br/>ふがふがふがふが<br/>ほげほげほげほげ<br/>ふがふがふがふが<br/>
+    </div>
+    <div style="align-self: end; background: azure; padding: 10px; position: sticky; bottom: 0; border: 1px solid darkgray; border-right: 0; border-bottom: 0;">フッター</div>
+  </div>
+</div>
 
 </div>
 </main>
