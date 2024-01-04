@@ -12,12 +12,6 @@ td {
   padding: 4px 10px;
   font-size: 90%;
 }
-div.label {
-  float: left;
-  padding-top: 4px;
-  width: 16px;
-  height: 22px;
-}
 input.inputColor {
   height: 34px;
   max-width: 54px;
@@ -46,31 +40,39 @@ table.cltb {
         padding-right: 0.4em;
     }
 }
+.html_color {
+  margin: 0;
+  padding: 4px 10px;
+  font-size: 90%;
+}
 -->
 </style>
 <script src="../funcs.js"></script>
 <script type="text/javascript"><!--
 const vError = "#ff0000";
-const defaults = [
-  "#a8d992", "#117da2", "#cce2e5", "#117da2", "#cce2e5",
-  "#393939", "#f7fcfd", "#7d590d", "#ede3a6", "#8a6415",
-  "#f3f0dd", "#f0f0f0", "#1f77b4", "#ff7f0e", "#2ca02c",
-  "#d62728", "#9467bd", "#8c564b",
-];
-
+const defaults = ["#a8d992", "#117da2", "#cce2e5"];
 let rgb0Elems = [];
 let hsl0Elems = [];
 let colorElems = [];
 let hexElems = [];
 let tabItems = [];
 let tabContents = [];
-
-let rgb = [
-  [0, 0, 0],
-  [0, 0, 0],
-  [0, 0, 0],
-];
+let rgb = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
 let hsl0 = [0, 0, 0];
+
+const css4Colors = {'black': '#000000', 'dimgray': '#696969', 'dimgrey': '#696969', 'gray': '#808080', 'grey': '#808080', 'darkgray': '#A9A9A9', 'darkgrey': '#A9A9A9', 'silver': '#C0C0C0', 'lightgray': '#D3D3D3', 'lightgrey': '#D3D3D3', 'gainsboro': '#DCDCDC', 'whitesmoke': '#F5F5F5', 'white': '#FFFFFF', 'snow': '#FFFAFA', 'rosybrown': '#BC8F8F', 'lightcoral': '#F08080', 'indianred': '#CD5C5C', 'brown': '#A52A2A', 'firebrick': '#B22222', 'maroon': '#800000', 'darkred': '#8B0000', 'red': '#FF0000', 'mistyrose': '#FFE4E1', 'salmon': '#FA8072', 'tomato': '#FF6347', 'darksalmon': '#E9967A', 'coral': '#FF7F50', 'orangered': '#FF4500', 'lightsalmon': '#FFA07A', 'sienna': '#A0522D', 'seashell': '#FFF5EE', 'chocolate': '#D2691E', 'saddlebrown': '#8B4513', 'sandybrown': '#F4A460', 'peachpuff': '#FFDAB9', 'peru': '#CD853F', 'linen': '#FAF0E6', 'bisque': '#FFE4C4', 'darkorange': '#FF8C00', 'burlywood': '#DEB887', 'antiquewhite': '#FAEBD7', 'tan': '#D2B48C', 'navajowhite': '#FFDEAD', 'blanchedalmond': '#FFEBCD', 'papayawhip': '#FFEFD5', 'moccasin': '#FFE4B5', 'orange': '#FFA500', 'wheat': '#F5DEB3', 'oldlace': '#FDF5E6', 'floralwhite': '#FFFAF0', 'darkgoldenrod': '#B8860B', 'goldenrod': '#DAA520', 'cornsilk': '#FFF8DC', 'gold': '#FFD700', 'lemonchiffon': '#FFFACD', 'khaki': '#F0E68C', 'palegoldenrod': '#EEE8AA', 'darkkhaki': '#BDB76B', 'ivory': '#FFFFF0', 'beige': '#F5F5DC', 'lightyellow': '#FFFFE0', 'lightgoldenrodyellow': '#FAFAD2', 'olive': '#808000', 'yellow': '#FFFF00', 'olivedrab': '#6B8E23', 'yellowgreen': '#9ACD32', 'darkolivegreen': '#556B2F', 'greenyellow': '#ADFF2F', 'chartreuse': '#7FFF00', 'lawngreen': '#7CFC00', 'honeydew': '#F0FFF0', 'darkseagreen': '#8FBC8F', 'palegreen': '#98FB98', 'lightgreen': '#90EE90', 'forestgreen': '#228B22', 'limegreen': '#32CD32', 'darkgreen': '#006400', 'green': '#008000', 'lime': '#00FF00', 'seagreen': '#2E8B57', 'mediumseagreen': '#3CB371', 'springgreen': '#00FF7F', 'mintcream': '#F5FFFA', 'mediumspringgreen': '#00FA9A', 'mediumaquamarine': '#66CDAA', 'aquamarine': '#7FFFD4', 'turquoise': '#40E0D0', 'lightseagreen': '#20B2AA', 'mediumturquoise': '#48D1CC', 'azure': '#F0FFFF', 'lightcyan': '#E0FFFF', 'paleturquoise': '#AFEEEE', 'darkslategray': '#2F4F4F', 'darkslategrey': '#2F4F4F', 'teal': '#008080', 'darkcyan': '#008B8B', 'aqua': '#00FFFF', 'cyan': '#00FFFF', 'darkturquoise': '#00CED1', 'cadetblue': '#5F9EA0', 'powderblue': '#B0E0E6', 'lightblue': '#ADD8E6', 'deepskyblue': '#00BFFF', 'skyblue': '#87CEEB', 'lightskyblue': '#87CEFA', 'steelblue': '#4682B4', 'aliceblue': '#F0F8FF', 'dodgerblue': '#1E90FF', 'lightslategray': '#778899', 'lightslategrey': '#778899', 'slategray': '#708090', 'slategrey': '#708090', 'lightsteelblue': '#B0C4DE', 'cornflowerblue': '#6495ED', 'royalblue': '#4169E1', 'ghostwhite': '#F8F8FF', 'lavender': '#E6E6FA', 'midnightblue': '#191970', 'navy': '#000080', 'darkblue': '#00008B', 'mediumblue': '#0000CD', 'blue': '#0000FF', 'slateblue': '#6A5ACD', 'darkslateblue': '#483D8B', 'mediumslateblue': '#7B68EE', 'mediumpurple': '#9370DB', 'rebeccapurple': '#663399', 'blueviolet': '#8A2BE2', 'indigo': '#4B0082', 'darkorchid': '#9932CC', 'darkviolet': '#9400D3', 'mediumorchid': '#BA55D3', 'thistle': '#D8BFD8', 'plum': '#DDA0DD', 'violet': '#EE82EE', 'purple': '#800080', 'darkmagenta': '#8B008B', 'fuchsia': '#FF00FF', 'magenta': '#FF00FF', 'orchid': '#DA70D6', 'mediumvioletred': '#C71585', 'deeppink': '#FF1493', 'hotpink': '#FF69B4', 'lavenderblush': '#FFF0F5', 'palevioletred': '#DB7093', 'crimson': '#DC143C', 'pink': '#FFC0CB', 'lightpink': '#FFB6C1'};
+const tableauColors = {'tab:blue': '#1f77b4', 'tab:orange': '#ff7f0e', 'tab:green': '#2ca02c', 'tab:red': '#d62728', 'tab:purple': '#9467bd', 'tab:brown': '#8c564b', 'tab:pink': '#e377c2', 'tab:gray': '#7f7f7f', 'tab:olive': '#bcbd22', 'tab:cyan': '#17becf'};
+const xkcdColors1 = {'xkcd:black': '#000000', 'xkcd:white': '#ffffff', 'xkcd:dull red': '#bb3f3f', 'xkcd:dried blood': '#4b0101', 'xkcd:dark red': '#840000', 'xkcd:red': '#e50000', 'xkcd:deep red': '#9a0200', 'xkcd:mahogany': '#4a0100', 'xkcd:pastel red': '#db5856', 'xkcd:reddish': '#c44240', 'xkcd:grapefruit': '#fd5956', 'xkcd:deep brown': '#410200', 'xkcd:dark coral': '#cf524e', 'xkcd:pale red': '#d9544d', 'xkcd:coral': '#fc5a50', 'xkcd:dark salmon': '#c85a53', 'xkcd:brownish pink': '#c27e79', 'xkcd:very dark brown': '#1d0200', 'xkcd:indian red': '#850e04', 'xkcd:salmon': '#ff796c', 'xkcd:pinkish grey': '#c8aca9', 'xkcd:reddy brown': '#6e1005', 'xkcd:reddish grey': '#997570', 'xkcd:brick red': '#8f1402', 'xkcd:tomato': '#ef4026', 'xkcd:peachy pink': '#ff9a8a', 'xkcd:orangey red': '#fa4224', 'xkcd:brick': '#a03623', 'xkcd:very light pink': '#fff4f2', 'xkcd:brownish red': '#9e3623', 'xkcd:orange red': '#fd411e', 'xkcd:blush': '#f29e8e', 'xkcd:vermillion': '#f4320c', 'xkcd:orange pink': '#ff6f52', 'xkcd:tomato red': '#ec2d01', 'xkcd:burnt red': '#9f2305', 'xkcd:reddish orange': '#f8481c', 'xkcd:orangish red': '#f43605', 'xkcd:red brown': '#8b2e16', 'xkcd:light salmon': '#fea993', 'xkcd:melon': '#ff7855', 'xkcd:rusty red': '#af2f0d', 'xkcd:rust red': '#aa2704', 'xkcd:pinkish orange': '#ff724c', 'xkcd:pinkish brown': '#b17261', 'xkcd:orangered': '#fe420f', 'xkcd:red orange': '#fd3c06', 'xkcd:pale salmon': '#ffb19a', 'xkcd:clay': '#b66a50', 'xkcd:dark peach': '#de7e5d', 'xkcd:brown red': '#922b05', 'xkcd:terracotta': '#ca6641', 'xkcd:terracota': '#cb6843', 'xkcd:reddish brown': '#7f2b0a', 'xkcd:blood orange': '#fe4b03', 'xkcd:pinkish tan': '#d99b82', 'xkcd:terra cotta': '#c9643b', 'xkcd:auburn': '#9a3001', 'xkcd:adobe': '#bd6c48', 'xkcd:orangish': '#fc824a', 'xkcd:warm grey': '#978a84', 'xkcd:brownish': '#9c6d57', 'xkcd:rust': '#a83c09', 'xkcd:russet': '#a13905', 'xkcd:chestnut': '#742802', 'xkcd:rust brown': '#8b3103', 'xkcd:deep orange': '#dc4d01', 'xkcd:brick orange': '#c14a09', 'xkcd:bright orange': '#ff5b00', 'xkcd:burnt umber': '#a0450e', 'xkcd:orangeish': '#fd8d49', 'xkcd:chocolate brown': '#411900', 'xkcd:earth': '#a2653e', 'xkcd:burnt sienna': '#b04e0f', 'xkcd:peach': '#ffb07c', 'xkcd:dusty orange': '#f0833a', 'xkcd:sienna': '#a9561e', 'xkcd:dark orange': '#c65102', 'xkcd:burnt orange': '#c04e01', 'xkcd:pastel orange': '#ff964f', 'xkcd:rusty orange': '#cd5909', 'xkcd:rust orange': '#c45508', 'xkcd:cocoa': '#875f42', 'xkcd:copper': '#b66325', 'xkcd:faded orange': '#f0944d', 'xkcd:burnt siena': '#b75203', 'xkcd:cinnamon': '#ac4f06', 'xkcd:mushroom': '#ba9e88', 'xkcd:chocolate': '#3d1c02', 'xkcd:clay brown': '#b2713d', 'xkcd:orange': '#f97306', 'xkcd:apricot': '#ffb16d', 'xkcd:sepia': '#985e2b', 'xkcd:dull orange': '#d8863b', 'xkcd:pale orange': '#ffa756', 'xkcd:pumpkin orange': '#fb7d07', 'xkcd:mocha': '#9d7651', 'xkcd:milk chocolate': '#7f4e1e', 'xkcd:light peach': '#ffd8b1', 'xkcd:brownish orange': '#cb7723'};
+const xkcdColors2 = {'xkcd:warm brown': '#964e02', 'xkcd:dark brown': '#341c02', 'xkcd:pale brown': '#b1916e', 'xkcd:browny orange': '#ca6b02', 'xkcd:orangish brown': '#b25f03', 'xkcd:orange brown': '#be6400', 'xkcd:tan brown': '#ab7e4c', 'xkcd:pumpkin': '#e17701', 'xkcd:light brown': '#ad8150', 'xkcd:puce': '#a57e52', 'xkcd:dark taupe': '#7f684e', 'xkcd:leather': '#ac7434', 'xkcd:orangey brown': '#b16002', 'xkcd:raw umber': '#a75e09', 'xkcd:light orange': '#fdaa48', 'xkcd:brown': '#653700', 'xkcd:umber': '#b26400', 'xkcd:brown orange': '#b96902', 'xkcd:tangerine': '#ff9408', 'xkcd:dirty orange': '#c87606', 'xkcd:medium brown': '#7f5112', 'xkcd:mango': '#ffa62b', 'xkcd:butterscotch': '#fdb147', 'xkcd:dull brown': '#876e4b', 'xkcd:coffee': '#a6814c', 'xkcd:taupe': '#b9a281', 'xkcd:dirt': '#8a6e45', 'xkcd:dirt brown': '#836539', 'xkcd:dark tan': '#af884a', 'xkcd:caramel': '#af6f09', 'xkcd:brownish grey': '#86775f', 'xkcd:fawn': '#cfaf7b', 'xkcd:greyish brown': '#7a6a4f', 'xkcd:dust': '#b2996e', 'xkcd:toupe': '#c7ac7d', 'xkcd:raw sienna': '#9a6200', 'xkcd:very light brown': '#d3b683', 'xkcd:camel': '#c69f59', 'xkcd:sand brown': '#cba560', 'xkcd:yellowish orange': '#ffab0f', 'xkcd:grey brown': '#7f7053', 'xkcd:dark beige': '#ac9362', 'xkcd:orange yellow': '#ffad01', 'xkcd:squash': '#f2ab15', 'xkcd:mud brown': '#60460f', 'xkcd:sandstone': '#c9ae74', 'xkcd:macaroni and cheese': '#efb435', 'xkcd:pale peach': '#ffe5ad', 'xkcd:dark sand': '#a88f59', 'xkcd:golden brown': '#b27a01', 'xkcd:tan': '#d1b26f', 'xkcd:saffron': '#feb209', 'xkcd:putty': '#beae8a', 'xkcd:amber': '#feb308', 'xkcd:poo brown': '#885f01', 'xkcd:sandy brown': '#c4a661', 'xkcd:yellow orange': '#fcb001', 'xkcd:shit brown': '#7b5804', 'xkcd:orangey yellow': '#fdb915', 'xkcd:desert': '#ccad60', 'xkcd:bronze': '#a87900', 'xkcd:mustard brown': '#ac7e04', 'xkcd:poop brown': '#7a5901', 'xkcd:poop': '#7f5e00', 'xkcd:golden rod': '#f9bc08', 'xkcd:ochre': '#bf9005', 'xkcd:shit': '#7f5f00', 'xkcd:muddy brown': '#886806', 'xkcd:sunflower': '#ffc512', 'xkcd:marigold': '#fcc006', 'xkcd:brown grey': '#8d8468', 'xkcd:golden yellow': '#fec615', 'xkcd:wheat': '#fbdd7e', 'xkcd:mud': '#735c12', 'xkcd:yellow ochre': '#cb9d06', 'xkcd:goldenrod': '#fac205', 'xkcd:light mustard': '#f7d560', 'xkcd:maize': '#f4d054', 'xkcd:golden': '#f5bf03', 'xkcd:sand': '#e2ca76', 'xkcd:ocre': '#c69c04', 'xkcd:yellowy brown': '#ae8b0c', 'xkcd:yellowish brown': '#9b7a01', 'xkcd:pale gold': '#fdde6c', 'xkcd:stone': '#ada587', 'xkcd:greyish': '#a8a495', 'xkcd:burnt yellow': '#d5ab09', 'xkcd:light gold': '#fddc5c', 'xkcd:puke brown': '#947706', 'xkcd:hazel': '#8e7618', 'xkcd:ocher': '#bf9b0c', 'xkcd:dark gold': '#b59410', 'xkcd:poo': '#8f7303', 'xkcd:bland': '#afa88b', 'xkcd:sandy': '#f1da7a', 'xkcd:yellow tan': '#ffe36e', 'xkcd:yellow brown': '#b79400', 'xkcd:dark mustard': '#a88905', 'xkcd:gold': '#dbb40c', 'xkcd:beige': '#e6daa6'};
+const xkcdColors3 = {'xkcd:baby shit brown': '#ad900d', 'xkcd:sand yellow': '#fce166', 'xkcd:diarrhea': '#9f8303', 'xkcd:dark khaki': '#9b8f55', 'xkcd:olive brown': '#645403', 'xkcd:light tan': '#fbeeac', 'xkcd:baby poo': '#ab9004', 'xkcd:baby poop': '#937c00', 'xkcd:brown yellow': '#b29705', 'xkcd:dark yellow': '#d5b60a', 'xkcd:sunflower yellow': '#ffda03', 'xkcd:sun yellow': '#ffdf22', 'xkcd:mustard': '#ceb301', 'xkcd:pale': '#fff9d0', 'xkcd:brownish yellow': '#c9b003', 'xkcd:dandelion': '#fedf08', 'xkcd:dull yellow': '#eedc5b', 'xkcd:dark cream': '#fff39a', 'xkcd:sandy yellow': '#fdee73', 'xkcd:mustard yellow': '#d2bd0a', 'xkcd:muddy yellow': '#bfac05', 'xkcd:cement': '#a5a391', 'xkcd:ugly brown': '#7d7103', 'xkcd:greenish brown': '#696112', 'xkcd:greeny brown': '#696006', 'xkcd:buff': '#fef69e', 'xkcd:yellowish': '#faee66', 'xkcd:green brown': '#544e03', 'xkcd:ugly yellow': '#d0c101', 'xkcd:olive yellow': '#c2b709', 'xkcd:khaki': '#aaa662', 'xkcd:egg shell': '#fffcc4', 'xkcd:straw': '#fcf679', 'xkcd:brown green': '#706c11', 'xkcd:manilla': '#fffa86', 'xkcd:dirty yellow': '#cdc50a', 'xkcd:piss yellow': '#ddd618', 'xkcd:vomit yellow': '#c7c10c', 'xkcd:browny green': '#6f6c0a', 'xkcd:sunny yellow': '#fff917', 'xkcd:parchment': '#fefcaf', 'xkcd:puke yellow': '#c2be0e', 'xkcd:custard': '#fffd78', 'xkcd:butter yellow': '#fffd74', 'xkcd:light beige': '#fffeb6', 'xkcd:sunshine yellow': '#fffd37', 'xkcd:bright yellow': '#fffd01', 'xkcd:light yellow': '#fffe7a', 'xkcd:pastel yellow': '#fffe71', 'xkcd:canary yellow': '#fffe40', 'xkcd:off white': '#ffffe4', 'xkcd:eggshell': '#ffffd4', 'xkcd:ivory': '#ffffcb', 'xkcd:cream': '#ffffc2', 'xkcd:creme': '#ffffb6', 'xkcd:pale yellow': '#ffff84', 'xkcd:yellowish tan': '#fcfc81', 'xkcd:butter': '#ffff81', 'xkcd:banana': '#ffff7e', 'xkcd:yellow': '#ffff14', 'xkcd:puke': '#a5a502', 'xkcd:faded yellow': '#feff7f', 'xkcd:lemon yellow': '#fdff38', 'xkcd:off yellow': '#f1f33f', 'xkcd:lemon': '#fdff52', 'xkcd:canary': '#fdff63', 'xkcd:vomit': '#a2a415', 'xkcd:drab': '#828344', 'xkcd:ecru': '#feffca', 'xkcd:banana yellow': '#fafe4b', 'xkcd:brownish green': '#6a6e09', 'xkcd:pea soup': '#929901', 'xkcd:mud green': '#606602', 'xkcd:baby poop green': '#8f9805', 'xkcd:olive': '#6e750e', 'xkcd:mustard green': '#a8b504', 'xkcd:baby puke green': '#b6c406', 'xkcd:bile': '#b5c306', 'xkcd:shit green': '#758000', 'xkcd:snot': '#acbb0d', 'xkcd:greenish beige': '#c9d179', 'xkcd:olive drab': '#6f7632', 'xkcd:poop green': '#6f7c00', 'xkcd:sickly yellow': '#d0e429', 'xkcd:dark olive': '#373e02', 'xkcd:baby shit green': '#889717', 'xkcd:puke green': '#9aae07', 'xkcd:pea soup green': '#94a617', 'xkcd:green/yellow': '#b5ce08', 'xkcd:swamp green': '#748500', 'xkcd:murky green': '#6c7a0e', 'xkcd:barf green': '#94ac02', 'xkcd:light khaki': '#e6f2a2', 'xkcd:vomit green': '#89a203', 'xkcd:olive green': '#677a04', 'xkcd:bright olive': '#9cbb04', 'xkcd:booger green': '#96b403', 'xkcd:pea': '#a4bf20', 'xkcd:gross green': '#a0bf16', 'xkcd:greenish tan': '#bccb7a'};
+const xkcdColors4 = {'xkcd:snot green': '#9dc100', 'xkcd:pea green': '#8eab12', 'xkcd:neon yellow': '#cfff04', 'xkcd:greenish yellow': '#cdfd02', 'xkcd:ugly green': '#7a9703', 'xkcd:sick green': '#9db92c', 'xkcd:sickly green': '#94b21c', 'xkcd:lime yellow': '#d0fe1d', 'xkcd:dark yellow green': '#728f02', 'xkcd:greeny yellow': '#c6f808', 'xkcd:booger': '#9bb53c', 'xkcd:light olive': '#acbf69', 'xkcd:icky green': '#8fae22', 'xkcd:yellowish green': '#b0dd16', 'xkcd:muddy green': '#657432', 'xkcd:dark olive green': '#3c4d03', 'xkcd:chartreuse': '#c1f80a', 'xkcd:camo': '#7f8f4e', 'xkcd:yellowy green': '#bff128', 'xkcd:green yellow': '#c9ff27', 'xkcd:avocado green': '#87a922', 'xkcd:pale olive': '#b9cc81', 'xkcd:army green': '#4b5d16', 'xkcd:slime green': '#99cc04', 'xkcd:khaki green': '#728639', 'xkcd:avocado': '#90b134', 'xkcd:yellowgreen': '#bbf90f', 'xkcd:light olive green': '#a4be5c', 'xkcd:tan green': '#a9be70', 'xkcd:yellow/green': '#c8fd3d', 'xkcd:dark lime': '#84b701', 'xkcd:camouflage green': '#4b6113', 'xkcd:yellow green': '#c0fb2d', 'xkcd:dirty green': '#667e2c', 'xkcd:pear': '#cbf85f', 'xkcd:lemon lime': '#bffe28', 'xkcd:camo green': '#526525', 'xkcd:lemon green': '#adf802', 'xkcd:dark lime green': '#7ebd01', 'xkcd:electric lime': '#a8ff04', 'xkcd:swamp': '#698339', 'xkcd:military green': '#667c3e', 'xkcd:pale olive green': '#b1d27b', 'xkcd:bright yellow green': '#9dff00', 'xkcd:light yellow green': '#ccfd7f', 'xkcd:sap green': '#5c8b15', 'xkcd:mossy green': '#638b27', 'xkcd:light moss green': '#a6c875', 'xkcd:navy green': '#35530a', 'xkcd:lime': '#aaff32', 'xkcd:acid green': '#8ffe09', 'xkcd:pale lime': '#befd73', 'xkcd:light lime green': '#b9ff66', 'xkcd:moss green': '#658b38', 'xkcd:leaf green': '#5ca904', 'xkcd:light pea green': '#c4fe82', 'xkcd:lime green': '#89fe05', 'xkcd:bright lime': '#87fd05', 'xkcd:kiwi': '#9cef43', 'xkcd:leaf': '#71aa34', 'xkcd:kermit green': '#5cb200', 'xkcd:drab green': '#749551', 'xkcd:pale lime green': '#b1ff65', 'xkcd:light yellowish green': '#c2ff89', 'xkcd:apple green': '#76cd26', 'xkcd:pistachio': '#c0fa8b', 'xkcd:kiwi green': '#8ee53f', 'xkcd:moss': '#769958', 'xkcd:light lime': '#aefd6c', 'xkcd:frog green': '#58bc08', 'xkcd:key lime': '#aeff6e', 'xkcd:lawn green': '#4da409', 'xkcd:nasty green': '#70b23f', 'xkcd:celery': '#c1fd95', 'xkcd:dark grass green': '#388004', 'xkcd:spring green': '#a9f971', 'xkcd:grassy green': '#419c03', 'xkcd:asparagus': '#77ab56', 'xkcd:bright lime green': '#65fe08', 'xkcd:grass': '#5cac2d', 'xkcd:light grass green': '#9af764', 'xkcd:turtle green': '#75b84f', 'xkcd:grass green': '#3f9b0b', 'xkcd:flat green': '#699d4c', 'xkcd:apple': '#6ecb3c', 'xkcd:light grey green': '#b7e1a1', 'xkcd:lichen': '#8fb67b', 'xkcd:sage': '#87ae73', 'xkcd:green apple': '#5edc1f', 'xkcd:medium grey': '#7d7f7c', 'xkcd:light grey': '#d8dcd6', 'xkcd:tea green': '#bdf8a3', 'xkcd:toxic green': '#61de2a', 'xkcd:light light green': '#c8ffb0', 'xkcd:very light green': '#d1ffbd', 'xkcd:off green': '#6ba353', 'xkcd:very pale green': '#cffdbc', 'xkcd:washed out green': '#bcf5a6', 'xkcd:greenish grey': '#96ae8d', 'xkcd:sage green': '#88b378'};
+const xkcdColors5 = {'xkcd:dull green': '#74a662', 'xkcd:grey/green': '#86a17d', 'xkcd:light sage': '#bcecac', 'xkcd:pale green': '#c7fdb5', 'xkcd:grey': '#929591', 'xkcd:pale light green': '#b1fc99', 'xkcd:forrest green': '#154406', 'xkcd:green grey': '#77926f', 'xkcd:fern green': '#548d44', 'xkcd:light green': '#96f97b', 'xkcd:fern': '#63a950', 'xkcd:pastel green': '#b0ff9d', 'xkcd:fresh green': '#69d84f', 'xkcd:poison green': '#40fd14', 'xkcd:leafy green': '#51b73b', 'xkcd:tree green': '#2a7e19', 'xkcd:muted green': '#5fa052', 'xkcd:light pastel green': '#b2fba5', 'xkcd:vivid green': '#2fef10', 'xkcd:grey green': '#789b73', 'xkcd:greyish green': '#82a67d', 'xkcd:lighter green': '#75fd63', 'xkcd:faded green': '#7bb274', 'xkcd:easter green': '#8cfd7e', 'xkcd:greeny grey': '#7ea07a', 'xkcd:celadon': '#befdb7', 'xkcd:mid green': '#50a747', 'xkcd:highlighter green': '#1bfc06', 'xkcd:electric green': '#21fc0d', 'xkcd:very dark green': '#062e03', 'xkcd:dark sage': '#598556', 'xkcd:radioactive green': '#2cfa1f', 'xkcd:dark green': '#033500', 'xkcd:dusty green': '#76a973', 'xkcd:hunter green': '#0b4008', 'xkcd:fluro green': '#0aff02', 'xkcd:true green': '#089404', 'xkcd:forest': '#0b5509', 'xkcd:racing green': '#014600', 'xkcd:vibrant green': '#0add08', 'xkcd:lightish green': '#61e160', 'xkcd:neon green': '#0cff0c', 'xkcd:fluorescent green': '#08ff08', 'xkcd:dark pastel green': '#56ae57', 'xkcd:bottle green': '#044a05', 'xkcd:hot green': '#25ff29', 'xkcd:bright green': '#01ff07', 'xkcd:boring green': '#63b365', 'xkcd:darkgreen': '#054907', 'xkcd:green': '#15b01a', 'xkcd:light neon green': '#4efd54', 'xkcd:lightgreen': '#76ff7b', 'xkcd:light bright green': '#53fe5c', 'xkcd:light forest green': '#4f9153', 'xkcd:light mint': '#b6ffbb', 'xkcd:soft green': '#6fc276', 'xkcd:dark forest green': '#002d04', 'xkcd:forest green': '#06470c', 'xkcd:british racing green': '#05480d', 'xkcd:medium green': '#39ad48', 'xkcd:light mint green': '#a6fbb2', 'xkcd:mint green': '#8fff9f', 'xkcd:deep green': '#02590f', 'xkcd:baby green': '#8cff9e', 'xkcd:light seafoam green': '#a7ffb5', 'xkcd:darkish green': '#287c37', 'xkcd:mint': '#9ffeb0', 'xkcd:pine': '#2b5d34', 'xkcd:bright light green': '#2dfe54', 'xkcd:emerald green': '#028f1e', 'xkcd:slate green': '#658d6d', 'xkcd:hospital green': '#9be5aa', 'xkcd:algae': '#54ac68', 'xkcd:foam green': '#90fda9', 'xkcd:light sea green': '#98f6b0', 'xkcd:kelly green': '#02ab2e', 'xkcd:irish green': '#019529', 'xkcd:pine green': '#0a481e', 'xkcd:tea': '#65ab7c', 'xkcd:light seafoam': '#a0febf', 'xkcd:dark mint': '#48c072', 'xkcd:cool green': '#33b864', 'xkcd:light bluish green': '#76fda8', 'xkcd:seafoam': '#80f9ad', 'xkcd:kelley green': '#009337', 'xkcd:seafoam green': '#7af9ab', 'xkcd:shamrock green': '#02c14d', 'xkcd:weird green': '#3ae57f', 'xkcd:spearmint': '#1ef876', 'xkcd:greenish': '#40a368', 'xkcd:shamrock': '#01b44c', 'xkcd:light blue green': '#7efbb3', 'xkcd:seaweed green': '#35ad6b', 'xkcd:emerald': '#01a049', 'xkcd:light green blue': '#56fca2', 'xkcd:sea green': '#53fca1', 'xkcd:wintergreen': '#20f986', 'xkcd:jade green': '#2baf6a', 'xkcd:algae green': '#21c36f', 'xkcd:minty green': '#0bf77d'};
+const xkcdColors6 = {'xkcd:tealish green': '#0cdc73', 'xkcd:dark seafoam green': '#3eaf76', 'xkcd:silver': '#c5c9c7', 'xkcd:jungle green': '#048243', 'xkcd:dark mint green': '#20c073', 'xkcd:seaweed': '#18d17b', 'xkcd:spruce': '#0a5f38', 'xkcd:light greenish blue': '#63f7b4', 'xkcd:turquoise green': '#04f489', 'xkcd:pale turquoise': '#a5fbd5', 'xkcd:evergreen': '#05472a', 'xkcd:greenish teal': '#32bf84', 'xkcd:bluey green': '#2bb179', 'xkcd:light teal': '#90e4c1', 'xkcd:light aquamarine': '#7bfdc7', 'xkcd:ocean green': '#3d9973', 'xkcd:teal green': '#25a36f', 'xkcd:dark seafoam': '#1fb57a', 'xkcd:aqua green': '#12e193', 'xkcd:jade': '#1fa774', 'xkcd:green teal': '#0cb577', 'xkcd:viridian': '#1e9167', 'xkcd:bright sea green': '#05ffa6', 'xkcd:dark sea green': '#11875d', 'xkcd:greenblue': '#23c48b', 'xkcd:pale teal': '#82cbb2', 'xkcd:light turquoise': '#7ef4cc', 'xkcd:greenish cyan': '#2afeb7', 'xkcd:bluish green': '#10a674', 'xkcd:light aqua': '#8cffdb', 'xkcd:greyish teal': '#719f91', 'xkcd:seafoam blue': '#78d1b6', 'xkcd:greenish turquoise': '#00fbb0', 'xkcd:pale aqua': '#b8ffeb', 'xkcd:grey teal': '#5e9b8a', 'xkcd:green/blue': '#01c08d', 'xkcd:greeny blue': '#42b395', 'xkcd:charcoal': '#343837', 'xkcd:aqua marine': '#2ee8bb', 'xkcd:dull teal': '#5f9e8f', 'xkcd:green blue': '#06b48b', 'xkcd:bright teal': '#01f9c6', 'xkcd:tiffany blue': '#7bf2da', 'xkcd:aquamarine': '#04d8b2', 'xkcd:dark green blue': '#1f6357', 'xkcd:dusty teal': '#4c9085', 'xkcd:blue green': '#137e6d', 'xkcd:aqua': '#13eac9', 'xkcd:eggshell blue': '#c4fff7', 'xkcd:tealish': '#24bca8', 'xkcd:duck egg blue': '#c3fbf4', 'xkcd:ice': '#d6fffa', 'xkcd:turquoise': '#06c2ac', 'xkcd:dark blue green': '#005249', 'xkcd:blue/green': '#0f9b8e', 'xkcd:teal': '#029386', 'xkcd:light light blue': '#cafffb', 'xkcd:sea': '#3c9992', 'xkcd:topaz': '#13bbaf', 'xkcd:pale cyan': '#b7fffa', 'xkcd:bright aqua': '#0bf9ea', 'xkcd:light cyan': '#acfffc', 'xkcd:greenish blue': '#0b8b87', 'xkcd:ice blue': '#d7fffe', 'xkcd:very pale blue': '#d6fffe', 'xkcd:dark turquoise': '#045c5a', 'xkcd:bright turquoise': '#0ffef9', 'xkcd:dark aquamarine': '#017371', 'xkcd:bluegreen': '#017a79', 'xkcd:dark grey': '#363737', 'xkcd:very light blue': '#d5ffff', 'xkcd:really light blue': '#d4ffff', 'xkcd:pale blue': '#d0fefe', 'xkcd:almost black': '#070d0d', 'xkcd:cyan': '#00ffff', 'xkcd:bright cyan': '#41fdfe', 'xkcd:deep turquoise': '#017374', 'xkcd:dark teal': '#014d4e', 'xkcd:dark cyan': '#0a888a', 'xkcd:dark aqua': '#05696b', 'xkcd:bright light blue': '#26f7fd', 'xkcd:light sky blue': '#c6fcff', 'xkcd:deep teal': '#00555a', 'xkcd:deep aqua': '#08787f', 'xkcd:aqua blue': '#02d8e9', 'xkcd:turquoise blue': '#06b1c4', "xkcd:robin's egg blue": '#98eff9', 'xkcd:petrol': '#005f6a', "xkcd:robin's egg": '#6dedfd', 'xkcd:robin egg blue': '#8af1fe', 'xkcd:pale sky blue': '#bdf6fe', 'xkcd:teal blue': '#01889f', 'xkcd:neon blue': '#04d9ff', 'xkcd:ocean': '#017b92', 'xkcd:charcoal grey': '#3c4142', 'xkcd:cool grey': '#95a3a6', 'xkcd:bright sky blue': '#02ccfe', 'xkcd:sea blue': '#047495', 'xkcd:gunmetal': '#536267', 'xkcd:ocean blue': '#03719c'};
+const xkcdColors7 = {'xkcd:dirty blue': '#3f829d', 'xkcd:steel grey': '#6f828a', 'xkcd:peacock blue': '#016795', 'xkcd:greyblue': '#77a1b5', 'xkcd:bluegrey': '#85a3b2', 'xkcd:nice blue': '#107ab0', 'xkcd:bluish grey': '#748b97', 'xkcd:battleship grey': '#6b7c85', 'xkcd:deep sea blue': '#015482', 'xkcd:water blue': '#0e87cc', 'xkcd:cerulean': '#0485d1', 'xkcd:lightblue': '#7bc8f6', 'xkcd:azure': '#069af3', 'xkcd:blue grey': '#607c8e', 'xkcd:dark blue grey': '#1f3b4d', 'xkcd:slate': '#516572', 'xkcd:slate grey': '#59656d', 'xkcd:ugly blue': '#31668a', 'xkcd:grey/blue': '#647d8e', 'xkcd:dark slate blue': '#214761', 'xkcd:sky': '#82cafc', 'xkcd:bluey grey': '#89a0b0', 'xkcd:dark grey blue': '#29465b', 'xkcd:prussian blue': '#004577', 'xkcd:light blue': '#95d0fc', 'xkcd:metallic blue': '#4f738e', 'xkcd:stormy blue': '#507b9c', 'xkcd:light grey blue': '#9dbcd4', 'xkcd:grey blue': '#6b8ba4', 'xkcd:greyish blue': '#5e819d', 'xkcd:steel blue': '#5a7d9a', 'xkcd:muted blue': '#3b719f', 'xkcd:slate blue': '#5b7c99', 'xkcd:cool blue': '#4984b8', 'xkcd:light navy': '#155084', 'xkcd:dusty blue': '#5a86ad', 'xkcd:dull blue': '#49759c', 'xkcd:steel': '#738595', 'xkcd:cadet blue': '#4e7496', 'xkcd:bluish': '#2976bb', 'xkcd:marine blue': '#01386a', 'xkcd:off blue': '#5684ae', 'xkcd:blue/grey': '#758da3', 'xkcd:sky blue': '#75bbfd', 'xkcd:flat blue': '#3c73a8', 'xkcd:twilight blue': '#0a437a', 'xkcd:darkish blue': '#014182', 'xkcd:denim': '#3b638c', 'xkcd:baby blue': '#a2cffe', 'xkcd:light navy blue': '#2e5a88', 'xkcd:cloudy blue': '#acc2d9', 'xkcd:mid blue': '#276ab3', 'xkcd:windows blue': '#3778bf', 'xkcd:medium blue': '#2c6fbb', 'xkcd:dark sky blue': '#448ee4', 'xkcd:marine': '#042e60', 'xkcd:faded blue': '#658cbb', 'xkcd:cerulean blue': '#056eee', 'xkcd:deep sky blue': '#0d75f8', 'xkcd:dusk blue': '#26538d', 'xkcd:powder blue': '#b1d1fc', 'xkcd:light blue grey': '#b7c9e2', 'xkcd:dark': '#1b2431', 'xkcd:bright blue': '#0165fc', 'xkcd:carolina blue': '#8ab8fe', 'xkcd:clear blue': '#247afd', 'xkcd:french blue': '#436bad', 'xkcd:cobalt': '#1e488f', 'xkcd:denim blue': '#3b5b92', 'xkcd:dodger blue': '#3e82fc', 'xkcd:navy': '#01153e', 'xkcd:lightish blue': '#3d7afd', 'xkcd:pastel blue': '#a2bffe', 'xkcd:dusky blue': '#475f94', 'xkcd:azul': '#1d5dec', 'xkcd:electric blue': '#0652ff', 'xkcd:blue': '#0343df', 'xkcd:soft blue': '#6488ea', 'xkcd:navy blue': '#001146', 'xkcd:cornflower blue': '#5170d7', 'xkcd:vibrant blue': '#0339f8', 'xkcd:blue blue': '#2242c7', 'xkcd:sapphire': '#2138ab', 'xkcd:dusk': '#4e5481', 'xkcd:vivid blue': '#152eff', 'xkcd:cornflower': '#6a79f7', 'xkcd:rich blue': '#021bf9', 'xkcd:periwinkle blue': '#8f99fb', 'xkcd:light periwinkle': '#c1c6fc', 'xkcd:warm blue': '#4b57db', 'xkcd:royal': '#0c1793', 'xkcd:dark navy': '#000435', 'xkcd:true blue': '#010fcc', 'xkcd:twilight': '#4e518b', 'xkcd:dark navy blue': '#00022e', 'xkcd:cobalt blue': '#030aa7', 'xkcd:darkblue': '#030764', 'xkcd:dark royal blue': '#02066f', 'xkcd:dark blue': '#00035b', 'xkcd:very dark blue': '#000133'};
+const xkcdColors8 = {'xkcd:pure blue': '#0203e2', 'xkcd:pale grey': '#fdfdfe', 'xkcd:royal blue': '#0504aa', 'xkcd:night blue': '#040348', 'xkcd:primary blue': '#0804f9', 'xkcd:deep blue': '#040273', 'xkcd:strong blue': '#0c06f7', 'xkcd:lavender blue': '#8b88f8', 'xkcd:perrywinkle': '#8f8ce7', 'xkcd:midnight blue': '#020035', 'xkcd:midnight': '#03012d', 'xkcd:light royal blue': '#3a2efe', 'xkcd:blueberry': '#464196', 'xkcd:dark periwinkle': '#665fd1', 'xkcd:ultramarine blue': '#1805db', 'xkcd:iris': '#6258c4', 'xkcd:periwinkle': '#8e82fe', 'xkcd:light indigo': '#6d5acf', 'xkcd:blue with a hint of purple': '#533cc6', 'xkcd:ultramarine': '#2000b1', 'xkcd:purpleish blue': '#6140ef', 'xkcd:blurple': '#5539cc', 'xkcd:indigo blue': '#3a18b1', 'xkcd:purpley blue': '#5f34e7', 'xkcd:bluey purple': '#6241c7', 'xkcd:blue purple': '#5729ce', 'xkcd:purple blue': '#632de9', 'xkcd:dark indigo': '#1f0954', 'xkcd:purplish blue': '#601ef9', 'xkcd:burple': '#6832e3', 'xkcd:bluish purple': '#703be7', 'xkcd:purple/blue': '#5d21d0', 'xkcd:purpley': '#8756e4', 'xkcd:purply blue': '#661aee', 'xkcd:blue/purple': '#5a06ef', 'xkcd:violet blue': '#510ac9', 'xkcd:blue violet': '#5d06e9', 'xkcd:pale violet': '#ceaefa', 'xkcd:indigo': '#380282', 'xkcd:pastel purple': '#caa0ff', 'xkcd:light lavender': '#dfc5fe', 'xkcd:light violet': '#d6b4fc', 'xkcd:pale lilac': '#e4cbff', 'xkcd:lilac': '#cea2fd', 'xkcd:liliac': '#c48efd', 'xkcd:lighter purple': '#a55af4', 'xkcd:lavender': '#c79fef', 'xkcd:light urple': '#b36ff6', 'xkcd:deep lilac': '#966ebd', 'xkcd:baby purple': '#ca9bf7', 'xkcd:deep lavender': '#8d5eb7', 'xkcd:easter purple': '#c071fe', 'xkcd:lightish purple': '#a552e6', 'xkcd:light purple': '#bf77f6', 'xkcd:pale purple': '#b790d4', 'xkcd:vivid purple': '#9900fa', 'xkcd:dark lavender': '#856798', 'xkcd:electric purple': '#aa23ff', 'xkcd:amethyst': '#9b5fc0', 'xkcd:wisteria': '#a87dc2', 'xkcd:violet': '#9a0eea', 'xkcd:bright lavender': '#c760ff', 'xkcd:pale lavender': '#eecffe', 'xkcd:bright violet': '#ad0afd', 'xkcd:light lilac': '#edc8ff', 'xkcd:grey purple': '#826d8c', 'xkcd:bright lilac': '#c95efb', 'xkcd:royal purple': '#4b006e', 'xkcd:greyish purple': '#887191', 'xkcd:neon purple': '#bc13fe', 'xkcd:midnight purple': '#280137', 'xkcd:bright purple': '#be03fd', 'xkcd:light lavendar': '#efc0fe', 'xkcd:purple': '#7e1e9c', 'xkcd:purply': '#983fb2', 'xkcd:vibrant purple': '#ad03de', 'xkcd:purplish grey': '#7a687f', 'xkcd:soft purple': '#a66fb5', 'xkcd:heather': '#a484ac', 'xkcd:very dark purple': '#2a0134', 'xkcd:faded purple': '#916e99', 'xkcd:dark violet': '#34013f', 'xkcd:hot purple': '#cb00f5', 'xkcd:heliotrope': '#d94ff5', 'xkcd:dark lilac': '#9c6da5', 'xkcd:dark purple': '#35063e', 'xkcd:muted purple': '#805b87', 'xkcd:deep purple': '#36013f', 'xkcd:very light purple': '#f6cefc', 'xkcd:dusty purple': '#825f87', 'xkcd:barney': '#ac1db8', 'xkcd:medium purple': '#9e43a2', 'xkcd:purple/pink': '#d725de', 'xkcd:plum purple': '#4e0550', 'xkcd:pinkish purple': '#d648d7', 'xkcd:violet pink': '#fb5ffc', 'xkcd:purpley grey': '#947e94', 'xkcd:pink purple': '#db4bda', 'xkcd:deep violet': '#490648', 'xkcd:light magenta': '#fa5ff7'};
+const xkcdColors9 = {'xkcd:darkish purple': '#751973', 'xkcd:eggplant purple': '#430541', 'xkcd:pink/purple': '#ef1de7', 'xkcd:ugly purple': '#a442a0', 'xkcd:purple grey': '#866f85', 'xkcd:pale mauve': '#fed0fc', 'xkcd:orchid': '#c875c4', 'xkcd:purple pink': '#e03fd8', 'xkcd:barney purple': '#a00498', 'xkcd:warm purple': '#952e8f', 'xkcd:light eggplant': '#894585', 'xkcd:eggplant': '#380835', 'xkcd:lavender pink': '#dd85d7', 'xkcd:purply pink': '#f075e6', 'xkcd:pinky purple': '#c94cbe', 'xkcd:fuchsia': '#ed0dd9', 'xkcd:bright magenta': '#ff08e8', 'xkcd:dusty lavender': '#ac86a8', 'xkcd:purpley pink': '#c83cb9', 'xkcd:purplish': '#94568c', 'xkcd:dull purple': '#84597e', 'xkcd:candy pink': '#ff63e9', 'xkcd:purpleish pink': '#df4ec8', 'xkcd:grape purple': '#5d1451', 'xkcd:purpleish': '#98568d', 'xkcd:aubergine': '#3d0734', 'xkcd:hot magenta': '#f504c9', 'xkcd:grape': '#6c3461', 'xkcd:bruise': '#7e4071', 'xkcd:rich purple': '#720058', 'xkcd:purplish pink': '#ce5dae', 'xkcd:dusky purple': '#895b7b', 'xkcd:bright pink': '#fe01b1', 'xkcd:dark plum': '#3f012c', 'xkcd:plum': '#580f41', 'xkcd:velvet': '#750851', 'xkcd:dirty purple': '#734a65', 'xkcd:red violet': '#9e0168', 'xkcd:shocking pink': '#fe02a2', 'xkcd:light plum': '#9d5783', 'xkcd:pale magenta': '#d767ad', 'xkcd:magenta': '#c20078', 'xkcd:neon pink': '#fe019a', 'xkcd:bubblegum pink': '#fe83cc', 'xkcd:dark magenta': '#960056', 'xkcd:deep magenta': '#a0025c', 'xkcd:electric pink': '#ff0490', 'xkcd:hot pink': '#ff028d', 'xkcd:dark fuchsia': '#9d0759', 'xkcd:reddish purple': '#910951', 'xkcd:strong pink': '#ff0789', 'xkcd:red purple': '#820747', 'xkcd:barbie pink': '#fe46a5', 'xkcd:violet red': '#a50055', 'xkcd:pink': '#ff81c0', 'xkcd:mulberry': '#920a4e', 'xkcd:bubblegum': '#ff6cb5', 'xkcd:merlot': '#730039', 'xkcd:wine': '#80013f', 'xkcd:deep pink': '#cb0162', 'xkcd:dark hot pink': '#d90166', 'xkcd:bubble gum pink': '#ff69af', 'xkcd:purple red': '#990147', 'xkcd:berry': '#990f4b', 'xkcd:raspberry': '#b00149', 'xkcd:cerise': '#de0c62', 'xkcd:purplish red': '#b0054b', 'xkcd:powder pink': '#ffb2d0', 'xkcd:dark mauve': '#874c62', 'xkcd:darkish pink': '#da467d', 'xkcd:red wine': '#8c0034', 'xkcd:cranberry': '#9e003a', 'xkcd:medium pink': '#f36196', 'xkcd:burgundy': '#610023', 'xkcd:bordeaux': '#7b002c', 'xkcd:ruby': '#ca0147', 'xkcd:maroon': '#650021', 'xkcd:baby pink': '#ffb7ce', 'xkcd:light mauve': '#c292a1', 'xkcd:carnation pink': '#ff7fa7', 'xkcd:rose red': '#be013c', 'xkcd:pink red': '#f5054f', 'xkcd:pinky': '#fc86aa', 'xkcd:light pink': '#ffd1df', 'xkcd:dark pink': '#cb416b', 'xkcd:dull pink': '#d5869d', 'xkcd:lipstick': '#d5174e', 'xkcd:pastel pink': '#ffbacd', 'xkcd:muted pink': '#d1768f', 'xkcd:pale pink': '#ffcfdc', 'xkcd:rosy pink': '#f6688e', 'xkcd:wine red': '#7b0323', 'xkcd:warm pink': '#fb5581', 'xkcd:mauve': '#ae7181', 'xkcd:pig pink': '#e78ea5', 'xkcd:rouge': '#ab1239', 'xkcd:light burgundy': '#a8415b', 'xkcd:rosa': '#fe86a4', 'xkcd:deep rose': '#c74767', 'xkcd:pinkish red': '#f10c45'};
+const xkcdColors10 = {'xkcd:cherry': '#cf0234', 'xkcd:lipstick red': '#c0022f', 'xkcd:faded pink': '#de9dac', 'xkcd:brownish purple': '#76424e', 'xkcd:claret': '#680018', 'xkcd:grey pink': '#c3909b', 'xkcd:soft pink': '#fdb0c0', 'xkcd:dusky pink': '#cc7a8b', 'xkcd:red pink': '#fa2a55', 'xkcd:neon red': '#ff073a', 'xkcd:dark rose': '#b5485d', 'xkcd:reddish pink': '#fe2c54', 'xkcd:pinkish': '#d46a7e', 'xkcd:rose': '#cf6275', 'xkcd:ugly pink': '#cd7584', 'xkcd:rose pink': '#f7879a', 'xkcd:old pink': '#c77986', 'xkcd:carnation': '#fd798f', 'xkcd:light maroon': '#a24857', 'xkcd:cherry red': '#f7022a', 'xkcd:pinky red': '#fc2647', 'xkcd:old rose': '#c87f89', 'xkcd:dusky rose': '#ba6873', 'xkcd:dusty pink': '#d58a94', 'xkcd:dark maroon': '#3c0008', 'xkcd:lightish red': '#fe2f4a', 'xkcd:carmine': '#9d0216', 'xkcd:scarlet': '#be0119', 'xkcd:strawberry': '#fb2943', 'xkcd:purplish brown': '#6b4247', 'xkcd:greyish pink': '#c88d94', 'xkcd:purple brown': '#673a3f', 'xkcd:crimson': '#8c000f', 'xkcd:watermelon': '#fd4659', 'xkcd:light rose': '#ffc5cb', 'xkcd:dusty rose': '#c0737a', 'xkcd:blush pink': '#fe828c', 'xkcd:pale rose': '#fdc1c5', 'xkcd:dirty pink': '#ca7b80', 'xkcd:dusty red': '#b9484e', 'xkcd:bright red': '#ff000d', 'xkcd:faded red': '#d3494e', 'xkcd:darkish red': '#a90308', 'xkcd:light red': '#ff474c', 'xkcd:blood red': '#980002', 'xkcd:coral pink': '#ff6163', 'xkcd:blood': '#770001', 'xkcd:fire engine red': '#fe0002', 'xkcd:salmon pink': '#fe7b7c'};
+let mcolors = tableauColors;
 
 window.addEventListener("load", startup, false);
 
@@ -123,6 +125,23 @@ function startup() {
       tabContents[index].classList.add('active');
     });
   }
+
+  document.querySelector("#smcolors").addEventListener('change', function() {
+    let selectedValue = this.value;
+    if (selectedValue == 'CSS4_COLORS') { mcolors = css4Colors; }
+    if (selectedValue == 'TABLEAU_COLORS') { mcolors = tableauColors; }
+    if (selectedValue == 'XKCD_COLORS_1') { mcolors = xkcdColors1; }
+    if (selectedValue == 'XKCD_COLORS_2') { mcolors = xkcdColors2; }
+    if (selectedValue == 'XKCD_COLORS_3') { mcolors = xkcdColors3; }
+    if (selectedValue == 'XKCD_COLORS_4') { mcolors = xkcdColors4; }
+    if (selectedValue == 'XKCD_COLORS_5') { mcolors = xkcdColors5; }
+    if (selectedValue == 'XKCD_COLORS_6') { mcolors = xkcdColors6; }
+    if (selectedValue == 'XKCD_COLORS_7') { mcolors = xkcdColors7; }
+    if (selectedValue == 'XKCD_COLORS_8') { mcolors = xkcdColors8; }
+    if (selectedValue == 'XKCD_COLORS_9') { mcolors = xkcdColors9; }
+    if (selectedValue == 'XKCD_COLORS_10') { mcolors = xkcdColors10; }
+    setMcolors();
+  });
 }
 function set(i, v) {
   rc = set_(i, v);
@@ -325,9 +344,31 @@ function setScale() {
     document.querySelector("#scale02" + String(k)).style.color = c;
   }
 }
+
+function setMcolors() {
+  let parent = document.querySelector("#mcolors");
+  parent.innerHTML = '';
+  for (let [htmlColor, htmlColorHexL] of Object.entries(mcolors)) {
+    let htmlColorHex = htmlColorHexL.toLowerCase();
+    let r = parseInt(htmlColorHex.substr(1, 2), 16);
+    let g = parseInt(htmlColorHex.substr(3, 2), 16);
+    let b = parseInt(htmlColorHex.substr(5, 2), 16);
+    let [h, s, l] = RGBtoHSL(r, g, b);
+    let div = document.createElement('div');
+    div.classList.add('html_color');
+    div.style.background = htmlColorHex;
+    div.style.color = (l < 45) ? "#ffffff" : ((g < 144) ? "#ffffff" : "#000000");
+    div.innerHTML = htmlColor + "<br/>" + htmlColorHex;
+    parent.appendChild(div);
+  }
+}
+function init_() {
+  init();
+  setMcolors();
+}
 // --></script>
 </head>
-<body onload="init()">
+<body onload="init_()">
 <div class="container">
 <div id="sidebar"></div>
 <main class="main">
@@ -335,15 +376,29 @@ function setScale() {
 <div class="item">
 <h1>カラーパレット</h1>
 
-<table style="background: #f0f0f0; float: left; margin: 0 10px 10px 0;">
-  <tr>
-    <td colspan="2">
-      <center>
-        <div id="area0" style="width: 90px; height: 90px; margin: 25px 0 15px;"></div>
-      </center>
-    </td>
-    <td rowspan="3" style="vertical-align: middle; background: #f0f0f0; padding-right: 20px;">
-      <center>
+<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+
+  <div style="border: 1px solid darkgray; padding: 10px; display: flex; align-items: center; flex-wrap: wrap;">
+    <div style="padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 10px;">
+
+      <div id="area0" style="width: 90px; height: 90px; margin: 25px 0 15px;"></div>
+      <div><input type="color" id="color0" class="inputColor" /><!--
+      --><input type="text" id="hex0" class="inputText"/></div>
+
+      <div style="display: flex; gap: 10px;">
+      <div style="display: flex; flex-direction: column; align-items: end;">
+        <div>R <input type="text" id="rgb00" class="inputTextR" style="width: 32px;"/></div>
+        <div>G <input type="text" id="rgb01" class="inputTextR" style="width: 32px;"/></div>
+        <div>B <input type="text" id="rgb02" class="inputTextR" style="width: 32px;"/></div>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: end;">
+        <div>H <input type="text" id="hsl00" class="inputTextR" style="width: 54px;"/></div>
+        <div>S <input type="text" id="hsl01" class="inputTextR" style="width: 54px;"/></div>
+        <div>L <input type="text" id="hsl02" class="inputTextR" style="width: 54px;"/></div>
+      </div>
+      </div>
+    </div>
+
         <table class="cltb">
           <tr><td id="scale000"></td><td id="scale010"></td><td id="scale020"></td></tr>
           <tr><td id="scale001"></td><td id="scale011"></td><td id="scale021"></td></tr>
@@ -355,40 +410,12 @@ function setScale() {
           <tr><td id="scale007"></td><td id="scale017"></td><td id="scale027"></td></tr>
           <tr><td id="scale008"></td><td id="scale018"></td><td id="scale028"></td></tr>
         </table>
-      </center>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="2" style="background: #f0f0f0; padding: 0 25px;">
-      <input type="color" id="color0" class="inputColor" /><!--
-      --><input type="text" id="hex0" class="inputText"/>
-    </td>
-  </tr>
-  <tr>
-    <td style="vertical-align: middle; background: #f0f0f0; padding: 10px 10px 15px 20px;">
-      <div class="label">R</div>
-      <input type="text" id="rgb00" class="inputTextR" style="width: 32px;"/><br/>
-      <div class="label">G</div>
-      <input type="text" id="rgb01" class="inputTextR" style="width: 32px;"/><br/>
-      <div class="label">B</div>
-      <input type="text" id="rgb02" class="inputTextR" style="width: 32px;"/>
-    </td>
-    <td style="vertical-align: middle; background: #f0f0f0; padding: 10px 15px 15px 0;">
-      <div class="label">H</div>
-      <input type="text" id="hsl00" class="inputTextR" style="width: 54px;"/><br/>
-      <div class="label">S</div>
-      <input type="text" id="hsl01" class="inputTextR" style="width: 54px;"/><br/>
-      <div class="label">L</div>
-      <input type="text" id="hsl02" class="inputTextR" style="width: 54px;"/>
-    </td>
-  </tr>
-</table>
 
-<table style="background: #f0f0f0; float: left;">
-  <tr>
-    <td style="vertical-align: middle; background: #f0f0f0; padding: 10px">
-      <input type="color" id="color1" class="inputColor" /><!--
-      --><input type="text" id="hex1" class="inputText"/>
+  </div>
+
+  <div style="border: 1px solid darkgray; padding: 10px; display: flex; flex-direction: column; align-items: center;">
+      <div><input type="color" id="color1" class="inputColor" /><!--
+      --><input type="text" id="hex1" class="inputText"/></div>
       <table style="width: 100%; margin: 6px 0; text-align: center;">
         <tr><td id="mix120"></td></tr>
         <tr><td id="mix121"></td></tr>
@@ -398,13 +425,31 @@ function setScale() {
         <tr><td id="mix125"></td></tr>
         <tr><td id="mix126"></td></tr>
       </table>
-      <input type="color" id="color2" class="inputColor" /><!--
-      --><input type="text" id="hex2" class="inputText"/>
-    </td>
-  </tr>
-</table>
+      <div><input type="color" id="color2" class="inputColor" /><!--
+      --><input type="text" id="hex2" class="inputText"/></div>
+  </div>
 
-<div style="clear: both;"></div>
+  <div style="border: 1px solid darkgray; padding: 10px; display: flex; flex-direction: column; gap: 5px; align-items: start;">
+  <a href="https://matplotlib.org/stable/gallery/color/named_colors.html" class="asis"></a>
+  <select id="smcolors">
+    <option value="TABLEAU_COLORS">TABLEAU_COLORS</option>
+    <option value="CSS4_COLORS">CSS4_COLORS</option>
+    <option value="XKCD_COLORS_1">XKCD_COLORS_1</option>
+    <option value="XKCD_COLORS_2">XKCD_COLORS_2</option>
+    <option value="XKCD_COLORS_3">XKCD_COLORS_3</option>
+    <option value="XKCD_COLORS_4">XKCD_COLORS_4</option>
+    <option value="XKCD_COLORS_5">XKCD_COLORS_5</option>
+    <option value="XKCD_COLORS_6">XKCD_COLORS_6</option>
+    <option value="XKCD_COLORS_7">XKCD_COLORS_7</option>
+    <option value="XKCD_COLORS_8">XKCD_COLORS_8</option>
+    <option value="XKCD_COLORS_9">XKCD_COLORS_9</option>
+    <option value="XKCD_COLORS_10">XKCD_COLORS_10</option>
+  </select>
+  <div style="display: flex; flex-wrap: wrap; gap: 5px;" id="mcolors">
+  </div>
+  </div>
+
+</div>
 
 </div>
 </main>
