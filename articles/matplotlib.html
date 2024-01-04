@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title></title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<script src="../funcs.js"></script>
+</head>
+<body onload="init()">
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>matplotlib</h1>
+
+<h2>Snippets</h2>
+
+<h3>フォント</h3>
+<pre class="python">
+# フォントが未追加のときに追加する.
+%matplotlib inline  
+import matplotlib.pyplot as plt
+from matplotlib import font_manager
+if 'VL Gothic' not in font_manager.fontManager.ttflist:
+    font_manager.fontManager.addfont('/usr/share/fonts/truetype/vlgothic/VL-Gothic-Regular.ttf')
+plt.rcParams['font.family'] = 'VL Gothic'
+plt.rcParams['font.size'] = 14
+
+# 可搬性のために複数フォントを指定する.
+%matplotlib inline  
+import matplotlib.pyplot as plt
+plt.rcParams['font.family'] = 'sans-serif'
+plt.rcParams['font.sans-serif'] = [
+    'Rounded Mplus 1c', 'Hiragino Maru Gothic Pro', 'IPAPGothic', 'Yu Gothic', 'Meiryo']
+</pre>
+
+
+
+</div>
+</main>
+</div>
+</body>
+</html>

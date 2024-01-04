@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title></title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<script src="../funcs.js"></script>
+</head>
+<body onload="init()">
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>その他の Python パッケージ</h1>
+
+<h2>Examples</h2>
+
+<h3>PDF をマージする</h3>
+おそらくこう。
+<pre class="python">
+import pypdf
+merger = pypdf.PdfMerger()
+for i in range(16):
+    merger.append(f'./pdf_files/{i+1}.pdf')
+merger.write('merged.pdf')
+merger.close()
+</pre>
+
+<h3>MP4 を GIF に変換する</h3>
+Windous 10 では Windows + Alt + R で画面録画できるが、生成される MP4 は Qiita に貼れないし、Slack には貼れるが閲覧者が再生ボタンをクリックしてくれなければ動かない。そこで GIF にする。なお、Qiita にアップロードする GIF は 10MB 以内でなければならず、月間で上限もある (<a href="https://help.qiita.com/ja/articles/qiita-image-upload">参考</a>)。ので、なるべく小さくなるように画像サイズ and/or fps を落とすとよい。
+<pre class="python">
+from moviepy.editor import VideoFileClip
+from moviepy.video.fx.resize import resize
+input_file = 'rubikscube.mp4'
+output_file = 'rubikscube.gif'
+clip = VideoFileClip(input_file)
+clip = resize(clip, (clip.w / 2.5, clip.h / 2.5))
+clip.write_gif(output_file, fps=5)
+</pre>
+
+</div>
+</main>
+</div>
+</body>
+</html>
