@@ -96,7 +96,19 @@ main.main>div.item {
 
 <h3>ヘッダーとフッター</h3>
 ヘッダーは左揃え、メイン画面は中央揃え、フッターは右揃えにできる。そうしたいかはさておき。
+
 <div style="width: 100%; width: 200px; height: 200px; overflow: auto; border: 1px solid darkgray; margin: 0.5em 0;">
+  <div style="display: flex; flex-direction: column; align-items: center;">
+    <div style="align-self: start; background: ivory; padding: 10px; position: sticky; top: 0; border: 1px solid darkgray; border-top: 0; border-left: 0;">ヘッダー</div>
+    <div style="padding: 10px;">
+      ほげほげほげほげ<br/>ふがふがふがふが<br/>ほげほげほげほげ<br/>ふがふがふがふが<br/>
+      ほげほげほげほげ<br/>ふがふがふがふが<br/>ほげほげほげほげ<br/>ふがふがふがふが<br/>
+    </div>
+    <div style="align-self: end; background: azure; padding: 10px; position: sticky; bottom: 0; border: 1px solid darkgray; border-right: 0; border-bottom: 0;">フッター</div>
+  </div>
+</div>
+
+<div style="width: 100%; width: 200px; height: 200px; overflow: auto; border: 1px solid darkgray; margin: 0.5em 0; overscroll-behavior: none;">
   <div style="display: flex; flex-direction: column; align-items: center;">
     <div style="align-self: start; background: ivory; padding: 10px; position: sticky; top: 0; border: 1px solid darkgray; border-top: 0; border-left: 0;">ヘッダー</div>
     <div style="padding: 10px;">
