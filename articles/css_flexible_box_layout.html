@@ -96,12 +96,23 @@ main.main>div.item {
 </ul>
 
 <h3>ヘッダーとフッター</h3>
+<style type="text/css">
+<!--
+.overflow-auto {
+  width: 200px;
+  height: 200px;
+  overflow: auto;
+  border: 1px solid darkgray;
+  margin: 1.0em 0;
+}
+-->
+</style>
 ヘッダーは左揃え、メイン画面は中央揃え、フッターは右揃えにできる。そうしたいかはさておき。
 
-<div style="width: 100%; width: 200px; height: 200px; overflow: auto; border: 1px solid darkgray; margin: 1.0em 0;">
-  <div style="display: flex; flex-direction: column; align-items: center;">
+<div class="overflow-auto">
+  <div style="display: flex; flex-direction: column;">
     <div style="align-self: start; background: ivory; padding: 10px; position: sticky; top: 0; border: 1px solid darkgray; border-top: 0; border-left: 0;">ヘッダー</div>
-    <div style="padding: 10px;">
+    <div style="align-self: center; padding: 10px;">
       ほげほげほげほげ<br/>ふがふがふがふが<br/>ほげほげほげほげ<br/>ふがふがふがふが<br/>
       ほげほげほげほげ<br/>ふがふがふがふが<br/>ほげほげほげほげ<br/>ふがふがふがふが<br/>
     </div>
@@ -111,10 +122,10 @@ main.main>div.item {
 
 なお、モバイルブラウザでのオーバースクロール (画面の上/下の方をみていこうとスクロールしたときにその勢いのままに本来スクロールできない領域まで一旦スクロールされてしまい (その後に跳ね返る)、上の方にスクロールしたときはページがリロードされることが多い) を防ぐためには overscroll-behavior: none; を設定する (以下では overflow: auto; をもつ div 要素に設定しているが実際には html 要素などに設定するはずである) [3]。
 
-<div style="width: 100%; width: 200px; height: 200px; overflow: auto; border: 1px solid darkgray; margin: 1.0em 0; overscroll-behavior: none;">
-  <div style="display: flex; flex-direction: column; align-items: center;">
+<div class="overflow-auto" style="overscroll-behavior: none;">
+  <div style="display: flex; flex-direction: column;">
     <div style="align-self: start; background: ivory; padding: 10px; position: sticky; top: 0; border: 1px solid darkgray; border-top: 0; border-left: 0;">ヘッダー</div>
-    <div style="padding: 10px;">
+    <div style="align-self: center; padding: 10px;">
       ほげほげほげほげ<br/>ふがふがふがふが<br/>ほげほげほげほげ<br/>ふがふがふがふが<br/>
       ほげほげほげほげ<br/>ふがふがふがふが<br/>ほげほげほげほげ<br/>ふがふがふがふが<br/>
     </div>
