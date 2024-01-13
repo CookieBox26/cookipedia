@@ -1,57 +1,250 @@
-body { color: #303030; font-family: 'Trebuchet MS', sans-serif; font-size: 88%; background: #ffffff; letter-spacing: 0.035em; margin: 0; }
-a, a:visited { color: #0068b7; text-decoration: none; }
-a:hover { text-decoration: underline; }
-a.note { vertical-align: super; font-size: 0.75em; }
-a.break { word-break: break-all; }
-a.asis::after { content: attr(href); }
-span.break { word-break: break-all; }
-span.u { text-decoration: underline; }
-h1, h2 { font-weight: normal; border-bottom: 1px solid darkgray; }
-div.long-title>h1 { line-height: 1.2; padding-top: 0.2em; padding-bottom: 0.1em; }
-div#smartphone-header { display: none; }
-div#sidebar { box-sizing: border-box;  /* 指定サイズ内でパディングを取るよう指示 */ flex-basis: 190px; max-width: 190px; top: 0; position: sticky; padding: 20px; font-size: 90%; word-break: break-all; }
-.container { max-width: 100%; display: -webkit-flex; display: flex; align-items: flex-start;  /* 規定値の stretch から変更し子要素の高さを揃えず上揃えに */ }
-.main { margin: 0 10px 0 0; padding: 0; flex-basis: 700px; max-width: 700px; }
-.main .item { margin: 15px 0 15px 0; padding: 0 20px 20px; background: #ffffff; border: 1px solid darkgray; font-size: 98%; }
-div#sidebar h5 { font-weight: normal; border-bottom: 1px solid darkgray; margin-bottom: 1.0em; font-size: 100%; }
-p { margin: 0 0 0.5em; }
-p>ul, p>ol { margin: 0.3em 0; }
-p.indent { padding-left: 1em; }
-ol.ref { counter-reset: li; padding-left: 2.25em; }
-ol.ref>li { position: relative; list-style: none; word-break: break-all; }
-ol.ref>li:before{ position: absolute; left: -2.25em; counter-increment: li; content: '['counter(li)']'; }
-ol.parenthesis { counter-reset: li; padding-left: 2.25em; }
-ol.parenthesis>li { position: relative; list-style: none; }
-ol.parenthesis>li:before{ position: absolute; left: -2.25em; counter-increment: li; content: '('counter(li)')'; }
-ol.none { counter-reset: li; padding-left: 0; }
-ol.none>li { position: relative; list-style: none; }
-ol.none>li:before{ position: absolute; content: ''; }
-ol.note { counter-reset: li; padding-left: 4.5em; font-size: 88%; }
-ol.note>li { position: relative; list-style: none; }
-ol.note>li:before { position: absolute; left: -4.5em; counter-increment: li; content: '[注釈'counter(li)']'; }
-div.categories { border: 1px solid darkgray; background: #ffffff; margin: 0.5em 5px 0.5em 0; padding: 0.5em; }
-div.categories:before { content: 'カテゴリ： '; }
-pre { background: #f3f3f3; border: 1px solid darkgray; padding: 1em; margin: 1em 5px 1em 0; white-space: pre; word-wrap: normal; overflow: auto; }
-pre.inline { display: inline; padding: 0.2em 0.3em; }
-pre.console { color: #f3f3f3; background: #4d4d4d; }
-pre span.keyword { color: #006eb0; font-weight: bold; }
-pre span.builtin { color: #006eb0; }
-pre span.numeric { color: #e07c0b; }
-pre span.literal, pre span.literal>span { color: #b7282e; font-weight: normal; }
-pre span.comment, pre span.comment>span { color: #3a924c; font-weight: normal; }
-div.prop { border: 1px dotted #303030; padding: 1.25em 1em 1em 1em; margin: 1.25em 0 1.25em 0; position: relative; }
-div.prop>div.header { margin-bottom: 0.5em; position: absolute; top: -0.75em; background-color: #ffffff; padding: 0 0.5em; font-weight: bold; }
-span.index-ts { font-size: 88%; }
-ul.ref-list>li { margin: 0 0 0.5em; list-style: none; text-indent: -2em; }
+body {
+  color: #303030;
+  font-family: 'Trebuchet MS', sans-serif;
+  font-size: 88%;
+  background: #ffffff;
+  letter-spacing: 0.035em;
+  margin: 0;
+}
+.break {
+  word-break: break-all;
+}
+a, a:visited {
+  color: #0068b7;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+a.note {
+  vertical-align: super;
+  font-size: 0.75em;
+}
+a.asis::after {
+  content: attr(href);
+}
+span.u {
+  text-decoration: underline;
+}
+h1, h2 {
+  font-weight: normal;
+  border-bottom: 1px solid darkgray;
+}
+div.long-title>h1 {
+  line-height: 1.2;
+  padding-top: 0.2em;
+  padding-bottom: 0.1em;
+}
+div#smartphone-header {
+  display: none;
+}
+div#sidebar {
+  /* 指定サイズ内でパディングを取るよう指示 */
+  box-sizing: border-box;
+  flex-basis: 190px;
+  max-width: 190px;
+  top: 0;
+  position: sticky;
+  padding: 20px;
+  font-size: 90%;
+  word-break: break-all;
+}
+.container {
+  max-width: 100%;
+  display: -webkit-flex;
+  display: flex;
+  /* 規定値の stretch から変更し子要素の高さを揃えず上揃えに */
+  align-items: flex-start;
+}
+.main {
+  margin: 0 10px 0 0;
+  padding: 0;
+  flex-basis: 700px;
+  max-width: 700px;
+}
+.main .item {
+  margin: 15px 0 15px 0;
+  padding: 0 20px 20px;
+  background: #ffffff;
+  border: 1px solid darkgray;
+  font-size: 98%;
+}
+div#sidebar h5 {
+  font-weight: normal;
+  border-bottom: 1px solid darkgray;
+  margin-bottom: 1.0em;
+  font-size: 100%;
+}
+p {
+  margin: 0 0 0.5em;
+}
+p>ul, p>ol {
+  margin: 0.3em 0;
+}
+p.indent {
+  padding-left: 1em;
+}
+ol.ref {
+  counter-reset: li;
+  padding-left: 2.25em;
+}
+ol.ref>li {
+  position: relative;
+  list-style: none;
+  word-break: break-all;
+}
+ol.ref>li:before{
+  position: absolute;
+  left: -2.25em;
+  counter-increment: li;
+  content: '['counter(li)']';
+}
+ol.parenthesis {
+  counter-reset: li;
+  padding-left: 2.25em;
+}
+ol.parenthesis>li {
+  position: relative;
+  list-style: none;
+}
+ol.parenthesis>li:before{
+  position: absolute;
+  left: -2.25em;
+  counter-increment: li;
+  content: '('counter(li)')';
+}
+ol.none {
+  counter-reset: li;
+  padding-left: 0;
+}
+ol.none>li {
+  position: relative;
+  list-style: none;
+}
+ol.none>li:before{
+  position: absolute;
+  content: '';
+}
+ol.note {
+  counter-reset: li;
+  padding-left: 4.5em;
+  font-size: 88%;
+}
+ol.note>li {
+  position: relative;
+  list-style: none;
+}
+ol.note>li:before {
+  position: absolute;
+  left: -4.5em;
+  counter-increment: li;
+  content: '[注釈'counter(li)']';
+}
+div.categories {
+  border: 1px solid darkgray;
+  margin: 0.5em 0;
+  padding: 0.5em;
+}
+div.categories:before {
+  content: 'カテゴリ： ';
+}
+pre {
+  background: #f3f3f3;
+  border: 1px solid darkgray;
+  padding: 1em;
+  margin: 1em 0;
+  white-space: pre;
+  word-wrap: normal;
+  overflow: auto;
+}
+pre.inline {
+  display: inline;
+  padding: 0.2em 0.3em;
+}
+pre.console {
+  color: #f3f3f3;
+  background: #4d4d4d;
+}
+pre span.keyword, pre span.builtin {
+  color: #006eb0;
+}
+pre span.keyword {
+  font-weight: bold;
+}
+pre span.numeric {
+  color: #e07c0b;
+}
+pre span.literal, pre span.literal>span {
+  color: #b7282e;
+  font-weight: normal;
+}
+pre span.comment, pre span.comment>span {
+  color: #3a924c;
+  font-weight: normal;
+}
+div.prop {
+  border: 1px dotted #303030;
+  padding: 1.25em 1em 1em 1em;
+  margin: 1.25em 0;
+  position: relative;
+}
+div.prop>div.header {
+  margin-bottom: 0.5em;
+  position: absolute;
+  top: -0.75em;
+  background-color: #ffffff;
+  padding: 0 0.5em;
+  font-weight: bold;
+}
+span.index-ts {
+  font-size: 88%;
+}
+ul.ref-list>li {
+  margin: 0 0 0.5em;
+  list-style: none;
+  text-indent: -2em;
+}
+div.flex {
+  display: flex;
+  margin: 0.5em 0;
+  gap: 0.5em;
+}
+div.flex>div {
+  flex: 1;
+  border: 1px solid darkgray;
+  padding: 0.5em;
+}
 @media screen and (max-width: 900px) {
-  div#sidebar { width: 150px; }
-  .main { max-width: calc(100% - 160px); }
+  div#sidebar {
+    width: 150px;
+  }
+  .main {
+    max-width: calc(100% - 160px);
+  }
 }
 @media screen and (max-width: 540px) {
-  body { /* URLだけ禁則処理解除するのが望ましいがさしあたり */ word-break: break-all; font-size: 86%; }
-  h1, h2 { /* 見出しは目立つので禁則処理する */ word-break: normal; }
-  div#smartphone-header { display: block; padding: 10px 20px 5px; font-size: 86%; }
-  div#sidebar { display: none; }
-  .main { margin: 0 5px 0 5px; max-width: calc(100% - 10px); }
-  .main .item { margin: 0 0 15px 0; }
+  body {
+    /* URLだけ禁則処理解除するのが望ましいがさしあたり */
+    word-break: break-all;
+    font-size: 86%;
+  }
+  h1, h2 {
+    /* 見出しは目立つので禁則処理する */
+    word-break: normal;
+  }
+  div#smartphone-header {
+    display: block;
+    padding: 10px 20px 5px;
+    font-size: 86%;
+  }
+  div#sidebar {
+    display: none;
+  }
+  .main {
+    margin: 0 5px 0 5px;
+    max-width: calc(100% - 10px);
+  }
+  .main .item {
+    margin: 0 0 15px 0;
+  }
 }
