@@ -1,0 +1,142 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title></title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<style type="text/css">
+<!--
+div.flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+div.flex>div {
+  border: 1px solid darkgray;
+  padding: 10px;
+}
+table.tbl_01 {
+  border-collapse: collapse;
+}
+table.tbl_01 th, table.tbl_01 td {
+  vertical-align: top;
+  padding: 0 0.35em;
+  border-top: 1px solid darkgray;
+  border-bottom: 1px solid darkgray;
+}
+table.tbl_01 td {
+  text-align: right;
+}
+-->
+</style>
+<script src="../funcs.js"></script>
+<script type="text/javascript"><!--
+let dollarsHourly = 1.459;
+let rate = 145.0;
+let options = '2,6,24';
+let dollarsHourlyElm;
+let rateElm;
+let optionsElm;
+
+function createTable() {
+  let parent = document.querySelector("#tableContainer");
+  parent.innerHTML = '';
+
+  for (let j = 0; j < 2; j++) {
+    let kigou = (j == 0) ? '＄' : '￥';
+    let headers = {};
+    headers['コスト (' + kigou + '/1時間)'] = 1;
+    let optionsArray = options.split(',');
+    for (let option of optionsArray) {
+      headers['コスト (' + kigou + '/' + option + '時間)'] = parseInt(option);
+    }
+
+    let table = document.createElement('table');
+
+    let tr0 = document.createElement('tr');
+    for (let [header, hours] of Object.entries(headers)) {
+      let td = document.createElement('td');
+      td.innerText = header;
+      tr0.appendChild(td);
+    }
+    table.appendChild(tr0);
+
+    let tr1 = document.createElement('tr');
+    for (let [header, hours] of Object.entries(headers)) {
+      let td = document.createElement('td');
+      if (j == 0) {
+        td.innerText = (hours * dollarsHourly).toFixed(4);
+      } else {
+        td.innerText = (hours * dollarsHourly * rate).toFixed(4);
+      }
+      tr1.appendChild(td);
+    }
+    table.appendChild(tr1);
+    table.classList.add('tbl_01');
+    parent.appendChild(table);
+  }
+}
+
+function init_() {
+  init();
+
+  dollarsHourlyElm = document.querySelector("#dollarsHourly");
+  dollarsHourlyElm.value = dollarsHourly;
+  dollarsHourlyElm.addEventListener("input", function(ev){setDollarsHourly(ev.target.value);}, false);
+
+  rateElm = document.querySelector("#rate");
+  rateElm.value = rate;
+  rateElm.addEventListener("input", function(ev){setRate(ev.target.value);}, false);
+
+  optionsElm = document.querySelector("#options");
+  optionsElm.value = options;
+  optionsElm.addEventListener("input", function(ev){setOptions(ev.target.value);}, false);
+
+  createTable();
+}
+
+function setDollarsHourly(v) {
+  dollarsHourly = v;
+  createTable();
+}
+
+function setRate(v) {
+  rate = v;
+  createTable();
+}
+
+function setOptions(v) {
+  options = v;
+  createTable();
+}
+// --></script>
+</head>
+<body onload="init_()">
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>電卓</h1>
+
+<div class="flex" style="gap: 0;">
+<div style="flex: none; border: 0;">
+コスト (＄/1時間)<br/>
+換算レート<br/>
+オプション
+</div>
+<div style="flex: none; border: 0;">
+<input type="text" style="width: 72px;" id="dollarsHourly"/><br/>
+<input type="text" style="width: 72px;" id="rate"/><br/>
+<input type="text" style="width: 72px;" id="options"/>
+</div>
+</div>
+
+<div class="flex" id="tableContainer"></div>
+
+</div>
+</main>
+</div>
+</body>
+</html>
