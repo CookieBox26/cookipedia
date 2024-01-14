@@ -162,7 +162,7 @@ function create_index() {
 
         index_="<a href=\""${filepath}"\">"${title}"</a>"
         if [[ $display_ts = "1" ]]; then
-            index_=${index_}"<span class=\"index-ts\">（最終更新日 "${ts}"）</span>"
+            index_=${index_}"<span class=\"index-ts\"> (最終更新日 "${ts}")</span>"
         fi
         echo $index_
         index=${index}"<li>"${index_}"</li>"
