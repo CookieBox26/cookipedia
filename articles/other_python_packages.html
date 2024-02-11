@@ -28,6 +28,44 @@ merger.write('merged.pdf')
 merger.close()
 </pre>
 
+<h3>WAV を MP3 に変換する</h3>
+サンプリングレートを下げないとビットレートは下がらない。<br/>
+以下に FFmpeg で許容されるサンプリングレートがある。<br/>
+https://superuser.com/questions/1492214/which-audio-encoders-in-ffmpeg-support-8-khz<br/>
+音声のサンプリング周波数を 16kHz より下げるとロボットのようなノイズが大きくなってくる。<br/>
+
+<pre class="python">
+from pydub import AudioSegment
+wav_audio = AudioSegment.from_wav('0.wav')
+wav_audio.export('0.mp3', format='mp3', parameters=['-ar', '16000', '-ab', '16k'])
+
+from pydub.utils import mediainfo
+audio = AudioSegment.from_mp3('0.mp3')
+sampling_rate = audio.frame_rate
+media_info = mediainfo('0.mp3')
+bitrate = media_info['bit_rate']
+print(f"サンプリングレート: {sampling_rate} Hz")
+print(f"ビットレート: {bitrate} bps")
+</pre>
+AquesTalkPlayer による音声合成からやるとこう。
+<pre class="python">
+from pydub import AudioSegment
+import subprocess
+atp = 'C:/tools/aquestalkplayer/AquesTalkPlayer.exe'
+story = [
+    'k:M推定量とはなんなのでしょうか。',
+    't:5.1式の形式の目的関数の最大化で得られるような推定量のことなのかな。'
+]
+audio = None
+for s in story:
+    v = s.split(':')
+    subprocess.run([atp, '/P', v[0], '/T', v[1], '/W', 'tmp.wav'])
+    audio_ = AudioSegment.from_wav('tmp.wav')
+    audio = audio_ if (audio is None) else (audio + audio_)
+audio.export('test.mp3', format='mp3', parameters=['-ar', '16000', '-ab', '16k'])
+audio.export('test.m4a', format='ipod', codec='aac', parameters=['-ar', '16000', '-ab', '16k'])
+</pre>
+
 <h3>MP4 を GIF に変換する</h3>
 Windous 10 では Windows + Alt + R で画面録画できるが、生成される MP4 は Qiita に貼れないし、Slack には貼れるが閲覧者が再生ボタンをクリックしてくれなければ動かない。そこで GIF にする。なお、Qiita にアップロードする GIF は 10MB 以内でなければならず、月間で上限もある (<a href="https://help.qiita.com/ja/articles/qiita-image-upload">参考</a>)。ので、なるべく小さくなるように画像サイズ and/or fps を落とすとよい。
 <pre class="python">

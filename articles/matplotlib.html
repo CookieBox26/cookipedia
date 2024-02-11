@@ -15,6 +15,11 @@
 <div class="item">
 <h1>matplotlib</h1>
 
+<h2>Gists</h2>
+<ul>
+  <li><a href="https://gist.github.com/CookieBox26/2f4016254b05efae4134a25925b98881">2軸グラフサンプル</a></li>
+</ul>
+
 <h2>Snippets</h2>
 
 <h3>フォント</h3>
@@ -36,7 +41,13 @@ plt.rcParams['font.sans-serif'] = [
     'Rounded Mplus 1c', 'Hiragino Maru Gothic Pro', 'IPAPGothic', 'Yu Gothic', 'Meiryo']
 </pre>
 
-
+<h3>色</h3>
+<pre class="python">
+import matplotlib.colors as mcolors
+# colors = mcolors.CSS4_COLORS
+colors = mcolors.XKCD_COLORS
+names = sorted(colors, key=lambda c: tuple(mcolors.rgb_to_hsv(mcolors.to_rgb(c))))
+</pre>
 
 </div>
 </main>
