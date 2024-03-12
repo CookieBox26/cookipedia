@@ -15,7 +15,7 @@
 <div class="item">
 <h1>その他の Python パッケージ</h1>
 
-<h2>Examples</h2>
+<h2>Snippets</h2>
 
 <h3>PDF をマージする</h3>
 おそらくこう。
@@ -76,6 +76,56 @@ output_file = 'rubikscube.gif'
 clip = VideoFileClip(input_file)
 clip = resize(clip, (clip.w / 2.5, clip.h / 2.5))
 clip.write_gif(output_file, fps=5)
+</pre>
+
+<h3>音声を録音する</h3>
+
+<pre class="python">
+import sounddevice as sd
+from scipy.io.wavfile import write
+import time
+import tqdm
+
+def count_down(t, step=-1):
+    for i in tqdm.tqdm(range(t, 0, step)):
+        time.sleep(-step)
+
+def record(duration=20, out_wav='output.wav'):
+    # 1つ目のシークバーで3秒カウントダウンする
+    # 2つ目のシークバーがいっぱいになるまでしゃべる
+    count_down(3)
+    rec = sd.rec(int(duration * 44100), samplerate=44100, channels=2)
+    count_down(duration)
+    sd.wait()
+    write(out_wav, 44100, rec)
+
+record()
+</pre>
+
+<h3>動画をトリミングする (時間方向も画面方向も)</h3>
+かき出しに時間がかかる。
+<pre class="python">
+from moviepy.editor import *
+from moviepy.video.fx.resize import resize
+
+# 元動画
+file_path = "Documents/zoom/2024-03-09 10.46.17 chihiro miharaのパーソナルミーティングルーム/video1558201350.mp4"
+save_path = "20240309_asympstat.mp4"
+
+# 時間クリップ用パラメータ
+t_start = 0  # 切り出し開始時刻 (秒)
+t_end = 30 * 60 + 15  # 切り出し終了時刻 (秒)
+
+# 画面クロップは「右上座標と右下座標」や「中心座標と画面サイズ」など色々な指定方法が可能である
+# https://zulko.github.io/moviepy/ref/videofx/moviepy.video.fx.all.crop.html
+x1 = 40  # 画面切り出し開始 x 座標 (右端が原点)
+y1 = 20  # 画面切り出し開始 y 座標 (上端が原点)
+width = 1800  # 切り出す画面幅
+height = 1100  # 切り出す画面高さ
+
+video = VideoFileClip(file_path).subclip(t_start, t_end).crop(x1=x1, y1=y1, width=width, height=height)
+video = resize(video, (width/2, height/2))
+video.write_videofile(save_path, fps=25)
 </pre>
 
 </div>
