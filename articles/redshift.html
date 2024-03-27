@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title></title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<script src="../funcs.js"></script>
+</head>
+<body onload="init()">
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>Redshift</h1>
+
+<h2>Snippets</h2>
+
+<pre>
+WITH test_table AS (
+  SELECT 'Shizuoka' AS pref, 'Shizuoka' AS city UNION ALL
+  SELECT 'Shizuoka' AS pref, 'Shizuoka' AS city UNION ALL
+  SELECT 'Shizuoka' AS pref, 'Hamamatsu' AS city UNION ALL
+  SELECT 'Shizuoka' AS pref, 'Hamamatsu' AS city UNION ALL
+  SELECT 'Shizuoka' AS pref, 'Hamamatsu' AS city UNION ALL
+  SELECT 'Aichi' AS pref, 'Nagoya' AS city UNION ALL
+  SELECT 'Aichi' AS pref, 'Nagoya' AS city UNION ALL
+  SELECT 'Aichi' AS pref, 'Nagoya' AS city UNION ALL
+  SELECT 'Aichi' AS pref, 'Nagoya' AS city UNION ALL
+  SELECT 'Aichi' AS pref, 'Nagoya' AS city UNION ALL
+  SELECT 'Aichi' AS pref, 'Chita' AS city
+),
+test_table_1 AS (
+  SELECT
+    COUNT(*) AS n, pref,
+    city || ' (' || COUNT(*)::VARCHAR || ')' AS city,
+    RANK() OVER (PARTITION BY pref ORDER BY COUNT(city) DESC) AS rank
+  FROM test_table
+  GROUP BY pref, city
+)
+SELECT
+  SUM(n) AS n, pref,
+  MAX(CASE WHEN rank = 1 THEN city ELSE NULL END) AS city_1,
+  MAX(CASE WHEN rank = 2 THEN city ELSE NULL END) AS city_2
+FROM test_table_1 GROUP BY pref ORDER BY n DESC;
+</pre>
+<pre class="console">
+n  pref      city_1         city_2
+6  Aichi     Nagoya (5)     Chita (1)
+5  Shizuoka  Hamamatsu (3)  Shizuoka (2)
+</pre>
+
+</div>
+</main>
+</div>
+</body>
+</html>
