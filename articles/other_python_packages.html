@@ -17,6 +17,21 @@
 
 <h2>Snippets</h2>
 
+<h3>PDF をテキスト化する</h3>
+<a href="https://pdfminersix.readthedocs.io/en/latest/">pdfminer.six</a> を用いた方法は以下である。<br/>
+<a class="asis" href="https://gist.github.com/CookieBox26/2aee53cc144a213c46efbfebc9fdca08"></a><br/>
+<br/>
+<a href="https://pymupdf.readthedocs.io/ja/latest/tutorial.html">PyMuPDF</a> を用いた方法は以下である。<br/>
+<pre class="python">
+import fitz
+pdf_path = '2302.11939v6.pdf'
+doc = fitz.open(pdf_path)
+for i_page, page in enumerate(doc):
+    texts = page.get_text()
+    print(texts)
+    break
+</pre>
+
 <h3>PDF をマージする</h3>
 おそらくこう。
 <pre class="python">
@@ -31,7 +46,7 @@ merger.close()
 <h3>WAV を MP3 に変換する</h3>
 サンプリングレートを下げないとビットレートは下がらない。<br/>
 以下に FFmpeg で許容されるサンプリングレートがある。<br/>
-https://superuser.com/questions/1492214/which-audio-encoders-in-ffmpeg-support-8-khz<br/>
+<a class="asis" href="https://superuser.com/questions/1492214/which-audio-encoders-in-ffmpeg-support-8-khz"></a><br/>
 音声のサンプリング周波数を 16kHz より下げるとロボットのようなノイズが大きくなってくる。<br/>
 
 <pre class="python">
