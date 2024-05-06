@@ -1,12 +1,5 @@
 #!/bin/bash
 
-# カテゴリ一覧をここにかく --> カテゴリ一覧取得自動化のため廃止
-# categories="
-# categories/category_matrix.html=行列 
-# categories/category_neurips_2021.html=NeurIPS&nbsp;2021 
-# categories/category_transformer.html=Transformer 
-# "
-
 # 【注1】
 # 各記事内で以下の形式の行を記述することでカテゴリの存在が認識され収集される。
 # 現在カテゴリタイトル中の空白に未対応なので特殊文字にすること。
@@ -67,8 +60,9 @@ function create_category_files() {
     for category in "${categories[@]}"; do
         category_title=${category#*=}
         category_url=${category%=*}
-        n_index=0
-        index=""
+
+        # 先に各ファイルの記事タイトルを抽出する (記事タイトルでソートするため)
+        articles=""
         for filepath in articles/*.html; do
             # _template が付くファイルはスキップ
             if [[ $filepath =~ .*_template.html ]]; then
@@ -80,13 +74,53 @@ function create_category_files() {
             elif [[ ${category_:0:2} != "<a" ]]; then
                 continue
             fi
+
+            # 記事タイトルを抽出する
             title=`grep "<h1>" "$filepath"`
             title=${title#*<h1>}
             title=${title%</h1>*}
-            index_="<li><a href=\"../"${filepath}"\">"${title}"</a></li>"
-            index=${index}${index_}
+            if [ -z "$title" ]; then
+                title=`grep "^# " "$filepath"`
+                title=${title#*\# }
+            fi
+            title=${title// /　}  # 空白があると上手くいかないので一旦全角に
+            title=${title//&/\\&}  # sed の置換先のアンパサンドをエスケープ
+
+            # 最終更新日付を取得する
+            # git status コマンドの結果が空でないならファイルのタイムスタンプを,
+            # git status コマンドの結果が空なら git log の最終更新日を参照する
+            status=`git status -s "$filepath"`
+            if [[ -n $status ]]; then
+                ts=`date "+%Y-%m-%d" -r "$filepath"`
+            else
+                ts=`git log -1 --format="%ad" --date=short "$filepath"`
+            fi
+
+            articles=${articles}${title}"="${filepath}"@"${ts}" "
+        done
+        articles=($articles)
+        articles=($(for v in "${articles[@]}"; do echo "$v"; done | sort -f ))
+        n_articles=${#articles[@]}
+
+        n_index=0
+        index=""
+        for article in "${articles[@]:0:$n_articles}"; do
+            title=${article%=*}
+            title=${title//　/ }
+            filepath=${article#*=}
+            filepath=${filepath%@*}
+            ts=${article#*@}
+
+            index_="<a href=\"../"${filepath}"\">"${title}"</a>"
+            if [[ $display_ts = "1" ]]; then
+                index_=${index_}"<span class=\"index-ts\"> (最終更新日 "${ts}")</span>"
+            fi
+            echo $index_
+            index=${index}"<li>"${index_}"</li>"
             n_index=$((n_index+1))
         done
+        echo -e "\n----- "$category_title" のページ一覧 -----"
+        echo $index
 
         # そのカテゴリに属する記事が収集されたときだけカテゴリページを生成する
         if [[ -n $index ]]; then
@@ -108,7 +142,7 @@ function create_index() {
     sort_ts=$3  # 更新日降順ソートにするか
     n_articles=$4  # 何件まで表示するか (0なら全て)
 
-    # 先に各ファイルの記事タイトルを抽出する（記事タイトルでソートするため）
+    # 先に各ファイルの記事タイトルを抽出する (記事タイトルでソートするため)
     articles=""
     for filepath in $1; do
         # _template が付くファイルはスキップ
@@ -136,7 +170,7 @@ function create_index() {
         else
             ts=`git log -1 --format="%ad" --date=short "$filepath"`
         fi
-        
+
         articles=${articles}${title}"="${filepath}"@"${ts}" "
     done
     articles=($articles)
@@ -147,7 +181,7 @@ function create_index() {
     fi
 
     # 改めて各記事のリンクを書き出す
-    echo -e "\n===== "${1}"以下のページ一覧 ====="
+    echo -e "\n===== "${1}" 以下のページ一覧 ====="
     n_index=0
     index=""
     if [[ $n_articles = "0" ]]; then
