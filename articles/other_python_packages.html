@@ -17,6 +17,21 @@
 
 <h2>Snippets</h2>
 
+<h3>HTML ファイルをパースする</h3>
+<pre class="python">
+import bs4
+
+in_file_html = 'hoge.html'
+soup = bs4.BeautifulSoup(open(in_file_html, encoding='utf8'), 'html.parser')
+for tag in soup.select('h1, h2, h3, p'):
+    print('-' * 20, tag.name, '-' * 20)
+    if tag.name == 'h2':
+        for tag_ in tag.select('span.title'):
+            print(tag_.get_text())
+    else:
+        print(tag.get_text())
+</pre>
+
 <h3>PDF をテキスト化する</h3>
 <a href="https://pdfminersix.readthedocs.io/en/latest/">pdfminer.six</a> を用いた方法は以下である。<br/>
 <a class="asis" href="https://gist.github.com/CookieBox26/2aee53cc144a213c46efbfebc9fdca08"></a><br/>
@@ -33,7 +48,6 @@ for i_page, page in enumerate(doc):
 </pre>
 
 <h3>PDF をマージする</h3>
-おそらくこう。
 <pre class="python">
 import pypdf
 merger = pypdf.PdfMerger()

@@ -17,6 +17,29 @@
 
 <h2>Snippets</h2>
 
+<h3>エクセルに出力する</h3>
+<pre class="python">
+import pandas as pd
+pd.io.formats.excel.ExcelFormatter.header_style = None
+
+df = pd.DataFrame()
+df['a'] = [0.9, 0.8, 0.7]
+df['b'] = ['qqq', 'www', 'eee']
+df['c'] = ['a' * 100, 's' * 100, 'd' * 100]
+
+xlsx_writer = pd.ExcelWriter('out.xlsx', engine='xlsxwriter')
+workbook  = xlsx_writer.book
+cell_format = workbook.add_format(
+    {'text_wrap': True, 'valign': 'top', 'font_size': 9})
+header_format = workbook.add_format({'align': 'center'})
+df.to_excel(xlsx_writer, sheet_name='hoge', index=False)
+worksheet = xlsx_writer.sheets['hoge']
+worksheet.set_column(0, 1, 10, cell_format)
+worksheet.set_column(2, 2, 20, cell_format)
+worksheet.set_row(0, None, header_format)
+xlsx_writer.close()
+</pre>
+
 <h3>雑然データにする</h3>
 <pre class="python">
 import numpy as np
@@ -45,6 +68,9 @@ print(df_l)
 0  0.9  qqq  aaa  0.8  www  sss  0.7  eee  ddd
 </pre>
 
+<div class="categories">
+<a href="../categories/category_python.html">Python</a>
+</div>
 
 </div>
 </main>
