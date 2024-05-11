@@ -17,14 +17,66 @@
 
 <h2>参考文献</h2>
 <ol class="ref">
-    <li>https://docs.python.org/ja/3/library/datetime.html</li>
-    <ul>
-        <li>#strftime-strptime-behavior に strptime() の書式コードがある。</li>
-    </ul>
-    <li>https://docs.python.org/ja/3.8/library/stdtypes.html#typeiter</li>
+<li><a class="asis" href="https://docs.python.org/ja/3/library/stdtypes.html#context-manager-types"></a></li>
+<li><a class="asis" href="https://docs.python.org/ja/3.8/library/stdtypes.html#typeiter"></a></li>
+<li><a class="asis" href="https://docs.python.org/ja/3/library/datetime.html"></a></li>
+<li><a class="asis" href="https://docs.python.org/ja/3/library/contextlib.html#contextlib.contextmanager"></a></li>
+<ul>
+<li>#strftime-strptime-behavior に strptime() の書式コードがある。</li>
+</ul>    
 </ol>
 
-<h2>フィボナッチ数列を返すイテレータオブジェクト</h2>
+<h2>Snippets</h2>
+<h3>コンテキストマネージャ型</h3>
+<pre class="python">
+import http.client
+import json
+
+class MyClient:
+    def __init__(self, host='localhost', port=8080):
+        self.host = host
+        self.port = port
+    def __enter__(self):
+        self.conn = http.client.HTTPConnection(self.host, self.port)
+        return self
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.conn.close()
+    def get(self, url):
+        self.conn.request('GET', url)
+        resp = self.conn.getresponse()
+        if resp.status == 200:
+            data = json.loads(resp.read().decode())
+            return data
+        else:
+            raise Exception(f'Failed: {resp.status} {resp.reason}')
+
+with MyClient() as cli:
+    data = cli.get('/bentou?type=A')
+    print(data)
+</pre>
+
+<h3>contextlib.contextmanager デコレータ</h3>
+<pre class="python">
+import http.client
+import json
+from contextlib import contextmanager
+
+@contextmanager
+def my_connection(host='localhost', port=8080):
+    conn = http.client.HTTPConnection(host, port)
+    try:
+        yield conn
+    finally:
+        conn.close()
+
+with my_connection() as conn:
+    conn.request('GET', '/bentou?type=A')
+    resp = conn.getresponse()
+    data = json.loads(resp.read().decode())
+    print(data)
+</pre>
+
+<h3>フィボナッチ数列を返すイテレータオブジェクト</h3>
 イテレータオブジェクトの構成プロトコルは、イテレータオブジェクト自体を返す<pre class="inline">__iter__()</pre>と次のアイテムを返す<pre class="inline">__next__()</pre>とのことなので[2]、これらのメソッドを実装する。以下のイテレータオブジェクトは100に達するまでフィボナッチ数列を出力する。
 <pre class="python">
 class Fibonacci:
@@ -106,7 +158,7 @@ class Fibonacci:
         return c
 </pre>
 
-<h2>文字列を datetime 型に変換しユニックス秒に変換する</h2>
+<h3>文字列を datetime 型に変換しユニックス秒に変換する</h3>
 datetime.datetime.strptime() で datetime 型にできる。timestamp() メソッドでユニックス秒にできる。タイムゾーン情報をパースしないと datetime 型は自分のタイムゾーンについて無知になる。その場合でも timestamp() メソッドではシステムのタイムゾーンが適用される。タイムゾーン情報をパースさせれば datetime 型は自分のタイムゾーンを認識する。日本時間の1時より協定世界時の1時の方が未来である。
 <pre class="python">
 import datetime
