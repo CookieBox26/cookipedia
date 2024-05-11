@@ -21,12 +21,23 @@
   <li>https://git-scm.com/docs/git-status#Documentation/git-status.txt---ignoredltmodegt</li>
 </ol>
 
-<pre class="console">
-git config --global --list
-core.autocrlf=false
-</pre>
+<h2>Commands</h2>
 
 <pre class="console">
+git config --list
+git config --local --list
+git config --global --list
+git config --system --list
+
+git config --global init.defaultBranch main
+git config --global core.autocrlf false
+git config --local user.name CookieBox26
+git config --local user.email cookie-box@cookie-box.info
+
+git init
+git add README.md
+git commit -m "first commit."
+
 git status --ignored ./articles/
 </pre>
 
