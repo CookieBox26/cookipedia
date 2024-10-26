@@ -6,6 +6,24 @@
 <title></title>
 <link rel="stylesheet" type="text/css" href="../style.css">
 <script src="../funcs.js"></script>
+
+<!-- Prism start-->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-coy.min.css" rel="stylesheet">
+<style type="text/css"><!--
+pre[class*="language-"]::before, pre[class*="language-"]::after { box-shadow: none !important; }
+code[class*="language-"] { border-left: none !important; box-shadow: none !important; font-size: 88%; }
+pre.language-text { background: #393939 !important; }
+code.language-text { color: #fff !important; background: #393939 !important; }
+--></style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+<script type="text/javascript"><!--
+(function () {
+if (typeof Prism === 'undefined' || typeof document === 'undefined') { return; }
+Prism.hooks.add('before-sanity-check', function (env) { env.code = env.code.replace(/^(?:\r?\n|\r)/, ''); });}());
+// --></script>
+<!-- Prism end -->
+
 </head>
 <body onload="init()">
 <div class="container">
@@ -17,39 +35,43 @@
 
 <h2>Snippets</h2>
 
-<pre>
-WITH test_table AS (
-  SELECT 'Shizuoka' AS pref, 'Shizuoka' AS city UNION ALL
-  SELECT 'Shizuoka' AS pref, 'Shizuoka' AS city UNION ALL
-  SELECT 'Shizuoka' AS pref, 'Hamamatsu' AS city UNION ALL
-  SELECT 'Shizuoka' AS pref, 'Hamamatsu' AS city UNION ALL
-  SELECT 'Shizuoka' AS pref, 'Hamamatsu' AS city UNION ALL
-  SELECT 'Aichi' AS pref, 'Nagoya' AS city UNION ALL
-  SELECT 'Aichi' AS pref, 'Nagoya' AS city UNION ALL
-  SELECT 'Aichi' AS pref, 'Nagoya' AS city UNION ALL
-  SELECT 'Aichi' AS pref, 'Nagoya' AS city UNION ALL
-  SELECT 'Aichi' AS pref, 'Nagoya' AS city UNION ALL
-  SELECT 'Aichi' AS pref, 'Chita' AS city
+<h3>グループごとの値の登場数ランキングを集計する</h3>
+各人の好きな果物テーブルからクラスごとの好きな果物ランキングを集計する。登場数が同じなら果物名で順位を付ける場合は <code class="language-sql">ORDER BY COUNT(*) DESC, fruit</code> とする。
+
+<pre class="language-sql"><code>
+WITH sample_table AS (
+  SELECT '1年1組' AS class_, 'りんご' AS fruit UNION ALL
+  SELECT '1年1組' AS class_, 'りんご' AS fruit UNION ALL
+  SELECT '1年1組' AS class_, 'バナナ' AS fruit UNION ALL
+  SELECT '1年1組' AS class_, 'バナナ' AS fruit UNION ALL
+  SELECT '1年1組' AS class_, 'バナナ' AS fruit UNION ALL
+  SELECT '1年2組' AS class_, 'バナナ' AS fruit UNION ALL
+  SELECT '1年2組' AS class_, 'みかん' AS fruit UNION ALL
+  SELECT '1年2組' AS class_, 'みかん' AS fruit UNION ALL
+  SELECT '1年2組' AS class_, 'みかん' AS fruit UNION ALL
+  SELECT '1年2組' AS class_, 'みかん' AS fruit UNION ALL
+  SELECT '1年2組' AS class_, 'キウイ' AS fruit
 ),
-test_table_1 AS (
+tmp_table_0 AS (
   SELECT
-    COUNT(*) AS n, pref,
-    city || ' (' || COUNT(*)::VARCHAR || ')' AS city,
-    RANK() OVER (PARTITION BY pref ORDER BY COUNT(city) DESC) AS rank
-  FROM test_table
-  GROUP BY pref, city
+    class_, fruit, COUNT(*) AS n_student,
+    RANK() OVER (PARTITION BY class_ ORDER BY COUNT(*) DESC, fruit) AS rank
+  FROM sample_table GROUP BY class_, fruit
 )
 SELECT
-  SUM(n) AS n, pref,
-  MAX(CASE WHEN rank = 1 THEN city ELSE NULL END) AS city_1,
-  MAX(CASE WHEN rank = 2 THEN city ELSE NULL END) AS city_2
-FROM test_table_1 GROUP BY pref ORDER BY n DESC;
-</pre>
-<pre class="console">
-n  pref      city_1         city_2
-6  Aichi     Nagoya (5)     Chita (1)
-5  Shizuoka  Hamamatsu (3)  Shizuoka (2)
-</pre>
+  class_, SUM(n_student) AS n_student,
+  MAX(CASE WHEN rank = 1 THEN fruit || '(' || n_student::VARCHAR || ')' ELSE NULL END) AS fruit_1,
+  MAX(CASE WHEN rank = 2 THEN fruit || '(' || n_student::VARCHAR || ')' ELSE NULL END) AS fruit_2,
+  MAX(CASE WHEN rank = 3 THEN fruit || '(' || n_student::VARCHAR || ')' ELSE NULL END) AS fruit_3
+FROM tmp_table_0
+GROUP BY class_
+ORDER BY class_
+</code></pre>
+<pre class="language-text"><code>
+class_, n_student, fruit_1,  fruit_2,  fruit_3
+1年1組, 5,         バナナ(3), りんご(2), 
+1年2組, 6,         みかん(4), キウイ(1), バナナ(1)
+</code></pre>
 
 </div>
 </main>
