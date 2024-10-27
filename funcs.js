@@ -29,6 +29,7 @@ function createSidebar() {
 }
 
 function syntaxHighlight() {
+    // [2024/10/27] Prism をつかうようにしたのでこの関数は呼ばないようにした
     let pres = document.getElementsByTagName('pre');
     for (let i=0; i < pres.length; ++i) {
         let re = [];
@@ -88,5 +89,5 @@ function syntaxHighlight() {
 function init() {
     prepareTitle();
     createSidebar();
-    syntaxHighlight();
+    // syntaxHighlight();
 }

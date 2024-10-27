@@ -1,9 +1,10 @@
 body {
   color: #303030;
-  font-family: 'Trebuchet MS', sans-serif;
+  font-family: 'Verdana', 'BIZ UDGothic', sans-serif; // 'Trebuchet MS'
+  line-height: 1.3;
   font-size: 88%;
-  background: #ffffff;
-  letter-spacing: 0.035em;
+  background: #fff;
+  letter-spacing: 0.02em;
   margin: 0;
 }
 .break {
@@ -28,7 +29,8 @@ span.u {
 }
 h1, h2 {
   font-weight: normal;
-  border-bottom: 1px solid darkgray;
+  padding-bottom: 0.15em;
+  border-bottom: 1px solid dimgray;
 }
 div.long-title>h1 {
   line-height: 1.2;
@@ -41,12 +43,12 @@ div#smartphone-header {
 div#sidebar {
   /* 指定サイズ内でパディングを取るよう指示 */
   box-sizing: border-box;
-  flex-basis: 190px;
-  max-width: 190px;
+  flex-basis: 200px;
+  max-width: 200px;
   top: 0;
   position: sticky;
   padding: 20px;
-  font-size: 90%;
+  font-size: 92%;
   word-break: break-all;
 }
 .container {
@@ -57,8 +59,7 @@ div#sidebar {
   align-items: flex-start;
 }
 .main {
-  margin: 0 10px 0 0;
-  padding: 0;
+  margin: 0 5px 0 0;
   flex-basis: 700px;
   max-width: 700px;
 }
@@ -66,12 +67,12 @@ div#sidebar {
   margin: 15px 0 15px 0;
   padding: 0 20px 20px;
   background: #ffffff;
-  border: 1px solid darkgray;
-  font-size: 98%;
+  border: 1px solid dimgray;
 }
 div#sidebar h5 {
   font-weight: normal;
-  border-bottom: 1px solid darkgray;
+  padding-bottom: 0.15em;
+  border-bottom: 1px solid dimgray;
   margin-bottom: 1.0em;
   font-size: 100%;
 }
@@ -141,7 +142,7 @@ ol.note>li:before {
   content: '[注釈'counter(li)']';
 }
 div.categories {
-  border: 1px solid darkgray;
+  border: 1px solid dimgray;
   margin: 0.5em 0;
   padding: 0.5em;
 }
@@ -150,7 +151,7 @@ div.categories:before {
 }
 pre {
   background: #f3f3f3;
-  border: 1px solid darkgray;
+  border: 1px solid dimgray;
   padding: 1em;
   margin: 1em 0;
   white-space: pre;
@@ -211,15 +212,34 @@ div.flex {
 }
 div.flex>div {
   flex: 1;
-  border: 1px solid darkgray;
+  border: 1px solid dimgray;
   padding: 0.5em;
+}
+pre[class*="language-"] {
+  border: 0 !important;
+}
+pre[class*="language-"]::before, pre[class*="language-"]::after {
+  box-shadow: none !important;
+}
+code[class*="language-"] {
+  border: 1px solid rgba(0, 0, 0, 0.2) !important;
+  box-shadow: none !important;
+  border-radius: 0.3em !important;
+  font-size: 90% !important;
+}
+pre.language-text>code {
+  color: #fff !important;
+  padding-top: 0.3em;
+  padding-bottom: 0.3em;
+  background: #393939 !important;
+  // background-image: linear-gradient(#444 50%, #333 50%) !important;
 }
 @media screen and (max-width: 900px) {
   div#sidebar {
-    width: 150px;
+    width: 130px;
   }
   .main {
-    max-width: calc(100% - 160px);
+    max-width: calc(100% - 130px);
   }
 }
 @media screen and (max-width: 540px) {
