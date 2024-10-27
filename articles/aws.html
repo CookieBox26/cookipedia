@@ -6,6 +6,16 @@
 <title></title>
 <link rel="stylesheet" type="text/css" href="../style.css">
 <script src="../funcs.js"></script>
+<!-- Prism start-->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-coy.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+<script type="text/javascript"><!--
+(function () {
+if (typeof Prism === 'undefined' || typeof document === 'undefined') { return; }
+Prism.hooks.add('before-sanity-check', function(env){ env.code = env.code.replace(/^(?:\r?\n|\r)/, ''); });}());
+// --></script>
+<!-- Prism end -->
 </head>
 <body onload="init()">
 <div class="container">
@@ -52,13 +62,13 @@ VPC を自分で作成する場合は作成する (なお、AWS アカウント�
 }
 #tbl_01 th, #tbl_01 td {
   vertical-align: top;
-  padding: 0 0.35em;
-  border-top: 1px solid darkgray;
-  border-bottom: 1px solid darkgray;
+  padding: 0.3em 0.4em;
+  border-top: 1px solid dimgray;
+  border-bottom: 1px solid dimgray;
 }
 </style>
 <table id="tbl_01">
-<tr style="border-bottom: 1px solid darkgray;">
+<tr style="border-bottom: 1px solid dimgray;">
 <th>項目</th>
 <th>説明</th>
 <th>選び方</th>
@@ -112,7 +122,7 @@ VPC を自分で作成する場合は作成する (なお、AWS アカウント�
 <ul>
   <li>インスタンス作成時に例えば参考文献 [1] のような AMI (Amazon Machine Image) を選択すると GPU 機械学習環境をプリインストールしてくれる (はずである)。ただし、インスタンスタイプも GPU 系を選択しなければならない。かつ、その AMI がサポートしているインスタンスタイプでなければプリインストールが効かない。例えば [1] のリリースノートによると、P2 系インスタンスはサポートしていない。また、サポートされている場合でも GPU と連携しているのは Conda 仮想環境の Python であるなどが [1] にあるのでちゃんとリリースノートを読むこと。</li>
   <ul><li>私は仮想環境の Python が GPU と連携しているのに気付かずシステム環境に GPU 連携 Python を構築してしまったが、こうしてしまうと時間とディスク容量を浪費する。</li></ul>
-  <li>サポートされていない組合せでインスタンスを作成してしまった場合でも、Ubuntu AMI であれば [2] の記事にしたがえばコマンド <pre class="inline">nvidia-smi</pre> を通せる (セッションマネージャーから接続している場合、再起動は管理画面から行う)。そうなれば後は [3] にしたがえば PyTorch for CUDA が入る。なお、2023年12月9日現在に [2] の記事にしたがうと CUDA 12.2 が入ってしまい、[3] でサポートされている CUDA 12.1 と食い違ってしまうが、こちらがやや新しい分にはたぶん何とかなる。何とかならなくなったら対処すること。</li>
+  <li>サポートされていない組合せでインスタンスを作成してしまった場合でも、Ubuntu AMI であれば [2] の記事にしたがえばコマンド <code class="language-bash">nvidia-smi</code> を通せる (セッションマネージャーから接続している場合、再起動は管理画面から行う)。そうなれば後は [3] にしたがえば PyTorch for CUDA が入る。なお、2023年12月9日現在に [2] の記事にしたがうと CUDA 12.2 が入ってしまい、[3] でサポートされている CUDA 12.1 と食い違ってしまうが、こちらがやや新しい分にはたぶん何とかなる。何とかならなくなったら対処すること。</li>
 </ul>
 
 <h4 style="margin-top: 0; margin-bottom: 0;">参考文献</h4>
@@ -128,7 +138,7 @@ VPC を自分で作成する場合は作成する (なお、AWS アカウント�
 
 <h3>同じサブネット内のインスタンス B からインスタンス A にアクセスする</h3>
 
-<pre class="console">
+<pre class="language-bash"><code>
 # ----- インスタンス B からインスタンス A にアクセスしたいとき -----
 # 以下ではインスタンス A のプライベート IPv4 アドレス： 172.16.0.25
 # 以下ではインスタンス B のプライベート IPv4 アドレス： 172.16.0.21
@@ -151,8 +161,8 @@ chmod 600 ~/.ssh/authorized_keys
 
 # (4) インスタンス B に行ってやること
 ssh ssm-user@172.16.0.25  # インスタンス A にアクセスできる
-scp ssm-user@172.16.0.25:~/aaa/bbb/*.npy ~/ccc/ddd/  # インスタンス A からものを取り寄せられる
-</pre>
+scp ssm-user@172.16.0.25:~/aaa/bbb/*.npy ~/ccc/ddd/  # インスタンス A から取り寄せられる
+</code></pre>
 <h4 style="margin-top: 0; margin-bottom: 0;">参考文献</h4>
 <ol class="ref">
   <li>異なるEC2インスタンス間でssh接続する - 箱のプログラミング日記。. <a class="asis" href="https://www.y-hakopro.com/entry/2020/10/31/175820"></a> (2023年12月9日参照).</li>
@@ -161,15 +171,15 @@ scp ssm-user@172.16.0.25:~/aaa/bbb/*.npy ~/ccc/ddd/  # インスタンス A か�
 
 <h3>ディスク容量を大きくする</h3>
 参考文献 [1] にしたがって管理画面からボリュームのサイズを拡大した後、インスタンスにて例えば以下のような作業を行う (以下は Ubuntu の場合) (ブロックデバイス名とファイルシステム名は異なる場合がある)。
-<pre class="console">
-lsblk -fip  # xvda 以下の1つ目のブロックデバイス (マウントポイント / ) のサイズが大きくなっていない
+<pre class="language-bash"><code>
+lsblk -fip  # xvda 以下の1つ目のブロックデバイス (マウントポイント / ) が大きくなっていない
 sudo growpart /dev/xvda 1
 lsblk -fip  # 大きくなっている
 
 df -hT  # ファイルシステム /dev/root (マウントポイント / ) のサイズが大きくなっていない
 sudo resize2fs /dev/root
 df -hT  # 大きくなっている
-</pre>
+</code></pre>
 <h4 style="margin-top: 0; margin-bottom: 0;">参考文献</h4>
 <ol class="ref">
   <li>AWS EC2インスタンスのディスク容量（EBSボリュームサイズ）を増やす方法. <a class="asis" href="https://zenn.dev/magavel/articles/aws-ebs-increase-volume"></a> (2023年12月11日参照).</li>

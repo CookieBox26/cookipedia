@@ -13,6 +13,16 @@ main.main { background: lightcyan; }
 -->
 </style>
 <script src="../funcs.js"></script>
+<!-- Prism start-->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-coy.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-html.min.js"></script>
+<script type="text/javascript"><!--
+(function () {
+if (typeof Prism === 'undefined' || typeof document === 'undefined') { return; }
+Prism.hooks.add('before-sanity-check', function(env){ env.code = env.code.replace(/^(?:\r?\n|\r)/, ''); });}());
+// --></script>
+<!-- Prism end -->
 </head>
 <body onload="init()">
 <div class="container">
@@ -32,7 +42,7 @@ CSS のフレックスボックスを用いると、要素を横/縦/複数行�
 <h2>Examples</h2>
 <h3>サイドバー</h3>
 この Cookipedia はフレックスボックスを用いることでサイドバーとメイン画面を左右に並べている。模式的 (でもなくそのものであるが) には以下である。このページも各要素がわかりやすいように色を付けている。
-<pre class="html">
+<pre class="language-html"><code>
 &lt;html&gt;
 &lt;head&gt;
 &lt;style type="text/css"&gt;
@@ -82,7 +92,7 @@ main.main>div.item {
 &lt;/div&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-</pre>
+</code></pre>
 <ul>
   <li>まずフレックスコンテナを配置する (淡い緑色)。display プロパティの値を flex とすることでフレックスコンテナになる。</li>
   <ul>

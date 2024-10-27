@@ -10,6 +10,16 @@
 </script>
 <link rel="stylesheet" type="text/css" href="../style.css">
 <script src="../funcs.js"></script>
+<!-- Prism start-->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-coy.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script type="text/javascript"><!--
+(function () {
+if (typeof Prism === 'undefined' || typeof document === 'undefined') { return; }
+Prism.hooks.add('before-sanity-check', function(env){ env.code = env.code.replace(/^(?:\r?\n|\r)/, ''); });}());
+// --></script>
+<!-- Prism end -->
 </head>
 <body onload="init()">
 <div class="container">
@@ -75,31 +85,19 @@ $$
 </div>
 また、元の行列が正定値の場合は、下三角行列の対角成分が正の実数にでき、かつ、そのような分解が一意に定まる。
 </p>
-<br/>
-
 
 <h2>参考文献</h2>
 <ol class="ref">
     <li>Cholesky decomposition - Wikipedia. <a href="https://en.wikipedia.org/wiki/Cholesky_decomposition">https://ja.wikipedia.org/wiki/QR%E5%88%86%E8%A7%A3</a>（2022年3月29日参照）.</li>
-    <!--
-    <ul>
-    <li>。</li>
-    </ul>
-    -->
 </ol>
-<br/>
-
 
 <h2>正定値実対称行列のコレスキー分解の一意性の証明</h2>
 <p><a href ="https://cookie-box.hatenablog.com/entry/2022/04/01/235825">雑記 - クッキーの日記</a></p>
-<br/>
-
 
 <h2>コレスキ―分解を得る方法</h2>
 参考文献 [1] の例を numpy の関数で得ると以下である。
-<pre class="python">
+<pre class="language-python"><code>
 import numpy as np
-
 A = np.array([
     [  4,  12, -16],
     [ 12,  37, -43],
@@ -107,21 +105,17 @@ A = np.array([
 ])
 R = np.linalg.cholesky(A)
 print(R)
-</pre>
-<pre class="console">
+</code></pre>
+<pre class="language-text"><code>
 [[ 2.  0.  0.]
  [ 6.  1.  0.]
  [-8.  5.  3.]]
-</pre>
-<br/>
-
+</code></pre>
 
 <h2>関連記事</h2>
 <ul>
     <li><a href="schur_complement.html">シューア補行列</a></li>
 </ul>
-<br/>
-
 
 <div class="categories">
 <a href="../categories/category_matrix.html">行列</a>

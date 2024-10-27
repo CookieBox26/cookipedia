@@ -6,24 +6,16 @@
 <title></title>
 <link rel="stylesheet" type="text/css" href="../style.css">
 <script src="../funcs.js"></script>
-
 <!-- Prism start-->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-coy.min.css" rel="stylesheet">
-<style type="text/css"><!--
-pre[class*="language-"]::before, pre[class*="language-"]::after { box-shadow: none !important; }
-code[class*="language-"] { border-left: none !important; box-shadow: none !important; font-size: 88%; }
-pre.language-text { background: #393939 !important; }
-code.language-text { color: #fff !important; background: #393939 !important; }
---></style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
 <script type="text/javascript"><!--
 (function () {
 if (typeof Prism === 'undefined' || typeof document === 'undefined') { return; }
-Prism.hooks.add('before-sanity-check', function (env) { env.code = env.code.replace(/^(?:\r?\n|\r)/, ''); });}());
+Prism.hooks.add('before-sanity-check', function(env){ env.code = env.code.replace(/^(?:\r?\n|\r)/, ''); });}());
 // --></script>
 <!-- Prism end -->
-
 </head>
 <body onload="init()">
 <div class="container">
@@ -34,6 +26,14 @@ Prism.hooks.add('before-sanity-check', function (env) { env.code = env.code.repl
 <h1>Redshift</h1>
 
 <h2>Snippets</h2>
+
+<h3>プレフィクスを除去する</h3>
+
+<code class="language-sql">REPLACE('hoge_xxx', 'hoge_', '')</code> でもよいがプレフィクスであれば以下の方が速い。
+
+<pre class="language-sql"><code>
+SELECT SUBSTRING('hoge_xxx', LENGTH('hoge_') + 1)
+</code></pre>
 
 <h3>グループごとの値の登場数ランキングを集計する</h3>
 各人の好きな果物テーブルからクラスごとの好きな果物ランキングを集計する。登場数が同じなら果物名で順位を付ける場合は <code class="language-sql">ORDER BY COUNT(*) DESC, fruit</code> とする。
