@@ -6,6 +6,16 @@
 <title></title>
 <link rel="stylesheet" type="text/css" href="../style.css">
 <script src="../funcs.js"></script>
+<!-- Prism start-->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-coy.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script type="text/javascript"><!--
+(function () {
+if (typeof Prism === 'undefined' || typeof document === 'undefined') { return; }
+Prism.hooks.add('before-sanity-check', function(env){ env.code = env.code.replace(/^(?:\r?\n|\r)/, ''); });}());
+// --></script>
+<!-- Prism end -->
 </head>
 <body onload="init()">
 <div class="container">
@@ -22,32 +32,52 @@
 
 <h2>Snippets</h2>
 
-<h3>フォント</h3>
-<pre class="python">
-# フォントが未追加のときに追加する.
+<h3>フォントが未追加のときに TTF から追加する</h3>
+<pre class="language-python"><code>
 %matplotlib inline  
 import matplotlib.pyplot as plt
 from matplotlib import font_manager
 if 'VL Gothic' not in font_manager.fontManager.ttflist:
-    font_manager.fontManager.addfont('/usr/share/fonts/truetype/vlgothic/VL-Gothic-Regular.ttf')
+    path_to_ttf = '/usr/share/fonts/truetype/vlgothic/VL-Gothic-Regular.ttf'
+    font_manager.fontManager.addfont(path_to_ttf)
 plt.rcParams['font.family'] = 'VL Gothic'
 plt.rcParams['font.size'] = 14
+</code></pre>
 
-# 可搬性のために複数フォントを指定する.
+<h3>可搬性のために複数フォントを指定する</h3>
+<pre class="language-python"><code>
 %matplotlib inline  
 import matplotlib.pyplot as plt
 plt.rcParams['font.family'] = 'sans-serif'
 plt.rcParams['font.sans-serif'] = [
-    'Rounded Mplus 1c', 'Hiragino Maru Gothic Pro', 'IPAPGothic', 'Yu Gothic', 'Meiryo']
-</pre>
+    'Rounded Mplus 1c', 'Hiragino Maru Gothic Pro', 'IPAPGothic', 'Meiryo']
+</code></pre>
 
-<h3>色</h3>
-<pre class="python">
-import matplotlib.colors as mcolors
-# colors = mcolors.CSS4_COLORS
-colors = mcolors.XKCD_COLORS
-names = sorted(colors, key=lambda c: tuple(mcolors.rgb_to_hsv(mcolors.to_rgb(c))))
-</pre>
+<h3>グラフを画像ファイルまたは Base64 文字列に保存する</h3>
+<pre class="language-python"><code>
+%matplotlib inline  
+import matplotlib.pyplot as plt
+from IPython.display import HTML, display
+import base64
+import io
+
+def to_figure(filename, format='png', bbox_inches='tight'):
+    # 画像ファイル名指定時はファイルに保存、未指定時は base64 文字列をコピーするボタンを表示。
+    kwargs = {'format': format, 'bbox_inches': bbox_inches}
+    if filename is not None:
+        plt.savefig(filename, **kwargs)
+        return
+    pic_io_bytes = io.BytesIO()
+    plt.savefig(pic_io_bytes, **kwargs)
+    pic_io_bytes.seek(0)
+    base64_img = base64.b64encode(pic_io_bytes.read()).decode('utf8')
+    display(HTML(f"""
+    &lt;button onclick="navigator.clipboard.writeText('{base64_img}')"&gt;Copy Image as Base64&lt;/button&gt;
+    """))
+
+# &lt;img width="80%" src="data:image/png;base64, ここにペースト /&gt;
+</code></pre>
+
 
 <div class="categories">
 <a href="../categories/category_python.html">Python</a>
