@@ -69,12 +69,25 @@ div#sidebar {
   background: #ffffff;
   border: 1px solid dimgray;
 }
+.item > img, td > img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+}
 div#sidebar h5 {
   font-weight: normal;
   padding-bottom: 0.15em;
   border-bottom: 1px solid dimgray;
   margin-bottom: 1.0em;
   font-size: 100%;
+}
+table {
+  border-collapse: collapse;
+}
+th, td {
+  border: 1px solid dimgrey;
+  padding: 5px 10px;
+  vertical-align: top;
 }
 p {
   margin: 0 0 0.5em;
