@@ -6,6 +6,16 @@
 <title></title>
 <link rel="stylesheet" type="text/css" href="../style.css">
 <script src="../funcs.js"></script>
+<!-- Prism start-->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-coy.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script type="text/javascript"><!--
+(function () {
+if (typeof Prism === 'undefined' || typeof document === 'undefined') { return; }
+Prism.hooks.add('before-sanity-check', function(env){ env.code = env.code.replace(/^(?:\r?\n|\r)/, ''); });}());
+// --></script>
+<!-- Prism end -->
 </head>
 <body onload="init()">
 <div class="container">
@@ -18,7 +28,7 @@
 <h2>Snippets</h2>
 
 <h3>エクセルに出力する</h3>
-<pre class="python">
+<pre class="language-python"><code>
 import pandas as pd
 pd.io.formats.excel.ExcelFormatter.header_style = None
 
@@ -38,10 +48,10 @@ worksheet.set_column(0, 1, 10, cell_format)
 worksheet.set_column(2, 2, 20, cell_format)
 worksheet.set_row(0, None, header_format)
 xlsx_writer.close()
-</pre>
+</code></pre>
 
 <h3>雑然データにする</h3>
-<pre class="python">
+<pre class="language-python"><code>
 import numpy as np
 import pandas as pd
 
@@ -58,15 +68,15 @@ cols_l = [f'{col}_{i + 1}' for i in range(n) for col in target_cols]
 df_l = pd.DataFrame(columns=cols_l)
 df_l.loc[0] = np.concatenate([df_s.loc[i, target_cols].values for i in range(n)])
 print(df_l)
-</pre>
-<pre class="console">
+</code></pre>
+<pre class="language-text"><code>
      a    b    c   d
 0  0.9  qqq  aaa  10
 1  0.8  www  sss  20
 2  0.7  eee  ddd  30
    a_1  b_1  c_1  a_2  b_2  c_2  a_3  b_3  c_3
 0  0.9  qqq  aaa  0.8  www  sss  0.7  eee  ddd
-</pre>
+</code></pre>
 
 <div class="categories">
 <a href="../categories/category_python.html">Python</a>
