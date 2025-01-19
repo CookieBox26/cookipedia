@@ -247,6 +247,17 @@ pre.language-text>code {
   background: #393939 !important;
   // background-image: linear-gradient(#444 50%, #333 50%) !important;
 }
+div.btn {
+  cursor: pointer;
+  color: #0068b7;
+  text-decoration: none;
+}
+div.btn:hover {
+  text-decoration: underline;
+}
+div.btn:after {
+  content: ' (クリックして表示・非表示)';
+}
 @media screen and (max-width: 900px) {
   div#sidebar {
     width: 130px;

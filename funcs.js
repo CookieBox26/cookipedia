@@ -91,3 +91,15 @@ function init() {
     createSidebar();
     // syntaxHighlight();
 }
+function setButton(id, handle) {
+    let button = document.getElementById(id);
+    button.addEventListener("click", handle);
+    button.addEventListener("touchstart", handle);
+}
+function setButtonOpenClose(id0, id1) {
+    let target = document.getElementById(id1);
+    target.style.display = "none";
+    setButton(id0, () => {
+        target.style.display = (target.style.display == "none") ? "block" : "none";
+    });
+}
