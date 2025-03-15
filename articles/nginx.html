@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title></title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<script src="../funcs.js"></script>
+<!-- Prism start-->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-coy.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-latex.min.js"></script>
+<script type="text/javascript"><!--
+(function () {
+if (typeof Prism === 'undefined' || typeof document === 'undefined') { return; }
+Prism.hooks.add('before-sanity-check', function(env){ env.code = env.code.replace(/^(?:\r?\n|\r)/, ''); });}());
+// --></script>
+<!-- Prism end -->
+</head>
+<body onload="init()">
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>nginx</h1>
+
+<pre class="language-text"><code>
+sudo apt update
+sudo apt upgrade -y
+sudo apt install -y nginx
+sudo systemctl start nginx
+sudo systemctl enable nginx
+sudo systemctl status nginx
+sudo vi /etc/nginx/conf.d/proxy.conf
+sudo systemctl restart nginx
+</code></pre>
+
+<pre class="language-text"><code>
+server {
+  listen 5000;
+  location / {
+    proxy_pass http://172.16.0.25:5000;
+  }
+}
+server {
+  listen 5100;
+  location / {
+    proxy_pass http://172.16.0.25:5100;
+  }
+}
+</code></pre>
+
+</div>
+</main>
+</div>
+</body>
+</html>
