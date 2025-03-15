@@ -23,21 +23,14 @@ Prism.hooks.add('before-sanity-check', function(env){ env.code = env.code.replac
 <main class="main">
 <div id="smartphone-header"></div>
 <div class="item">
-<h1>XeLaTeX</h1>
+<h1>Ubuntu</h1>
 
-<h2>Samples</h2>
-<ul>
-  <li><a href="https://github.com/CookieBox26/notes-2024/tree/main/sample-book-0">本0</a></li>
-  <li><a href="https://github.com/CookieBox26/notes-2024/tree/main/sample-report-0">レポート0</a></li>
-  <li><a href="https://gist.github.com/CookieBox26/4b26df7a8949669c6de49b7b439017e9">スライド0 (Beamer)</a></li>
-</ul>
-
-<h2>Tips</h2>
-<h3>xcolor</h3>
-<ul>
-  <li><code class="language-latex">\usepackage[svgnames]{xcolor}</code> や <code class="language-latex">\usepackage[x11names]{xcolor}</code> で読み込める色名は以下の 38-40 ページ (2024年5月5日参照) を参照。デフォルトで読み込める色名もある。</li>
-  <ul><li><a href="https://ftp.kddilabs.jp/CTAN/macros/latex/contrib/xcolor/xcolor.pdf" class="asis"></a></li></ul>
-</ul>
+<pre class="language-text"><code>
+sudo ufw status
+sudo ufw allow 22/tcp
+sudo ufw enable
+sudo ufw allow 5000:6000/tcp
+</code></pre>
 
 </div>
 </main>
