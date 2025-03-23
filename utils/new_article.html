@@ -1,0 +1,125 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title></title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<style type="text/css"><!--
+input[type="text"] {
+  box-sizing: border-box;
+  width: calc(100% - 7em);
+}
+div.form-row {
+  display: flex;
+  margin: 0.2em 0;
+}
+div.form-row label.fix {
+  box-sizing: border-box;
+  display: inline-block;
+  width: 7em;
+}
+--></style>
+<script src="../funcs.js"></script>
+</head>
+<body onload="init()">
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>新しい記事の作成</h1>
+<p><button id="createBtn">新しい記事を作成する</button></p>
+
+<div class="form-row">
+<label class="fix" for="file-name">ファイル名</label>
+<input type="text" id="file-name" value="hogehoge"/>
+</div>
+
+<div class="form-row">
+<label class="fix" for="article-title">記事タイトル</label>
+<input type="text" id="article-title" value="ほげほげ"/>
+</div>
+
+<div class="form-row">
+<input type="checkbox" id="include-mathjax">
+<label for="include-mathjax">include MathJax</label>
+</div>
+
+<div class="form-row">
+<input type="checkbox" id="include-prism">
+<label for="include-prism">include Prism</label>
+</div>
+
+</div>
+</main>
+</div>
+<script type="text/javascript"><!--
+const contentBase0 = `<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title></title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<script src="../funcs.js"></script>`;
+
+const contentMathjax = `
+<script src="../mathjax-config.js" defer></script>
+<script type="text/javascript" id="MathJax-script" defer
+ src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>`;
+
+const contentPrism = `
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-coy.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-latex.min.js"></script>
+<script type="text/javascript">
+(function () {
+if (typeof Prism === 'undefined' || typeof document === 'undefined') { return; }
+Prism.hooks.add('before-sanity-check', function(env){ env.code = env.code.replace(/^(?:\\r?\\n|\\r)/, ''); });}());
+</script>`;
+
+const contentBase1 = `
+</head>
+<body onload="init()">
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>{{ article_title }}</h1>
+{{ article_content }}
+</div>
+</main>
+</div>
+</body>
+</html>`;
+
+document.getElementById('createBtn').addEventListener('click', async () => {
+  try {
+    const fileName = document.getElementById('file-name').value;
+    const handle = await window.showSaveFilePicker({
+      suggestedName: `${fileName}.html`,
+      types: [{
+        description: 'Text file',
+        accept: { 'text/plain': ['.html'] }
+      }]
+    });
+    const writable = await handle.createWritable();
+
+    let content = contentBase0 + contentMathjax + contentPrism + contentBase1;
+    const articleTitle = document.getElementById('article-title').value;
+    content = content.replace('{{ article_title }}', articleTitle);
+
+    await writable.write(content);
+    await writable.close();
+    alert('新しい記事を作成しました。');
+  } catch (err) {
+    if (err.name !== 'AbortError') {
+      console.error('保存エラー:', err);
+    }
+  }
+});
+// --></script>
+</body>
+</html>
