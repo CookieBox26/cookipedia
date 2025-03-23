@@ -3,12 +3,19 @@ function prepareTitle() {
     document.title = title + ' - Cookipedia';
 }
 
-function createSidebar() {
-    var gitHub = '<a href="https://github.com/CookieBox26/cookipedia/issues">Issues</a>';
-    var message = '何かありましたら ' + gitHub + ' までご連絡ください';
+function createSidebar(mainPage=false) {
+    let content = '';
 
-    var index = '<h5>ページ内の小見出し一覧</h5>';
-    var allHeaders = document.querySelectorAll('h2, h3');
+    if (!mainPage) {
+        let gitHub = '<a href="https://github.com/CookieBox26/cookipedia/issues">Issues</a>';
+        content += `<p>何かありましたら ${gitHub} までご連絡ください</p>`;
+        let back = '<a href="../index.html">メインページに戻る</a>';
+        content += '<p><a href="#">ページの一番上に戻る</a></p><p>' + back + '</p>';
+        document.getElementById('smartphone-header').innerHTML += back;
+    }
+
+    const allHeaders = document.querySelectorAll('h2, h3');
+    let index = '<h5>ページ内の小見出し一覧</h5>';
     for (var i=0; i<allHeaders.length; ++i) {
         index += '<p class="';
         if (allHeaders[i].tagName == 'H3') {
@@ -19,13 +26,16 @@ function createSidebar() {
         index += allHeaders[i].textContent + '</a></p>';
         allHeaders[i].innerHTML += '<a id="head' + String(i) + '"></a>';
     }
+    content += `<div id="headers">${index}</div>`;
 
-    var content = '<p class="contact">' + message + '</p><br/>';
-    var back = '<a href="../index.html">メインページに戻る</a>';
-    content += '<p><a href="#">ページの一番上に戻る</a></p><p>' + back + '</p><br/>';
-    content += '<div id="headers">' + index + '</div>';
-    document.getElementById('sidebar').innerHTML += content;
-    document.getElementById('smartphone-header').innerHTML += back;
+    if (mainPage) {
+        let div = document.createElement('div');
+        div.innerHTML = content;
+        let ref = document.getElementById('header-quicklink');
+        document.getElementById('sidebar').insertBefore(div, ref);
+    } else {
+        document.getElementById('sidebar').innerHTML += content;
+    }
 }
 
 function syntaxHighlight() {
@@ -86,10 +96,19 @@ function syntaxHighlight() {
     }
 }
 
-function init() {
-    prepareTitle();
-    createSidebar();
+function init(mainPage=false) {
+    if (!mainPage) prepareTitle();
+    createSidebar(mainPage);
     // syntaxHighlight();
+
+    const links = document.querySelectorAll('a');
+    links.forEach((elem) => {
+        const href = elem.getAttribute('href');
+        if (href && !href.startsWith('#') && !href.startsWith('..')) {
+            elem.setAttribute('target', '_blank');
+            elem.setAttribute('rel', 'noopener noreferrer');
+        }
+    });
 }
 function setButton(id, handle) {
     let button = document.getElementById(id);

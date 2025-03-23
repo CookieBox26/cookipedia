@@ -5,30 +5,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cookipedia</title>
 <link rel="stylesheet" type="text/css" href="style.css">
+<script src="funcs.js"></script>
 </head>
-<body>
+<body onload="init(true)">
 <div class="container">
 <div id="sidebar">
 <p><a href="https://github.com/CookieBox26/cookipedia">リポジトリ</a></p>
-<p><a href="utils/references.html">文献リスト</a></p>
+
+<h5 id="header-quicklink">クイックリンク</h5>
+<p><a href="articles/aws.html">AWS</a></p>
+<p><a href="categories/category_python.html">Category:Python</a></p>
+
+<h5>便利ツール</h5>
+<!--<p><a href="utils/references.html">文献リスト</a></p>-->
 <p><a href="utils/color_palette.html">カラーパレット</a></p>
 <p><a href="utils/calculator.html">電卓</a></p>
-<p><a href="categories/category_python.html">Category:Python</a></p>
-<br/>
-<h5>リンク集</h5>
+
+<h5>外部リンク</h5>
 <p><a href="https://cookie-box.hatenablog.com/">はてなブログ</a></p>
+<p><a href="https://qiita.com/CookieBox26">Qiita</a></p>
 <!--
 <p><a href="https://cookiebox26.github.io/games/todlefukens/todlefuken.html">都道府県当てゲーム</a></p>
 <p><a href="https://github.com/CookieBox26/notes/tree/main/20211223_sequence_models">NeurIPS 2021 にみる<br/>
 最近のニューラル系列モデルへの発見・工夫・理解</a></p>
 -->
 </div>
+
 <main class="main">
 <div id="smartphone-header"></div> <!-- メインページにリンクは不要だがレイアウト上必要 -->
 <div class="item" style="word-break: normal;">
-
-<h1 style="font-size: 2.4em; font-weight: normal;">Welcome to Cookipedia</h1>
-
+<h1 style="font-size: 2.4em;">Welcome to Cookipedia</h1>
 このサイトはクッキーが自分のためにつくっている百科事典風のノートです。各記事の内容には網羅性はなくしばしば主観が含まれます。このサイトのリポジトリは<a href="https://github.com/CookieBox26/cookipedia">こちら</a>です。何かありましたらリポジトリの <a href="https://github.com/CookieBox26/cookipedia/issues">Issues</a> までご連絡ください。
 
 <h2>更新日が新しい記事</h2>
