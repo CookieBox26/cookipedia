@@ -27,17 +27,129 @@ Prism.hooks.add('before-sanity-check', function(env){ env.code = env.code.replac
 
 <h2>Snippets</h2>
 
+<h3>動作確認用のデータを用意する</h3>
+1 列の場合は以下などの方法がある。
+<pre class="language-sql"><code>
+WITH test_data AS (
+  SELECT TO_TIMESTAMP(v::TEXT, 'YYYYMMDD HH24:MI:SS.MS') AS ts
+  FROM (
+    SELECT ARRAY(
+      '20240325 00:00:00.000',
+      '20240326 00:00:00.000') AS v
+  ) AS g, g.v AS v
+)
+SELECT ts AT TIME ZONE 'Asia/Tokyo' AS ts FROM test_data
+</code></pre>
+<pre class="language-text"><code>
+ts
+2024-03-25 09:00:00
+2024-03-26 09:00:00
+</code></pre>
+2 列以上の場合は以下などの方法がある。
+<pre class="language-sql"><code>
+WITH test_data AS (
+  SELECT
+    v[0]::TEXT AS fruit,
+    v[1] AS price
+  FROM (
+    SELECT ARRAY(
+      ARRAY('apple', 200),
+      ARRAY('banana', 100)) AS v
+  ) AS g, g.v AS v
+)
+SELECT * FROM test_data
+</code></pre>
+<pre class="language-text"><code>
+fruit,  price
+apple,  200
+banana, 100
+</code></pre>
+
+<h3>月曜日に丸める</h3>
+Redshift の DOW (曜日番号) は日曜日が 0, ... 土曜日が 6 なので、日曜日を除いては「DOW - 1」日前の日付をとればよい。日曜日については 6 日前の日付をとればよい。
+<ul>
+<li>ISODOW がとれるなら月曜日が 1, ..., 日曜日が 7 になるので CASE 文が要らないが、少なくとも手元の Redshift は対応していない。</li>
+<li>なお、「(DOW + 6) % 7」日前をとることでも CASE 文は要らなくなる。</li>
+</ul>
+<pre class="language-sql"><code>
+WITH test_data AS (
+  SELECT TO_TIMESTAMP(v::TEXT, 'YYYYMMDD HH24:MI:SS.MS') AS ts
+  FROM (
+    SELECT ARRAY(
+      '20240325 00:00:00.000',
+      '20240326 00:00:00.000',
+      '20240331 00:00:00.000',
+      '20240401 00:00:00.000') AS v
+  ) AS g, g.v AS v
+)
+SELECT
+  ts AT TIME ZONE 'Asia/Tokyo' AS ts_jst,
+  CASE
+    WHEN EXTRACT(DOW FROM ts_jst) = 0 THEN TO_CHAR(ts_jst - INTERVAL '6 day', 'YYYY-MM-DD')
+    ELSE TO_CHAR(ts_jst - INTERVAL '1 day' * (EXTRACT(DOW FROM ts_jst) - 1), 'YYYY-MM-DD')
+  END AS week_0,
+  TO_CHAR(ts_jst - INTERVAL '1 day' * ((EXTRACT(DOW FROM ts_jst) + 6) % 7), 'YYYY-MM-DD') AS week_1
+FROM test_data
+</code></pre>
+<pre class="language-text"><code>
+ts_jst,              week_0,     week_1
+2024-03-25 09:00:00, 2024-03-25, 2024-03-25
+2024-03-26 09:00:00, 2024-03-25, 2024-03-25
+2024-03-31 09:00:00, 2024-03-25, 2024-03-25
+2024-04-01 09:00:00, 2024-04-01, 2024-04-01
+</code></pre>
+
+<h3>基準日から N×X 日に丸める</h3>
+基準日があり、そこから 7 日間や 28 日間などの区間で区切っていきたいときは以下の方法がある。なお、<code class="language-sql">DATEDIFF</code> で日数の差をとるときは、日付部分の差が取られるので、先に目的のタイムゾーンにしなければ意図通りにならない (i.e. 20240325 00:00+09 と 20240325 09:00+09 は同じ日なので日数の差は 0 になってほしいが、これらを協定世界時 20240324 15:00+00 と 20240325 00:00+00 として扱うと別々の日になり日数の差が 1 となってしまう)。
+<pre class="language-sql"><code>
+WITH test_data AS (
+  SELECT TO_TIMESTAMP(v::TEXT, 'YYYYMMDD HH24:MI:SS.MS') AS ts
+  FROM (
+    SELECT ARRAY(
+      '20240325 00:00:00.000',
+      '20240325 14:59:59.000',
+      '20240325 15:00:00.000',
+      '20240331 00:00:00.000',
+      '20240421 00:00:00.000',
+      '20240422 00:00:00.000',
+      '20240519 00:00:00.000',
+      '20240520 00:00:00.000') AS v
+  ) AS g, g.v AS v
+),
+configs AS (
+  SELECT
+    'YYYYMMDD HH24:MI:SS.MS' AS tf,  -- 時刻フォーマット
+    -(INTERVAL '9 hour') AS td,  -- 日本標準時 - 世界標準時
+    TO_TIMESTAMP('20240325 00:00:00.000'::TEXT, tf) + td AS bd,  -- 基準日
+    bd AT TIME ZONE 'Asia/Tokyo' AS bd_jst
+)
+SELECT
+  ts AT TIME ZONE 'Asia/Tokyo' AS ts_jst,
+  DATEDIFF(days, (SELECT bd_jst FROM configs)::TIMESTAMP, ts_jst::TIMESTAMP) AS diff,
+  TO_CHAR(ts_jst - INTERVAL '1 day' * (diff % 7), 'YYYY-MM-DD') AS week,
+  TO_CHAR(ts_jst - INTERVAL '1 day' * (diff % 28), 'YYYY-MM-DD') AS week4
+FROM test_data
+</code></pre>
+<pre class="language-text"><code>
+ts_jst,              diff, week,       week4
+2024-03-25 09:00:00, 0,    2024-03-25, 2024-03-25
+2024-03-25 23:59:59, 0,    2024-03-25, 2024-03-25
+2024-03-26 00:00:00, 1,    2024-03-25, 2024-03-25
+2024-03-31 09:00:00, 6,    2024-03-25, 2024-03-25
+2024-04-21 09:00:00, 27,   2024-04-15, 2024-03-25
+2024-04-22 09:00:00, 28,   2024-04-22, 2024-04-22
+2024-05-19 09:00:00, 55,   2024-05-13, 2024-04-22
+2024-05-20 09:00:00, 56,   2024-05-20, 2024-05-20
+</code></pre>
+
 <h3>プレフィクスを除去する</h3>
-
 <code class="language-sql">REPLACE('hoge_xxx', 'hoge_', '')</code> でもよいがプレフィクスであれば以下の方が速い。
-
 <pre class="language-sql"><code>
 SELECT SUBSTRING('hoge_xxx', LENGTH('hoge_') + 1)
 </code></pre>
 
 <h3>グループごとの値の登場数ランキングを集計する</h3>
 各人の好きな果物テーブルからクラスごとの好きな果物ランキングを集計する。登場数が同じなら果物名で順位を付ける場合は <code class="language-sql">ORDER BY COUNT(*) DESC, fruit</code> とする。
-
 <pre class="language-sql"><code>
 WITH sample_table AS (
   SELECT '1年1組' AS class_, 'りんご' AS fruit UNION ALL
