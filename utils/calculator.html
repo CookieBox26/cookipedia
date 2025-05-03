@@ -7,23 +7,12 @@
 <link rel="stylesheet" type="text/css" href="../style.css">
 <style type="text/css">
 <!--
-div.flex {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-div.flex>div {
-  border: 1px solid darkgray;
-  padding: 10px;
-}
 table.tbl_01 {
-  border-collapse: collapse;
+  margin-top: 0.75em;
 }
 table.tbl_01 th, table.tbl_01 td {
   vertical-align: top;
   padding: 0 0.35em;
-  border-top: 1px solid darkgray;
-  border-bottom: 1px solid darkgray;
 }
 table.tbl_01 td {
   text-align: right;
@@ -31,86 +20,6 @@ table.tbl_01 td {
 -->
 </style>
 <script src="../funcs.js"></script>
-<script type="text/javascript"><!--
-let dollarsHourly = 1.459;
-let rate = 145.0;
-let options = '2,6,24';
-let dollarsHourlyElm;
-let rateElm;
-let optionsElm;
-
-function createTable() {
-  let parent = document.querySelector("#tableContainer");
-  parent.innerHTML = '';
-
-  for (let j = 0; j < 2; j++) {
-    let kigou = (j == 0) ? '＄' : '￥';
-    let headers = {};
-    headers['コスト (' + kigou + '/1時間)'] = 1;
-    let optionsArray = options.split(',');
-    for (let option of optionsArray) {
-      headers['コスト (' + kigou + '/' + option + '時間)'] = parseInt(option);
-    }
-
-    let table = document.createElement('table');
-
-    let tr0 = document.createElement('tr');
-    for (let [header, hours] of Object.entries(headers)) {
-      let td = document.createElement('td');
-      td.innerText = header;
-      tr0.appendChild(td);
-    }
-    table.appendChild(tr0);
-
-    let tr1 = document.createElement('tr');
-    for (let [header, hours] of Object.entries(headers)) {
-      let td = document.createElement('td');
-      if (j == 0) {
-        td.innerText = (hours * dollarsHourly).toFixed(4);
-      } else {
-        td.innerText = (hours * dollarsHourly * rate).toFixed(4);
-      }
-      tr1.appendChild(td);
-    }
-    table.appendChild(tr1);
-    table.classList.add('tbl_01');
-    parent.appendChild(table);
-  }
-}
-
-function init_() {
-  init();
-
-  dollarsHourlyElm = document.querySelector("#dollarsHourly");
-  dollarsHourlyElm.value = dollarsHourly;
-  dollarsHourlyElm.addEventListener("input", function(ev){setDollarsHourly(ev.target.value);}, false);
-
-  rateElm = document.querySelector("#rate");
-  rateElm.value = rate;
-  rateElm.addEventListener("input", function(ev){setRate(ev.target.value);}, false);
-
-  optionsElm = document.querySelector("#options");
-  optionsElm.value = options;
-  optionsElm.addEventListener("input", function(ev){setOptions(ev.target.value);}, false);
-
-  createTable();
-}
-
-function setDollarsHourly(v) {
-  dollarsHourly = v;
-  createTable();
-}
-
-function setRate(v) {
-  rate = v;
-  createTable();
-}
-
-function setOptions(v) {
-  options = v;
-  createTable();
-}
-// --></script>
 </head>
 <body onload="init_()">
 <div class="container">
@@ -120,23 +29,159 @@ function setOptions(v) {
 <div class="item">
 <h1>電卓</h1>
 
-<div class="flex" style="gap: 0;">
-<div style="flex: none; border: 0;">
-コスト (＄/1時間)<br/>
-換算レート<br/>
-オプション
-</div>
-<div style="flex: none; border: 0;">
-<input type="text" style="width: 72px;" id="dollarsHourly"/><br/>
-<input type="text" style="width: 72px;" id="rate"/><br/>
-<input type="text" style="width: 72px;" id="options"/>
-</div>
-</div>
+<h2>時間計算</h2>
+<h4>予定</h4>
+<label><input type="number" id="inputHours" value="7" style="width: 3em;"></label> 時間
+<label><input type="number" id="inputMinutes" value="15" style="width: 3em;"></label> 分<br>
+<h4>実績</h4>
+<textarea id="input" rows="3" cols="36" style="resize: none;">
+作業開始時刻：2025年5月3日 5:30 JST
+作業終了時刻：2025年5月3日 13:40 JST
+</textarea><br>
+<button onclick="calcTime()" style="margin: 0.5em 0; padding: 0.3em 1.0em;">時間計算</button>
+<p id="result" style="margin: 0; height: 2.6em;"></p>
 
-<div class="flex" id="tableContainer"></div>
+<h2>コスト計算</h2>
+<ul>
+<li>インスタンスタイプ - Amazon EC2 | AWS. <a class="asis" href="https://aws.amazon.com/jp/ec2/instance-types/"></a> (2025年3月15日参照).</li>
+<li>Amazon EC2 Instance Comparison. <a class="asis" href="https://instances.vantage.sh/?region=ap-northeast-1"></a> (2025年3月15日参照).</li>
+</ul>
+コスト＄/h &nbsp;<input type="text" id="dollarsHourly"/><br/>
+換算レート &nbsp;<input type="text" id="rate"/><br/>
+オプション &nbsp;<input type="text" id="options-h"/><br/>
+オプション &nbsp;<input type="text" id="options-d"/><br/>
+<div id="tableContainer"></div>
 
 </div>
 </main>
 </div>
+<script type="text/javascript"><!--
+const dollarsHourlyElm = document.querySelector("#dollarsHourly");
+const rateElm = document.querySelector("#rate");
+const optionsHElm = document.querySelector("#options-h");
+const optionsDElm = document.querySelector("#options-d");
+let dollarsHourly = '6.6737,9.681';
+let rate = 145.0;
+let optionsH = '1,2,6,24';
+let optionsD = '1,2,7,31';
+
+function createTd(innerHTML) {
+  let td = document.createElement('td');
+  td.innerHTML = innerHTML
+  return td
+}
+
+function formatNum(num, digit) {
+  return num.toLocaleString('ja-JP', {
+    minimumFractionDigits: digit,
+    maximumFractionDigits: digit})
+}
+
+function createCostTable() {
+  let dollarsHourlyArray = dollarsHourly.split(',');
+  let container = document.querySelector("#tableContainer");
+  container.innerHTML = '';
+  let table = document.createElement('table');
+
+  for (let j = 0; j < 2; j++) {
+    let optionsArray = (j == 0) ? optionsH.split(',') : optionsD.split(',');
+    if (j == 0) {
+      optionsArray.unshift('');
+    }
+    let unit = (j == 0) ? 'h' : 'd';
+    let coef = (j == 0) ? 1 : 24;
+    for (let option of optionsArray) {
+      let tr = document.createElement('tr');
+      if (option == '') {
+        tr.appendChild(createTd(''));
+        for (let dollarsHourly of dollarsHourlyArray) {
+          let td = createTd(`コスト ＄${dollarsHourly}/h`);
+          td.setAttribute('colspan', '2');
+          tr.appendChild(td);
+        }
+      } else {
+        tr.appendChild(createTd(`${option}${unit}`));
+        x = parseInt(option);
+        for (let dollarsHourly of dollarsHourlyArray) {
+          tr.appendChild(createTd('＄' + formatNum(coef * x * dollarsHourly, 3)));
+          tr.appendChild(createTd('￥' + formatNum(coef * x * dollarsHourly * rate, 1)));
+        }
+      }
+      table.appendChild(tr);
+    }
+  }
+  table.classList.add('tbl_01');
+  container.appendChild(table);
+}
+
+function calcCost() {
+  dollarsHourly = dollarsHourlyElm.value;
+  rate = rateElm.value;
+  optionsH = optionsHElm.value;
+  optionsD = optionsDElm.value;
+  createCostTable();
+}
+
+function setupCalcCost() {
+  dollarsHourlyElm.value = dollarsHourly;
+  dollarsHourlyElm.addEventListener('input', calcCost);
+  rateElm.value = rate;
+  rateElm.addEventListener('input', calcCost);
+  optionsHElm.value = optionsH;
+  optionsHElm.addEventListener('input', calcCost);
+  optionsDElm.value = optionsD;
+  optionsDElm.addEventListener('input', calcCost);
+  createCostTable();
+}
+
+function parseJapaneseDatetime(str) {
+  const match = str.match(/(\d{4})年(\d{1,2})月(\d{1,2})日\s+(\d{1,2}):(\d{2})/);
+  if (!match) return null;
+   const [_, year, month, day, hour, minute] = match.map(Number);
+  return new Date(Date.UTC(year, month - 1, day, hour - 9, minute)); // UTC に変換
+}
+
+function calcTime() {
+  const textarea = document.getElementById('input').value.split('\n');
+  const firstLine = textarea[0];
+  const secondLine = textarea[1];
+  const startMatch = firstLine.split('：')[1]?.trim() ?? '';
+  const endMatch = secondLine.split('：')[1]?.trim() ?? '';
+  if (!startMatch || !endMatch) {
+    document.getElementById('result').textContent = '形式が正しくありません。';
+    return;
+  }
+  const start = parseJapaneseDatetime(startMatch.trim());
+  const end = parseJapaneseDatetime(endMatch.trim());
+  if (!start || !end || isNaN(start.getTime()) || isNaN(end.getTime())) {
+    document.getElementById('result').textContent = '時刻の解析に失敗しました。';
+    return;
+  }
+  const sagyoMs = end - start;
+  const sagyoMinutes = Math.floor(sagyoMs / 1000 / 60);
+  const sagyoH = Math.floor(sagyoMinutes / 60);
+  const sagyoM = sagyoMinutes % 60;
+
+  const inputHours = parseInt(document.getElementById('inputHours').value) || 0;
+  const inputMinutes = parseInt(document.getElementById('inputMinutes').value) || 0;
+  const inputTotalMinutes = inputHours * 60 + inputMinutes;
+  let diffMinutes = sagyoMinutes - inputTotalMinutes;
+
+  const sign = diffMinutes < 0 ? "-" : "";
+  diffMinutes = Math.abs(diffMinutes);
+
+  const resultHours = Math.floor(diffMinutes / 60);
+  const resultMinutes = diffMinutes % 60;
+
+  document.getElementById('result').innerHTML = `${sagyoH} 時間 ${sagyoM} 分 作業しました。<br/>`;
+  document.getElementById('result').innerHTML +=
+    `予定に対する差分は ${sign}${resultHours} 時間 ${resultMinutes} 分です。`;
+}
+
+function init_() {
+  init();
+  setupCalcCost();
+}
+// --></script>
 </body>
 </html>

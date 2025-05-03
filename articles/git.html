@@ -6,6 +6,16 @@
 <title>Git - Cookipedia</title>
 <link rel="stylesheet" type="text/css" href="../style.css">
 <script src="../funcs.js"></script>
+<!-- Prism start-->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-coy.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+<script type="text/javascript"><!--
+(function () {
+if (typeof Prism === 'undefined' || typeof document === 'undefined') { return; }
+Prism.hooks.add('before-sanity-check', function(env){ env.code = env.code.replace(/^(?:\r?\n|\r)/, ''); });}());
+// --></script>
+<!-- Prism end -->
 </head>
 <body onload="init()">
 <div class="container">
@@ -23,7 +33,7 @@
 
 <h2>Commands</h2>
 
-<pre class="console">
+<pre class="language-text"><code>
 git config --list
 git config --local --list
 git config --global --list
@@ -34,12 +44,8 @@ git config --global core.autocrlf false
 git config --local user.name CookieBox26
 git config --local user.email cookie-box@cookie-box.info
 
-git init
-git add README.md
-git commit -m "first commit."
-
 git status --ignored ./articles/
-</pre>
+</code></pre>
 
 </div>
 </main>
