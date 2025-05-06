@@ -10,8 +10,8 @@ https://cookiebox26.github.io/cookipedia/index.html
 pip install git+https://github.com/CookieBox26/cookies-backpack
 pip install -e .
 
-cpt -s -k panda  # Display filenames containing "pa"
+cpt -s -k pa  # Display filenames containing "pa"
 cpt -s -k panda  # Only one filename contains "panda" (pandas.html), so open it
 
-cpt -n  # Create a new article (under construction)
+cpt -n  # Create a new article
 ```

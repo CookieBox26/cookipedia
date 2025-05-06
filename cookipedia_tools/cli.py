@@ -1,4 +1,5 @@
 from cookies_backpack.text_editor_interface import TextEditorInterface
+from cookipedia_tools.article import Article
 import subprocess
 import argparse
 import os
@@ -12,9 +13,19 @@ def open_article(text_editor, browser, article_dir, article):
 
 
 def create_new_article(tei, browser, article_dir):
-    def func(apple=200, banana=100):
-        return apple + banana
-    tei.run_with_args(func, {'apple': 200, 'banana': 100}, confirm=False)
+    def func_open(out_file):
+        directory, filename = os.path.split(out_file)
+        open_article(tei.text_editor, browser, directory, filename)
+    article = Article(article_dir, func_open)
+    tei.run_with_args(article.create, {
+        'filebody': 'fuga',
+        'title': 'ふがふが',
+        'references': [
+            'https://qiita.com/CookieBox26/items/25c9f52b92e2c373c6cd',
+        ],
+        'description': 'ふがふがです。',
+        'long_title': False,
+    }, confirm=False, show=False)
 
 
 def main():
