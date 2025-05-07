@@ -64,5 +64,6 @@ class Article:
         }
         with open(out_file, mode='w', encoding='utf8', newline='\n') as ofile:
             ofile.write(self.template.render(data))
+            ofile.write('\n')
         if self.func_open is not None:
             self.func_open(out_file)

@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title></title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<script src="../funcs.js"></script>
+</head>
+<body onload="init()">
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>テキスト整形</h1>
+
+<h2>改行を空白に置換</h2>
+<p><button id="formatText1">整形する</button> <button id="copyText1">整形後をコピーする</button></p>
+<div style="display: flex; width: 100%; gap: 10px;">
+<textarea id="input1" rows="10" style="resize: vertical; width: 47.5%;"></textarea>
+<textarea id="output1" rows="10" style="resize: vertical; width: 47.5%;"></textarea>
+</div>
+
+<h2>句点を改行に置換</h2>
+<p><button id="formatText2">整形する</button> <button id="copyText2">整形後をコピーする</button></p>
+<div style="display: flex; width: 100%; gap: 10px;">
+<textarea id="input2" rows="10" style="resize: vertical; width: 47.5%;"></textarea>
+<textarea id="output2" rows="10" style="resize: vertical; width: 47.5%;"></textarea>
+</div>
+
+</div>
+</main>
+</div>
+<script type="text/javascript"><!--
+document.getElementById('formatText1').addEventListener('click', () => {
+  let inputContent = document.getElementById('input1').value;
+  let lines = inputContent.split('\n');
+  let processedLines = lines.map(function(line) {
+    if (line.endsWith('-')) {
+      return line.slice(0, -1);
+    } else {
+      return line + ' ';
+    }
+  });
+  let outputContent = processedLines.join("");
+  document.getElementById('output1').textContent = outputContent;
+});
+document.getElementById('copyText1').addEventListener('click', () => {
+  navigator.clipboard.writeText(document.getElementById('output1').textContent);
+});
+document.getElementById('formatText2').addEventListener('click', () => {
+  let inputContent = document.getElementById('input2').value;
+  let modifiedContent = inputContent.replace(/\. /g, '.\n\n').replace(/。/g, '。\n\n');
+  document.getElementById('output2').textContent = modifiedContent;
+});
+document.getElementById('copyText2').addEventListener('click', () => {
+  navigator.clipboard.writeText(document.getElementById('output2').textContent);
+});
+// --></script>
+</body>
+</html>

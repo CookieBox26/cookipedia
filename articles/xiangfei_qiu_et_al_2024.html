@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title></title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<script src="../funcs.js"></script>
+<!-- prism start --><!--
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-coy.min.css" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="../prism-config.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<!-- prism end -->
+<!-- mathjax start --><!--
+<script src="../mathjax-config.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" defer></script>
+<!-- mathjax end -->
+</head>
+<body onload="init()">
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item long-title">
+<h1>TFB: Towards Comprehensive and Fair Benchmarking of Time Series Forecasting Methods</h1>
+TFB: Towards Comprehensive and Fair Benchmarking of Time Series Forecasting Methods は Proceedings of the VLDB Endowment, Volume 17, Issue 9 に掲載された論文である (VLDB 2024 で発表された)。具体的に、これまでの時系列予測手法の研究には以下の課題があるとし、
+<ul>
+<li>データドメインのカバレッジが不十分である。</li>
+<li>伝統的な手法と比較しない傾向がある。</li>
+<li>パイプライン一貫性がない。</li>
+</ul>
+網羅的なドメインからなるデータセットを備えた、自動ベンチマークフレームワークを提案している。また、データセットの網羅性を示すために各時系列の特徴付けも提示しており、どのような手法がどのような時系列の予測を得意とするかについての考察も添えている。
+
+<h2>
+参考文献
+</h2>
+
+<ol class="ref">
+<li>
+TFB: Towards Comprehensive and Fair Benchmarking of Time Series Forecasting Methods | Proceedings of the VLDB Endowment.
+<a class="asis" href="https://dl.acm.org/doi/abs/10.14778/3665844.3665863"></a>
+ (2025年05月06日参照).
+</li>
+<li>
+[2403.20150] TFB: Towards Comprehensive and Fair Benchmarking of Time Series Forecasting Methods.
+<a class="asis" href="https://arxiv.org/abs/2403.20150"></a>
+ (2025年05月06日参照).
+</li>
+</ol>
+
+<!-- python start --><!--
+<h2>Python スクリプト</h2>
+<pre class="language-python"><code>
+import pandas as pd
+df = pd.DataFrame()
+</code></pre>
+<!-- python end -->
+
+<!-- rel start --><!--
+<h2>関連記事</h2>
+<ul>
+<li><a href="le_cams_first_lemma.html">Le Cam の第一補題</a></li>
+</ul>
+<!-- rel end -->
+
+<!-- category start -->
+<div class="categories">
+<a href="../categories/category_time_series_forecasting.html">時系列予測</a>
+</div>
+<!-- category end -->
+
+</div>
+</main>
+</div>
+</body>
+</html>
