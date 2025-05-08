@@ -229,7 +229,7 @@ sed -i -e "s@{{ARTICLE_LIST}}@$index@" index_.html
 sed -i -e "s@{{NUM_OF_ARTICLES}}@$n_index@" index_.html
 
 # 更新日が新しい記事
-create_index "articles/*.html" 1 1 8
+create_index "articles/*.html" 1 1 10
 sed -i -e "s@{{RECENT_ARTICLE_LIST}}@$index@" index_.html
 
 # ブラウザ上の表示に影響ないがソースファイルで改行しておく
