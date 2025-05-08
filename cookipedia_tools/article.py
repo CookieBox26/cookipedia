@@ -59,7 +59,7 @@ class Article:
         data = {
             'long_title': ('long-title' if long_title else ''),
             'title': title,
-            'description': description,
+            'description': Elm('p', description),
             'references': ('' if len(references) == 0 else create_refereces(references)),
         }
         with open(out_file, mode='w', encoding='utf8', newline='\n') as ofile:

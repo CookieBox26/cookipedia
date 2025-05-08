@@ -23,14 +23,30 @@
 <main class="main">
 <div id="smartphone-header"></div>
 <div class="item long-title">
-<h1>TFB: Towards Comprehensive and Fair Benchmarking of Time Series Forecasting Methods</h1>
-TFB: Towards Comprehensive and Fair Benchmarking of Time Series Forecasting Methods は Proceedings of the VLDB Endowment, Volume 17, Issue 9 に掲載された論文である (VLDB 2024 で発表された)。具体的に、これまでの時系列予測手法の研究には以下の課題があるとし、
+<!--
+<p>
+</p>
 <ul>
-<li>データドメインのカバレッジが不十分である。</li>
-<li>伝統的な手法と比較しない傾向がある。</li>
-<li>パイプライン一貫性がない。</li>
+<li></li>
 </ul>
-網羅的なドメインからなるデータセットを備えた、自動ベンチマークフレームワークを提案している。また、データセットの網羅性を示すために各時系列の特徴付けも提示しており、どのような手法がどのような時系列の予測を得意とするかについての考察も添えている。
+-->
+<h1>TFB: Towards Comprehensive and Fair Benchmarking of Time Series Forecasting Methods</h1>
+
+<p>
+<b>TFB: Towards Comprehensive and Fair Benchmarking of Time Series Forecasting Methods</b> は Proceedings of the VLDB Endowment, Volume 17, Issue 9 に掲載された論文である。VLDB 2024 で発表された。
+</p>
+
+<p>
+具体的に、これまでの時系列予測手法の研究には以下の課題があるとし、これらの課題を克服した新しい時系列予測用評価プラットフォーム TFB を整備している。
+<ul>
+<li>データドメインのカバレッジが不十分である。多様なデータセットを備えるべきである。</li>
+<li>最新の深層学習モデルのみと比較する (伝統的な手法と比較しない) 傾向がある。多様なモデルと比較するべきである。</li>
+<li>検証実験の設定に一貫性がないことがある (Ex. バッチサイズに満たない末尾のテストデータを捨てるか否かがモデルによって変わってしまっているなど)。統一的なデータ前処理、学習、評価の機構を備えるべきである。</li>
+</ul>
+</p>
+<p>
+また、この論文ではデータセットの網羅性を示すために各時系列の特徴も提示しており、どのような手法がどのような時系列の予測を得意とするかについての考察も添えている。
+</p>
 
 <h2>
 参考文献
@@ -63,6 +79,27 @@ df = pd.DataFrame()
 <li><a href="le_cams_first_lemma.html">Le Cam の第一補題</a></li>
 </ul>
 <!-- rel end -->
+
+<h2>時系列の特徴</h2>
+<p>
+<ul>
+<li>Seasonality</li>
+<li>Trend</li>
+<li>Abrupt Changes</li>
+<li>Non-stationarity</li>
+<li>Change Points</li>
+</ul>
+</p>
+
+<h2>備考</h2>
+<p>
+著者らの所属は以下である。
+<ul>
+<li>ECNU: East China Normal University, China</li>
+<li>Huawei Cloud Algorithm Innovation Lab, China</li>
+<li>Aalborg University, Denmark</li>
+</ul>
+</p>
 
 <!-- category start -->
 <div class="categories">
