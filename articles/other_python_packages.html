@@ -32,31 +32,6 @@ for tag in soup.select('h1, h2, h3, p'):
         print(tag.get_text())
 </pre>
 
-<h3>PDF をテキスト化する</h3>
-<a href="https://pdfminersix.readthedocs.io/en/latest/">pdfminer.six</a> を用いた方法は以下である。<br/>
-<a class="asis" href="https://gist.github.com/CookieBox26/2aee53cc144a213c46efbfebc9fdca08"></a><br/>
-<br/>
-<a href="https://pymupdf.readthedocs.io/ja/latest/tutorial.html">PyMuPDF</a> を用いた方法は以下である。<br/>
-<pre class="python">
-import fitz
-pdf_path = '2302.11939v6.pdf'
-doc = fitz.open(pdf_path)
-for i_page, page in enumerate(doc):
-    texts = page.get_text()
-    print(texts)
-    break
-</pre>
-
-<h3>PDF をマージする</h3>
-<pre class="python">
-import pypdf
-merger = pypdf.PdfMerger()
-for i in range(16):
-    merger.append(f'./pdf_files/{i+1}.pdf')
-merger.write('merged.pdf')
-merger.close()
-</pre>
-
 <h3>WAV を MP3 に変換する</h3>
 サンプリングレートを下げないとビットレートは下がらない。<br/>
 以下に FFmpeg で許容されるサンプリングレートがある。<br/>

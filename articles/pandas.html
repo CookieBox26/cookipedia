@@ -27,6 +27,18 @@ Prism.hooks.add('before-sanity-check', function(env){ env.code = env.code.replac
 
 <h2>Snippets</h2>
 
+<h3>エクセルを読み込む</h3>
+<h4></h4>
+<pre class="language-python"><code>
+import os
+import pandas as pd
+in_file = '~/Downloads/xxxxxx.xlsx'
+in_file = os.path.expanduser(in_file)
+excel_file = pd.ExcelFile(in_file)
+print(excel_file.sheet_names)  # シート名のリストを表示する
+df = excel_file.parse(sheet_name='シート1')  # シートを読み込む
+</code></pre>
+
 <h3>エクセルに出力する</h3>
 <pre class="language-python"><code>
 import pandas as pd
