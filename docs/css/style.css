@@ -1,0 +1,434 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400,600&family=Armata&family=M+PLUS+1+Code:wght@400,600&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+:root {
+  --surface: #ffffff;
+  --main-surface: #ffffff;
+  --summary-surface: #e9edee;
+  --text: #16181c;
+  --text-link: #01889f;
+  --border: #a9b2bc;
+  --font-family: 'Armata', 'IBM Plex Sans JP', sans-serif;
+  --font-weight: 400;
+  --font-weight-header: 400;
+  --font-family-mono: 'JetBrains Mono', 'M PLUS 1 Code', monospace;
+  --font-weight-mono: 400;
+  --code: linear-gradient(#f2f4f5 50%, #ffffff 50%);
+  --odd: #f2f4f5;
+  --even: #ffffff
+  --console: #394149;
+  --punctuation: #5f6364;
+  --string: #2f9c0a;
+  --keyword: #1990b8;
+  --number: #c92c2c;
+  --operator: #a67f59;
+  --doughnut: #d2691e;
+  --chocolate: #83898f;
+}
+:root[data-mode='dark'] {
+  --surface: #2f373e;  /* #23292f */
+  --main-surface: #2f373e;
+  --summary-surface: #404b55;
+  --text: #f5f7f8;
+  --text-link: #3fc2d9;
+  --border: #667584;
+  --code: linear-gradient(#374149 50%, #2f373e 50%);
+  --odd: #374149;
+  --even: #2f373e;
+  --console: #23292f;
+  --punctuation: #bbc1c7;
+  --string: #6ac94a;
+  --keyword: #5bc0e1;
+  --number: #e46c6c;
+  --operator: #deb14f;
+  --doughnut: #cc8a43;
+  --chocolate: #9ba5af;
+}
+.mode-btn {
+  user-select: none;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  width: 1em;
+  height: 1em;
+}
+.mode-container {
+  display: flex;
+  gap: 0.25em;
+}
+[id^="mode-light-"] {
+  background: #ffffff;
+}
+[id^="mode-dark-"] {
+  background: #2f373e;
+}
+
+body {
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-family);
+  font-weight: var(--font-weight);
+  line-height: 1.3;
+  font-size: 0.92em;
+  letter-spacing: 0.01em;
+  margin: 0;
+}
+a, a:visited {
+  color: var(--text-link);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+a.asis::after {
+  content: attr(href);
+}
+
+/*----- Heading styles -----*/
+h1, h2, h3, h4, h5 {
+  font-weight: var(--font-weight-header);
+}
+h1, h2, h3, h4 {
+  margin: 0.6em 0 0.5em;
+  padding-bottom: 0.15em;
+}
+h1, h2 {
+  border-bottom: 1px solid var(--border);
+}
+h2 {
+  margin-top: 1.25em;
+}
+h3, h4 {
+  margin-top: 0.9em;
+  border-bottom: 1px dashed var(--border);
+}
+h5 {
+  margin: 1.35em 0 0.5em;
+  font-size: 1em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--border);
+}
+h1.title {
+  font-size: 2.4em;
+}
+h2.logo {
+  margin-top: 0.15em;
+}
+a.logo, a.logo:visited {
+  color: var(--text);
+}
+a.logo:hover {
+  text-decoration: none;
+}
+
+div#smartphone-header {
+  display: none;
+}
+div#sidebar {
+  /* 指定サイズ内でパディングを取るよう指示 */
+  box-sizing: border-box;
+  flex-basis: 200px;
+  max-width: 200px;
+  top: 0;
+  position: sticky;
+  padding: 20px;
+  font-size: 0.94em;
+}
+div#sidebar p {
+  margin: 0 0 0.3em;
+}
+.container {
+  max-width: 100%;
+  display: -webkit-flex;
+  display: flex;
+  /* 規定値の stretch から変更し子要素の高さを揃えず上揃えに */
+  align-items: flex-start;
+}
+.main {
+  margin: 0 5px 0 0;
+  flex-basis: 700px;
+  max-width: 700px;
+}
+.main .item {
+  margin: 15px 0 15px 0;
+  padding: 0 20px 20px;
+  background: var(--main-surface);
+  border: 1px solid var(--border);
+}
+.item > img, td > img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+table {
+  border-collapse: collapse;
+}
+th, td {
+  border: 1px solid var(--border);
+  padding: 5px 10px;
+  vertical-align: top;
+}
+ul, ol {
+  margin-block-start: 0.75em;
+  margin-block-end: 0.75em;
+  padding-left: 1.5em;
+}
+ul > ul, ul > ol, ol > ul, ol > ol {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+li {
+  margin-top: 0.15em;
+  margin-bottom: 0.15em;
+}
+ol.ref {
+  counter-reset: li;
+  padding-left: 2.25em;
+}
+ol.ref li {
+  position: relative;
+  list-style: none;
+  word-break: break-all;
+}
+ol.ref > li:before {
+  position: absolute;
+  left: -2.25em;
+  counter-increment: li;
+  content: '['counter(li)']';
+}
+ol.parenthesis {
+  counter-reset: li;
+  padding-left: 2.25em;
+}
+ol.parenthesis > li {
+  position: relative;
+  list-style: none;
+}
+ol.parenthesis > li:before{
+  position: absolute;
+  left: -2.25em;
+  counter-increment: li;
+  content: '('counter(li)')';
+}
+ol.none {
+  counter-reset: li;
+  padding-left: 0;
+}
+ol.none > li {
+  position: relative;
+  list-style: none;
+}
+ol.none > li:before{
+  position: absolute;
+  content: '';
+}
+ol.note {
+  counter-reset: li;
+  padding-left: 4.5em;
+  font-size: 88%;
+}
+ol.note > li {
+  position: relative;
+  list-style: none;
+}
+ol.note > li:before {
+  position: absolute;
+  left: -4.5em;
+  counter-increment: li;
+  content: '[注釈'counter(li)']';
+}
+
+span.doughnut {
+  color: var(--doughnut);
+}
+li.doughnut {
+  position: relative;
+  list-style: none;
+  color: var(--doughnut);
+}
+li.doughnut::before {
+  position: absolute;
+  content: '\01f369 ';
+  left: -1.5em;
+}
+li.doughnut + ul {
+  color: var(--doughnut);
+}
+
+span.chocolate {
+  color: var(--chocolate);
+}
+li.chocolate {
+  position: relative;
+  list-style: none;
+  color: var(--chocolate);
+}
+li.chocolate::before {
+  position: absolute;
+  content: '\01f36b ';
+  left: -1.5em;
+}
+li.chocolate + ul {
+  color: var(--chocolate);
+}
+
+.small {
+  font-size: 88%;
+}
+div.categories:before {
+  content: 'カテゴリ: ';
+}
+div.summary {
+  background: var(--summary-surface);
+  border: 1px solid var(--border);
+  margin: 0.5em 0 1.0em;
+  padding: 0.75em 0.75em 0.75em;
+}
+div.summary > ul, div.summary > ol {
+  margin-block-start: 0.5em;
+  margin-block-end: 0.25em;
+}
+
+span.index-ts {
+  font-size: 0.8em;
+}
+span.index-ts:before {
+  content: 'Updated: ';
+}
+
+/* コードブロック・インラインコード共通 */
+code[class*="language-"] {
+  font-family: var(--font-family-mono);
+  font-weight: var(--font-weight-mono);
+  font-optical-sizing: auto;
+  font-size: 0.9em !important;
+  letter-spacing: 0.01em;
+  border: 1px solid var(--border) !important;
+  border-radius: 0.3em !important;
+  color: var(--text) !important;
+}
+.token.entity, .token.operator, .token.url, .token.variable {
+  background: transparent;
+  color: var(--operator);
+}
+.token.punctuation {
+  color: var(--punctuation);
+}
+.token.attr-name, .token.builtin, .token.char, .token.function,
+.token.inserted, .token.selector, .token.string {
+  color: var(--string);
+}
+.token.atrule, .token.attr-value, .token.class-name, .token.keyword {
+  color: var(--keyword);
+}
+.token.boolean,.token.constant,.token.deleted,.token.function-name,
+.token.number,.token.property,.token.symbol,.token.tag {
+  color: var(--number);
+}
+
+/* コードブロック */
+pre[class*="language-"] {
+  background: transparent !important;
+}
+pre[class*="language-"]>code {
+  box-shadow: none !important;
+  background-image: var(--code);
+}
+pre.language-text>code {
+  color: #f2f4f5 !important;
+  padding-top: 0.3em;
+  padding-bottom: 0.3em;
+  background: #23292f !important;
+}
+pre[class*="language-"]::before, pre[class*="language-"]::after {
+  box-shadow: none !important;
+}
+
+/* インラインコード */
+:not(pre)>code[class*=language-] {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+:not(pre)>code[class*=language-], :not(pre)>code[class*=language-] span {
+  background-color: var(--summary-surface) !important;
+  /* color: var(--text) !important; */
+}
+
+/* GitHub Gist */
+div.gist-data {
+  border: 1px solid var(--border) !important;
+  margin-top: 0.5em;
+}
+div.gist-data td {
+  font-family: var(--font-family-mono) !important;
+  font-weight: var(--font-weight-mono);
+}
+.gist .blob-code {
+  line-height: 1.3 !important;
+}
+.blob-num {
+  display: none;
+}
+div.gist-data tr:nth-child(odd) {
+  background-color: var(--odd) !important;
+}
+div.gist-data tr:nth-child(even) {
+  background-color: var(--even) !important;
+}
+div.gist-data span.pl-s:after {
+  content: ' ';
+}
+.gist .blob-code-inner {
+  color: var(--punctuation) !important;
+}
+span.pl-v {
+  color: var(--operator) !important;
+}
+span.pl-c1, span.pl-en {
+  color: var(--punctuation) !important;
+}
+span.pl-s {
+  color: var(--string) !important;
+}
+span.pl-k {
+  color: var(--keyword) !important;
+}
+span.pl-s1 {
+  color: var(--text);
+}
+
+@media screen and (min-width: 540px) {
+  .gist .blob-code-inner {
+    font-size: 13.25px !important;
+  }
+}
+@media screen and (max-width: 900px) {
+  div#sidebar {
+    width: 130px;
+  }
+  .main {
+    max-width: calc(100% - 130px);
+  }
+}
+@media screen and (max-width: 540px) {
+  div#smartphone-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px 5px;
+    font-size: 88%;
+  }
+  div#smartphone-header > :first-child {
+    margin-right: auto;
+  }
+  div#sidebar {
+    display: none;
+  }
+  .main {
+    margin: 0 5px 0 5px;
+    max-width: calc(100% - 10px);
+  }
+  .main .item {
+    margin: 0 0 15px 0;
+  }
+  .gist .blob-code-inner {
+    font-size: 0.75em !important;
+  }
+}

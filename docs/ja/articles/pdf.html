@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>PDF - Cookipedia</title>
+
+
+<!-- prism start -->
+<link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-coy.min.css" integrity="sha512-LOT5F67SMZVdXMrvQe4S1ZHu5l6xk3CST2qqno9kY329OsJBBpybnq+fM9qG4ZSaNzPOjoGzHAeBamSSJyyuZg==" referrerpolicy="no-referrer" rel="stylesheet"/>
+<script crossorigin="anonymous" defer="" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="../prism-config.js"></script>
+<script crossorigin="anonymous" defer="" integrity="sha512-AKaNmg8COK0zEbjTdMHJAPJ0z6VeNqvRvH4/d5M4sHJbQQUToMBtodq4HaV4fa+WV2UTfoperElm66c9/8cKmQ==" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<!-- prism end -->
+<!-- mathjax start --><!--
+<script src="../mathjax-config.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" defer></script>
+<!-- mathjax end -->
+<link href="../../css/style.css?v=2025-10-19" rel="stylesheet" type="text/css"/><link href="../../css/cookipedia.css?v=2025-10-19" rel="stylesheet" type="text/css"/><script data-lang="ja" data-mainpage="false" data-repo="cookipedia" defer="True" id="app" src="../../funcs.js?v=2025-10-18"></script></head>
+<body>
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<!--
+<p>
+</p>
+<ul>
+<li></li>
+</ul>
+<p>
+ふがふがです。
+</p>
+-->
+<h1>PDF</h1>
+<h2>Python Snippets</h2>
+<h3>PDF から特定のページ範囲のみ切り出す</h3>
+<pre class="language-python"><code>
+from PyPDF2 import PdfReader, PdfWriter
+in_file = 'Downloads/original.pdf'
+reader = PdfReader(in_file)
+writer = PdfWriter()
+for i in range(54 - 1, 57):
+    writer.add_page(reader.pages[i])
+with open('Downloads/extracted.pdf', 'wb') as f:
+    writer.write(f)
+</code></pre>
+<h3>PDF をマージする</h3>
+<pre class="language-python"><code>
+import pypdf
+merger = pypdf.PdfMerger()
+for i in range(16):
+    merger.append(f'./pdf_files/{i+1}.pdf')
+merger.write('merged.pdf')
+merger.close()
+</code></pre>
+<h3>PDF をテキスト化する</h3>
+<p>
+<a href="https://pdfminersix.readthedocs.io/en/latest/">pdfminer.six</a> を用いた方法は以下である。<br/>
+<a class="asis" href="https://gist.github.com/CookieBox26/2aee53cc144a213c46efbfebc9fdca08"></a>
+</p>
+<a href="https://pymupdf.readthedocs.io/ja/latest/tutorial.html">PyMuPDF</a> を用いた方法は以下である。<br/>
+<pre class="language-python"><code>
+import fitz
+in_file = 'Downloads/hoge.pdf'
+doc = fitz.open(in_file)
+for i_page, page in enumerate(doc):
+    text = page.get_text()
+    print(i_page)
+    print(text)
+    break
+</code></pre>
+<!-- rel start --><!--
+<h2>関連記事</h2>
+<ul>
+<li><a href="le_cams_first_lemma.html">Le Cam の第一補題</a></li>
+</ul>
+<!-- rel end -->
+<!-- category start --><!--
+<div class="categories">
+  <a href="../categories/category_asymptotic_theory.html">漸近理論</a>
+</div>
+<!-- category end -->
+</div>
+</main>
+</div>
+</body>
+</html>

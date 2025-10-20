@@ -1,0 +1,147 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>CSS フレックスボックスレイアウト - Cookipedia</title>
+
+<style type="text/css">
+<!--
+div.container { background: honeydew; }
+div#sidebar { background: mistyrose; }
+main.main { background: lightcyan; }
+-->
+</style>
+
+<!-- Prism start-->
+<link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-coy.min.css" integrity="sha512-LOT5F67SMZVdXMrvQe4S1ZHu5l6xk3CST2qqno9kY329OsJBBpybnq+fM9qG4ZSaNzPOjoGzHAeBamSSJyyuZg==" referrerpolicy="no-referrer" rel="stylesheet"/>
+<script crossorigin="anonymous" defer="" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-html.min.js"></script>
+
+<!-- Prism end -->
+<link href="../../css/style.css?v=2025-10-19" rel="stylesheet" type="text/css"/><link href="../../css/cookipedia.css?v=2025-10-19" rel="stylesheet" type="text/css"/><script data-lang="ja" data-mainpage="false" data-repo="cookipedia" defer="True" id="app" src="../../funcs.js?v=2025-10-18"></script></head>
+<body>
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>CSS フレックスボックスレイアウト</h1>
+CSS のフレックスボックスを用いると、要素を横/縦/複数行に直感的に並べることができる。
+<h2>参考文献</h2>
+<ol class="ref small">
+<li><a class="asis" href="https://developer.mozilla.org/ja/docs/Web/CSS/CSS_flexible_box_layout/Basic_concepts_of_flexbox"></a></li>
+<li><a class="asis" href="https://developer.mozilla.org/ja/docs/Web/CSS/position"></a></li>
+<li><a class="asis" href="https://developer.mozilla.org/ja/docs/Web/CSS/overscroll-behavior"></a></li>
+</ol>
+<h2>Examples</h2>
+<h3>サイドバー</h3>
+この Cookipedia はフレックスボックスを用いることでサイドバーとメイン画面を左右に並べている。模式的 (でもなくそのものであるが) には以下である。このページも各要素がわかりやすいように色を付けている。
+<pre class="language-html"><code>
+&lt;html&gt;
+&lt;head&gt;
+&lt;style type="text/css"&gt;
+&lt;!--
+body {
+  margin: 0;
+  background: lightgray;
+}
+div.container {  /* フレックスコンテナ */
+  display: flex;
+  align-items: flex-start;  /* 規定値の stretch から変更し子要素の高さを揃えず上揃えに */
+  background: honeydew;
+}
+div.sidebar {  /* フレックスアイテム（サイドバー）*/
+  box-sizing: border-box;  /* 指定サイズ内でパディングを取るよう指示 */
+  flex-basis: 100px;
+  position: sticky;
+  top: 0;
+  padding: 20px;
+  background: mistyrose;
+}
+main.main {  /* フレックスアイテム（メイン）*/
+  flex-basis: 500px;
+  background: lightcyan;
+}
+main.main&gt;div.item {
+  margin: 15px 0;
+  padding: 20px;
+  background: white;
+}
+--&gt;
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class="container"&gt;
+  &lt;div class="sidebar"&gt;
+    メインページに戻る
+  &lt;/div&gt;
+  &lt;main class="main"&gt;
+    &lt;div class="item"&gt;
+      ほげほげ&lt;br/&gt;ふがふが&lt;br/&gt;ほげほげ&lt;br/&gt;ふがふが&lt;br/&gt;
+      ほげほげ&lt;br/&gt;ふがふが&lt;br/&gt;ほげほげ&lt;br/&gt;ふがふが&lt;br/&gt;
+      ほげほげ&lt;br/&gt;ふがふが&lt;br/&gt;ほげほげ&lt;br/&gt;ふがふが&lt;br/&gt;
+      ほげほげ&lt;br/&gt;ふがふが&lt;br/&gt;ほげほげ&lt;br/&gt;ふがふが&lt;br/&gt;
+    &lt;/div&gt;
+  &lt;/main&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<ul>
+<li>まずフレックスコンテナを配置する (淡い緑色)。display プロパティの値を flex とすることでフレックスコンテナになる。</li>
+<ul>
+<li>flex-direction プロパティで中に配置する要素 (フレックスアイテム) が並ぶ方向を決める。デフォルト値は row なので左から右へ並ぶ (ただしアラビア語環境では逆になる)。</li>
+<li>align-items プロパティで中に配置する要素の位置と高さをどう揃えるかを決める。 デフォルト値は stretch であり、最も高いフレックスアイテムの高さまで他のアイテムも伸びる。ただし、サイドバーを動かないようにする目的ではサイドバーをメイン画面に合わせて伸ばしてはならないので、ここでは flex-start (上揃え) としている。</li>
+</ul>
+<li>次に中に要素 (フレックスアイテム) を配置する。ここではサイドバー (ピンク色) とメイン画面 (水色) を配置している。flex-basis プロパティを設定すると、各要素はこの幅だけとって詰める (コンテナに余白があっても広がらない)。</li>
+<ul>
+<li>ここで、ピンク色のサイドバーについては position: sticky; top: 0; とすることで、淡い緑色のコンテナから浮き上がり、画面が切り取るコンテナの上辺から 0 の位置に常に配置される。ただし、コンテナ内にいなければならないので、ピンク色のサイドバーが画面下に x だけはみ出している場合、スクロールしていってコンテナの画面下のはみ出しが x 未満になるタイミングからコンテナと連動してスクロールされることになる。</li>
+</ul>
+</ul>
+<h3>ヘッダーとフッター</h3>
+<style type="text/css">
+<!--
+.overflow-auto {
+  width: 200px;
+  height: 200px;
+  overflow: auto;
+  border: 1px solid darkgray;
+  margin: 1.0em 0;
+}
+-->
+</style>
+ヘッダーは左揃え、メイン画面は中央揃え、フッターは右揃えにできる。そうしたいかはさておき。
+
+<div class="overflow-auto">
+<div>
+<div>ヘッダー</div>
+<div>
+      ほげほげほげほげ<br/>ふがふがふがふが<br/>ほげほげほげほげ<br/>ふがふがふがふが<br/>
+      ほげほげほげほげ<br/>ふがふがふがふが<br/>ほげほげほげほげ<br/>ふがふがふがふが<br/>
+</div>
+<div>フッター</div>
+</div>
+</div>
+
+なお、モバイルブラウザでのオーバースクロール (画面の上/下の方をみていこうとスクロールしたときにその勢いのままに本来スクロールできない領域まで一旦スクロールされてしまい (その後に跳ね返る)、上の方にスクロールしたときはページがリロードされることが多い) を防ぐためには overscroll-behavior: none; を設定する (以下では overflow: auto; をもつ div 要素に設定しているが実際には html 要素などに設定するはずである) [3]。
+
+<div class="overflow-auto">
+<div>
+<div>ヘッダー</div>
+<div>
+      ほげほげほげほげ<br/>ふがふがふがふが<br/>ほげほげほげほげ<br/>ふがふがふがふが<br/>
+      ほげほげほげほげ<br/>ふがふがふがふが<br/>ほげほげほげほげ<br/>ふがふがふがふが<br/>
+</div>
+<div>フッター</div>
+</div>
+</div>
+
+なお、overscroll-behavior: contain; では外側要素へのスクロール伝播を抑止するだけで画面端効果は抑制されない。スここでは画面端効果を抑止したいので overscroll-behavior: none; としなければならない (#スクロール伝播は抑止したくないが画面端効果のみ抑止したいときはどうするのだろうか)。
+
+</div>
+</main>
+</div>
+</body>
+</html>

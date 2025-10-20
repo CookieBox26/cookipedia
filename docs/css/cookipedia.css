@@ -1,0 +1,15 @@
+a.logo:before {
+  content: '\01f4d8Cookipedia';
+}
+:root {
+  --text-link: #047ac5;
+}
+:root[data-mode='dark'] {
+  --text-link: #4ec7f2;
+}
+div.categories {
+  background: var(--summary-surface);
+  border: 1px solid var(--border);
+  margin: 0.5em 0 1.0em;
+  padding: 0.75em 0.75em 0.75em;
+}

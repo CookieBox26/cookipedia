@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>OpenAI (Python Package) - Cookipedia</title>
+
+
+<link href="../../css/style.css?v=2025-10-19" rel="stylesheet" type="text/css"/><link href="../../css/cookipedia.css?v=2025-10-19" rel="stylesheet" type="text/css"/><script data-lang="ja" data-mainpage="false" data-repo="cookipedia" defer="True" id="app" src="../../funcs.js?v=2025-10-18"></script></head>
+<body>
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>OpenAI (Python Package)</h1>
+<h2>Snippets</h2>
+<h3>テキスト読み上げ</h3>
+<pre class="python">
+from IPython.display import Audio
+from openai import OpenAI
+import os
+
+os.environ['OPENAI_API_KEY'] = 'xxxxxx'
+
+client = OpenAI()
+mp3_file_path = 'out.mp3'
+
+# https://arxiv.org/abs/2210.03629
+with client.audio.speech.with_streaming_response.create(
+    model='tts-1-hd', voice='nova', speed=0.75,
+    input='While large language models have demonstrated impressive performance'
+    ' across tasks in language understanding and interactive decision making,'
+    ' their abilities for reasoning and acting have primarily been studied as separate topics.'
+) as resp:
+    resp.stream_to_file(mp3_file_path)
+Audio(mp3_file_path)
+</pre>
+<div class="categories">
+<a href="../categories/python.html">Python</a>
+</div>
+</div>
+</main>
+</div>
+</body>
+</html>
