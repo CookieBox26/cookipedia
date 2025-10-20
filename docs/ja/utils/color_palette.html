@@ -3,14 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title></title>
-<link rel="stylesheet" type="text/css" href="../style.css">
+<title>カラーパレット - Cookipedia</title>
+<link href="../../css/style.css?v=2025-10-19" rel="stylesheet" type="text/css"/>
+<link href="../../css/cookipedia.css?v=2025-10-19" rel="stylesheet" type="text/css"/>
 <style type="text/css">
 <!--
 td {
   margin: 0;
   padding: 4px 10px;
   font-size: 90%;
+}
+input, select {
+  font-family: var(--font-family);
 }
 input.inputColor {
   height: 34px;
@@ -47,10 +51,10 @@ table.cltb {
 }
 -->
 </style>
-<script src="../funcs.js"></script>
+<script data-lang="ja" data-mainpage="false" data-repo="cookipedia" defer="" id="app" src="../../funcs.js?v=2025-10-18"></script>
 <script type="text/javascript"><!--
 const vError = "#ff0000";
-const defaults = ["#a8d992", "#117da2", "#cce2e5"];
+const defaults = ["#a8d992", "#117da2", "#ffffff"];
 let rgb0Elems = [];
 let hsl0Elems = [];
 let colorElems = [];
@@ -101,13 +105,14 @@ function startup() {
   }
   // 色iのカラーピッカーとHEX値変更に対するイベントリスナーを登録
   for (let i = 0; i < defaults.length; i++) {
+    let v = localStorage.getItem(`palette-color-${i}`) || defaults[i];
     colorElems.push(document.querySelector("#color" + String(i)));
-    colorElems[i].value = defaults[i];
+    colorElems[i].value = v;
     colorElems[i].addEventListener("input", function(ev){set(i, ev.target.value);}, false);
     hexElems.push(document.querySelector("#hex" + String(i)));
-    hexElems[i].value = defaults[i];
+    hexElems[i].value = v;
     hexElems[i].addEventListener("input", function(ev){set(i, ev.target.value);}, false);
-    set(i, defaults[i]);
+    set(i, v);
   }
   tabItems = document.querySelectorAll('.tab-item');
   tabContents = document.querySelectorAll('.tab-content');
@@ -159,6 +164,7 @@ function set(i, v) {
     updateRGBByHexInput(i, v);
     setMix();
   }
+  localStorage.setItem(`palette-color-${i}`, v);
 }
 function set_(i, v) {
   // 色iのカラーピッカーとHEX値とあれば色iにひもづく要素を更新
@@ -363,7 +369,6 @@ function setMcolors() {
   }
 }
 function init_() {
-  init();
   setMcolors();
 }
 // --></script>
@@ -378,7 +383,7 @@ function init_() {
 
 <div style="display: flex; flex-wrap: wrap; gap: 10px;">
 
-  <div style="border: 1px solid darkgray; padding: 10px; display: flex; align-items: center; flex-wrap: wrap;">
+  <div style="border: 1px solid var(--border); padding: 10px; display: flex; align-items: center; flex-wrap: wrap;">
     <div style="padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 10px;">
 
       <div id="area0" style="width: 90px; height: 90px; margin: 25px 0 15px;"></div>
@@ -413,7 +418,7 @@ function init_() {
 
   </div>
 
-  <div style="border: 1px solid darkgray; padding: 10px; display: flex; flex-direction: column; align-items: center;">
+  <div style="border: 1px solid var(--border); padding: 10px; display: flex; flex-direction: column; align-items: center;">
       <div><input type="color" id="color1" class="inputColor" /><!--
       --><input type="text" id="hex1" class="inputText"/></div>
       <table style="width: 100%; margin: 6px 0; text-align: center;">
@@ -429,7 +434,7 @@ function init_() {
       --><input type="text" id="hex2" class="inputText"/></div>
   </div>
 
-  <div style="border: 1px solid darkgray; padding: 10px; display: flex; flex-direction: column; gap: 5px; align-items: start;">
+  <div style="border: 1px solid var(--border); padding: 10px; display: flex; flex-direction: column; gap: 5px; align-items: start;">
   <a href="https://matplotlib.org/stable/gallery/color/named_colors.html" class="asis"></a>
   <select id="smcolors">
     <option value="TABLEAU_COLORS">TABLEAU_COLORS</option>
