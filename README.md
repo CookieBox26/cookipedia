@@ -1,3 +1,3 @@
 # Cookipedia
 
-https://cookiebox26.github.io/cookipedia/index.html
+https://cookiebox26.github.io/cookipedia/ja/
