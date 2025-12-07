@@ -5,7 +5,7 @@
 # ]
 # [tool.uv.sources.cookies_site_utils]
 # git = "https://github.com/CookieBox26/cookies-site-utils"
-# rev = "9c7b6b822e9f6eea26de0f9209de0062d5457113"
+# rev = "e5283562e026142bbadd426ac08b94c9f319f746"
 # ///
 from pathlib import Path
 from cookies_site_utils import index_generation, IndexPage, Sitemap, validate
@@ -23,6 +23,6 @@ if __name__ == '__main__':
 
     with index_generation(
         site_name, site_root, style_css, funcs_js, last_counts_path, domain='',
-        force_keep_timestamp=True,
+        force_keep_timestamp=False,
     ):
         index_ja = IndexPage(lang_root, lang_template_root)
