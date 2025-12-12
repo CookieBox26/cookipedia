@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>TFB: Towards Comprehensive and Fair Benchmarking of Time Series Forecasting Methods - Cookipedia α-version</title>
+<!-- prism start --><!--
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-coy.min.css" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="../prism-config.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<!-- prism end -->
+<!-- mathjax start --><!--
+<script src="../mathjax-config.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" defer></script>
+<!-- mathjax end -->
+<link href="../css/style.css?v=2025-12-09" rel="stylesheet" type="text/css"/><link href="../css/cookipedia.css?v=2025-12-09" rel="stylesheet" type="text/css"/><script data-lang="ja" data-mainpage="false" data-repo="cookipedia" defer="True" id="app" src="../funcs.js?v=2025-12-09"></script></head>
+<body>
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item long-title">
+<!--
+<p>
+</p>
+<ul>
+<li></li>
+</ul>
+-->
+<h1>TFB: Towards Comprehensive and Fair Benchmarking of Time Series Forecasting Methods</h1>
+<p>
+<b>TFB: Towards Comprehensive and Fair Benchmarking of Time Series Forecasting Methods</b> は Proceedings of the VLDB Endowment, Volume 17, Issue 9 に掲載された論文である。VLDB 2024 で発表された。
+</p>
+<p>
+具体的に、これまでの時系列予測手法の研究には以下の課題があるとし、これらの課題を克服した新しい時系列予測用評価プラットフォーム TFB を整備している。
+<ul>
+<li>データドメインのカバレッジが不十分である。多様なデータセットを備えるべきである。</li>
+<li>最新の深層学習モデルのみと比較する (伝統的な手法と比較しない) 傾向がある。多様なモデルと比較するべきである。</li>
+<li>検証実験の設定に一貫性がないことがある (Ex. バッチサイズに満たない末尾のテストデータを捨てるか否かがモデルによって変わってしまっているなど)。統一的なデータ前処理、学習、評価の機構を備えるべきである。</li>
+</ul>
+</p>
+<p>
+また、この論文ではデータセットの網羅性を示すために各時系列の特徴も提示しており、どのような手法がどのような時系列の予測を得意とするかについての考察も添えている。
+</p>
+<h2>
+参考文献
+</h2>
+<ol class="ref small">
+<li>
+TFB: Towards Comprehensive and Fair Benchmarking of Time Series Forecasting Methods | Proceedings of the VLDB Endowment.
+<a class="asis" href="https://dl.acm.org/doi/abs/10.14778/3665844.3665863"></a>
+ (2025年05月06日参照).
+</li>
+<li>
+[2403.20150] TFB: Towards Comprehensive and Fair Benchmarking of Time Series Forecasting Methods.
+<a class="asis" href="https://arxiv.org/abs/2403.20150"></a>
+ (2025年05月06日参照).
+</li>
+</ol>
+<!-- python start --><!--
+<h2>Python スクリプト</h2>
+<pre class="language-python"><code>
+import pandas as pd
+df = pd.DataFrame()
+</code></pre>
+<!-- python end -->
+<!-- rel start --><!--
+<h2>関連記事</h2>
+<ul>
+<li><a href="le_cams_first_lemma.html">Le Cam の第一補題</a></li>
+</ul>
+<!-- rel end -->
+<h2>時系列の特徴</h2>
+<p>
+<ul>
+<li>Seasonality</li>
+<li>Trend</li>
+<li>Abrupt Changes</li>
+<li>Non-stationarity</li>
+<li>Change Points</li>
+</ul>
+</p>
+<h2>備考</h2>
+<p>
+著者らの所属は以下である。
+<ul>
+<li>ECNU: East China Normal University, China</li>
+<li>Huawei Cloud Algorithm Innovation Lab, China</li>
+<li>Aalborg University, Denmark</li>
+</ul>
+</p>
+<!-- category start -->
+<div class="categories">
+<a href="../categories/time_series_forecasting.html">時系列予測</a>
+</div>
+<!-- category end -->
+</div>
+</main>
+</div>
+</body>
+</html>

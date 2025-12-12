@@ -111,14 +111,26 @@ h1.title {
 h2.logo {
   margin-top: 0.15em;
 }
-a.logo, a.logo:visited {
+a.index-link {
+  display: block;
+}
+a.index-link, a.index-link:visited {
   color: var(--text);
 }
-a.logo:hover {
+a.index-link:hover {
   text-decoration: none;
+}
+div.top-link {
+  margin: 1.35em 0;
+  border-top: 1px solid var(--border);
+  padding-top: 0.5em;
+  font-size: 0.9em;
 }
 
 div#smartphone-header {
+  display: none;
+}
+div#smartphone-footer {
   display: none;
 }
 div#sidebar {
@@ -432,5 +444,11 @@ span.pl-s1, span.pl-smi {
   }
   .gist .blob-code-inner {
     font-size: 0.75em !important;
+  }
+  div#smartphone-footer {
+    display: flex;
+    margin-top: -15px;
+    padding: 10px 20px 5px;
+    font-size: 88%;
   }
 }

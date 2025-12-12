@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Beautiful Soup 4 - Cookipedia α-version</title>
+<!-- Prism start-->
+<link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-coy.min.css" integrity="sha512-LOT5F67SMZVdXMrvQe4S1ZHu5l6xk3CST2qqno9kY329OsJBBpybnq+fM9qG4ZSaNzPOjoGzHAeBamSSJyyuZg==" referrerpolicy="no-referrer" rel="stylesheet"/>
+<script crossorigin="anonymous" defer="" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script crossorigin="anonymous" defer="" integrity="sha512-AKaNmg8COK0zEbjTdMHJAPJ0z6VeNqvRvH4/d5M4sHJbQQUToMBtodq4HaV4fa+WV2UTfoperElm66c9/8cKmQ==" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<!-- Prism end -->
+<!-- mathjax start --><!--
+<script src="../mathjax-config.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" defer></script>
+<!-- mathjax end -->
+<link href="../css/style.css?v=2025-12-09" rel="stylesheet" type="text/css"/><link href="../css/cookipedia.css?v=2025-12-09" rel="stylesheet" type="text/css"/><script data-lang="ja" data-mainpage="false" data-repo="cookipedia" defer="True" id="app" src="../funcs.js?v=2025-12-09"></script></head>
+<body>
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<!--
+<p>
+</p>
+<ul>
+<li></li>
+</ul>
+-->
+<h1>Beautiful Soup 4</h1>
+<h2>
+参考文献
+</h2>
+<ol class="ref small">
+<li>
+Beautiful Soup Documentation — Beautiful Soup 4.13.0 documentation.
+<a class="asis" href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">
+</a>
+ (2025年09月21日参照).
+</li>
+<ul>
+<li><a class="asis" href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/#kwargs"></a> に、関数側で特別に定義されていないキーワード引数は自動的に「その属性を持つタグを絞り込むためのフィルタ」として解釈される旨が記されている。
+</li>
+</ul>
+</ol>
+<!-- python start --><!--
+<h2>Python スクリプト</h2>
+<pre class="language-python"><code>
+import pandas as pd
+df = pd.DataFrame()
+</code></pre>
+<!-- python end -->
+<!-- rel start --><!--
+<h2>関連記事</h2>
+<ul>
+<li><a href="le_cams_first_lemma.html">Le Cam の第一補題</a></li>
+</ul>
+<!-- rel end -->
+<h2>Snippets</h2>
+<h3>HTML ファイルが参照するスタイルシートのパスを修正する</h3>
+<code class="language-">soup.find()</code> で <code class="language-">href</code> 属性が <code class="language-">css/style.css</code> を含む要素をみつけるには引数 <code class="language-python">href=lambda v: v and 'css/style.css' in v</code> を指定すればよい。
+<pre class="language-python"><code>
+from bs4 import BeautifulSoup
+from pathlib import Path
+
+if __name__ == '__main__':
+    root = Path('docs/articles/')
+    for article_path in root.glob('*.html'):
+        text = article_path.read_text(encoding='utf8')
+        soup = BeautifulSoup(text, 'html.parser')
+
+        link = soup.find('link', href=lambda v: v and 'css/style.css' in v)
+        link['href'] = '../css/style.css?v=2025-12-09'
+        link = soup.find('link', href=lambda v: v and 'css/cookipedia.css' in v)
+        link['href'] = '../css/cookipedia.css?v=2025-12-09'
+        link = soup.find('script', src=lambda v: v and 'funcs.js' in v)
+        link['src'] = '../funcs.js?v=2025-12-09'
+
+        article_path.write_text(str(soup), newline='\n', encoding='utf8')
+</code></pre>
+<h3>HTML ファイル内の title 要素を修正する</h3>
+<pre class="language-python"><code>
+from bs4 import BeautifulSoup
+from pathlib import Path
+
+if __name__ == '__main__':
+    root = Path('docs/articles/')
+    for article_path in root.glob('*.html'):
+        text = article_path.read_text(encoding='utf8')
+        soup = BeautifulSoup(text, 'html.parser')
+        org = soup.head.title.string
+        soup.head.title.string = org.replace(' - Cookipedia', ' - Cookipedia α-version')
+        print(soup.head.title.string)
+        article_path.write_text(str(soup), newline='\n', encoding='utf8')
+</code></pre>
+<!-- category start -->
+<div class="categories">
+<a href="../categories/python.html">Python</a>
+</div>
+<!-- category end -->
+</div>
+</main>
+</div>
+</body>
+</html>

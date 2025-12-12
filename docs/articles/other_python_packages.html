@@ -1,0 +1,132 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>その他の Python パッケージ - Cookipedia α-version</title>
+<link href="../css/style.css?v=2025-12-09" rel="stylesheet" type="text/css"/><link href="../css/cookipedia.css?v=2025-12-09" rel="stylesheet" type="text/css"/><script data-lang="ja" data-mainpage="false" data-repo="cookipedia" defer="True" id="app" src="../funcs.js?v=2025-12-09"></script></head>
+<body>
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>その他の Python パッケージ</h1>
+<h2>Snippets</h2>
+<h3>HTML ファイルをパースする</h3>
+<pre class="python">
+import bs4
+
+in_file_html = 'hoge.html'
+soup = bs4.BeautifulSoup(open(in_file_html, encoding='utf8'), 'html.parser')
+for tag in soup.select('h1, h2, h3, p'):
+    print('-' * 20, tag.name, '-' * 20)
+    if tag.name == 'h2':
+        for tag_ in tag.select('span.title'):
+            print(tag_.get_text())
+    else:
+        print(tag.get_text())
+</pre>
+<h3>WAV を MP3 に変換する</h3>
+サンプリングレートを下げないとビットレートは下がらない。<br/>
+以下に FFmpeg で許容されるサンプリングレートがある。<br/>
+<a class="asis" href="https://superuser.com/questions/1492214/which-audio-encoders-in-ffmpeg-support-8-khz"></a><br/>
+音声のサンプリング周波数を 16kHz より下げるとロボットのようなノイズが大きくなってくる。<br/>
+<pre class="python">
+from pydub import AudioSegment
+wav_audio = AudioSegment.from_wav('0.wav')
+wav_audio.export('0.mp3', format='mp3', parameters=['-ar', '16000', '-ab', '16k'])
+
+from pydub.utils import mediainfo
+audio = AudioSegment.from_mp3('0.mp3')
+sampling_rate = audio.frame_rate
+media_info = mediainfo('0.mp3')
+bitrate = media_info['bit_rate']
+print(f"サンプリングレート: {sampling_rate} Hz")
+print(f"ビットレート: {bitrate} bps")
+</pre>
+AquesTalkPlayer による音声合成からやるとこう。
+<pre class="python">
+from pydub import AudioSegment
+import subprocess
+atp = 'C:/tools/aquestalkplayer/AquesTalkPlayer.exe'
+story = [
+    'k:M推定量とはなんなのでしょうか。',
+    't:5.1式の形式の目的関数の最大化で得られるような推定量のことなのかな。'
+]
+audio = None
+for s in story:
+    v = s.split(':')
+    subprocess.run([atp, '/P', v[0], '/T', v[1], '/W', 'tmp.wav'])
+    audio_ = AudioSegment.from_wav('tmp.wav')
+    audio = audio_ if (audio is None) else (audio + audio_)
+audio.export('test.mp3', format='mp3', parameters=['-ar', '16000', '-ab', '16k'])
+audio.export('test.m4a', format='ipod', codec='aac', parameters=['-ar', '16000', '-ab', '16k'])
+</pre>
+<h3>MP4 を GIF に変換する</h3>
+Windous 10 では Windows + Alt + R で画面録画できるが、生成される MP4 は Qiita に貼れないし、Slack には貼れるが閲覧者が再生ボタンをクリックしてくれなければ動かない。そこで GIF にする。なお、Qiita にアップロードする GIF は 10MB 以内でなければならず、月間で上限もある (<a href="https://help.qiita.com/ja/articles/qiita-image-upload">参考</a>)。ので、なるべく小さくなるように画像サイズ and/or fps を落とすとよい。
+<pre class="python">
+from moviepy.editor import VideoFileClip
+from moviepy.video.fx.resize import resize
+input_file = 'rubikscube.mp4'
+output_file = 'rubikscube.gif'
+clip = VideoFileClip(input_file)
+clip = resize(clip, (clip.w / 2.5, clip.h / 2.5))
+clip.write_gif(output_file, fps=5)
+</pre>
+<h3>音声を録音する</h3>
+<pre class="python">
+import sounddevice as sd
+from scipy.io.wavfile import write
+import time
+import tqdm
+
+def count_down(t, step=-1):
+    for i in tqdm.tqdm(range(t, 0, step)):
+        time.sleep(-step)
+
+def record(duration=20, out_wav='output.wav'):
+    # 1つ目のシークバーで3秒カウントダウンする
+    # 2つ目のシークバーがいっぱいになるまでしゃべる
+    count_down(3)
+    rec = sd.rec(int(duration * 44100), samplerate=44100, channels=2)
+    count_down(duration)
+    sd.wait()
+    write(out_wav, 44100, rec)
+
+record()
+</pre>
+<h3>動画をトリミングする (時間方向も画面方向も)</h3>
+かき出しに時間がかかる。
+<pre class="python">
+from moviepy.editor import *
+from moviepy.video.fx.resize import resize
+
+# 元動画
+file_path = "Documents/zoom/2024-03-09 10.46.17 chihiro miharaのパーソナルミーティングルーム/video1558201350.mp4"
+save_path = "20240309_asympstat.mp4"
+
+# 時間クリップ用パラメータ
+t_start = 0  # 切り出し開始時刻 (秒)
+t_end = 30 * 60 + 15  # 切り出し終了時刻 (秒)
+
+# 画面クロップは「右上座標と右下座標」や「中心座標と画面サイズ」など色々な指定方法が可能である
+# https://zulko.github.io/moviepy/ref/videofx/moviepy.video.fx.all.crop.html
+x1 = 40  # 画面切り出し開始 x 座標 (右端が原点)
+y1 = 20  # 画面切り出し開始 y 座標 (上端が原点)
+width = 1800  # 切り出す画面幅
+height = 1100  # 切り出す画面高さ
+
+video = VideoFileClip(file_path).subclip(t_start, t_end).crop(x1=x1, y1=y1, width=width, height=height)
+video = resize(video, (width/2, height/2))
+video.write_videofile(save_path, fps=25)
+</pre>
+<div class="categories">
+<a href="../categories/python.html">Python</a>
+</div>
+</div>
+</main>
+</div>
+</body>
+</html>

@@ -5,50 +5,65 @@ function setModeButton(localStorageKeyName, elmId, mode) {
     });
 }
 
-function createModeButtons(i) {
-    let btns = '<div class="mode-container">配色切替';
+function createModeButtons(i, lang) {
+    let btns = '<div class="mode-container">';
+    btns += (lang == 'ja') ? '配色切替' : 'Light/Dark';
     btns += `<div id="mode-light-${i}" class="mode-btn"></div>`;
     btns += `<div id="mode-dark-${i}" class="mode-btn"></div>`;
     btns += '</div>';
     return btns;
 }
 
-function createSidebar(repo = 'cookie-box', mainPage = false, lang = 'ja') {
-    let indexUrl = mainPage ? 'index.html' : '../index.html';
-    let back = `<a class="logo" href="${indexUrl}"></a>`;
+function createSidebar(repo = 'cookie-box', isIndex = false, linkTop = false, lang = 'ja') {
+    let indexUrl = isIndex ? 'index.html' : '../index.html';
+    let toIndex = `<a class="index-link" href="${indexUrl}"></a>`;
     let gitHub = `<a href="https://github.com/CookieBox26/${repo}/issues">Issues</a>`;
     let localStorageKeyName = (repo == 'cookie-box') ? 'mode' : `mode-${repo}`;
 
-    let spHeaderLeft = mainPage ? '<span></span>' : back;
-    let modeButtons0 = createModeButtons(0);
-    let modeButtons1 = createModeButtons(1);
+    let spHeaderLeft = isIndex ? '<span></span>' : toIndex;
+    let modeButtons0 = createModeButtons(0, lang);
+    let modeButtons1 = createModeButtons(1, lang);
     document.getElementById('smartphone-header').innerHTML += spHeaderLeft + modeButtons0;
 
     let content = '';
-    content += `<h2 class="logo">${back}</h2>`;
+    content += `<h2 class="logo">${toIndex}</h2>`;
     content += `<p>${modeButtons1}</p>`;
-    content += mainPage ? '' : `<p>ご指摘等は ${gitHub} までご連絡ください</p>`;
-    content += '<p><a href="#">ページの一番上に戻る</a></p>';
-    let index = '<h5>ページ内の小見出し一覧</h5>';
+    content += isIndex ? '' : `<p>ご指摘等は ${gitHub} までご連絡ください</p>`;
+    content += isIndex ? '' : '<p><a href="#">ページの一番上に戻る</a></p>';
+
     const allHeaders = document.querySelectorAll('h2, h3');
-    for (var i = 0; i < allHeaders.length; ++i) {
-        index += '<p class="';
-        if (allHeaders[i].tagName == 'H3') {
-            index += 'indent';
+    if (allHeaders.length > 0) {
+        let index = '<h5>ページ内の小見出し一覧</h5>';
+        for (var i = 0; i < allHeaders.length; ++i) {
+            index += '<p class="';
+            if (allHeaders[i].tagName == 'H3') {
+                index += 'indent';
+            }
+            index += '">';
+            index += '<a href="#head' + String(i) + '">';
+            index += allHeaders[i].textContent + '</a></p>';
+            allHeaders[i].innerHTML += '<a id="head' + String(i) + '"></a>';
         }
-        index += '">';
-        index += '<a href="#head' + String(i) + '">';
-        index += allHeaders[i].textContent + '</a></p>';
-        allHeaders[i].innerHTML += '<a id="head' + String(i) + '"></a>';
+        content += `<div id="headers">${index}</div>`;
     }
-    content += `<div id="headers">${index}</div>`;
-    if (mainPage) {
+
+    if (isIndex) {
         let div = document.createElement('div');
         div.innerHTML = content;
-        let ref = document.getElementById('header-externallink');
+        let ref = document.getElementById('bookmark');
         document.getElementById('sidebar').insertBefore(div, ref);
     } else {
         document.getElementById('sidebar').innerHTML += content;
+    }
+    if (linkTop) {
+        let topUrl = isIndex ? '../index.html' : '../../index.html';
+        let toTop = `From&nbsp;<a class="top-link" href="${topUrl}"></a>`;
+        let toTopDiv = `<div class="top-link">${toTop}</div>`;
+        document.getElementById('sidebar').innerHTML += toTopDiv;
+        const footer = document.getElementById('smartphone-footer');
+        if (footer) {
+            footer.innerHTML += toTop;
+        }
     }
 
     document.documentElement.setAttribute('data-mode', 'light');
@@ -102,14 +117,18 @@ function secureExternalLinks(root = document) {
     });
 }
 
-function init(mainPage = false, lang = 'ja') {
-    createSidebar(mainPage, lang);
+function init(repo, isIndex = false, isTop = false, lang = 'ja') {
+    createSidebar(repo, isIndex, isTop, lang);
     secureExternalLinks();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     const s = document.getElementById('app');
-    init(s?.dataset.repo || 'cookie-box', s?.dataset.mainpage === 'true', s?.dataset.lang || 'ja');
+    const repo = s?.dataset.repo || 'cookie-box';
+    const isIndex = s?.dataset.isIndex === 'true';
+    const linkTop = s?.dataset.linkTop === 'true';
+    const lang = s?.dataset.lang || 'ja';
+    init(repo, isIndex, linkTop, lang);
     if (s?.dataset.mathjax === 'true') loadMathJax();
 });
 

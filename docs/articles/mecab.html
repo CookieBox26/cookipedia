@@ -1,0 +1,149 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>MeCab - Cookipedia α-version</title>
+<link href="../css/style.css?v=2025-12-09" rel="stylesheet" type="text/css"/><link href="../css/cookipedia.css?v=2025-12-09" rel="stylesheet" type="text/css"/><script data-lang="ja" data-mainpage="false" data-repo="cookipedia" defer="True" id="app" src="../funcs.js?v=2025-12-09"></script></head>
+<body>
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>MeCab</h1>
+<h2>参考文献</h2>
+<ol class="ref small">
+<li><a href="http://www.mwsoft.jp/programming/munou/mecab_nitteretou.html">日本テレビ東京で学ぶMeCabのコスト計算 | mwSoft</a> (2024年03月19日参照).</li>
+</ol>
+<h2>Snippets</h2>
+<h3>形態素解析する</h3>
+<a href="https://clrd.ninjal.ac.jp/unidic/back_number.html">「UniDic」国語研短単位自動解析用辞書|バックナンバー</a>から辞書をダウンロードして配置し、形態素解析すると以下のようになる。
+
+<pre class="python">
+import MeCab
+tagger = MeCab.Tagger('-d "C:/Program Files/MeCab/dic/unidic-csj-3.1.1-full"')
+print(tagger.parse('ヒンメルはもういないじゃない'))
+</pre>
+<pre>
+ヒンメル	名詞,普通名詞,一般,,,
+は	助詞,係助詞,,,,,ハ,は,は,ワ,は,ワ,和,"","","","","","",係助,ハ,ハ,ハ,ハ,"","動詞%F2@0,名詞%F1,形容詞%F2@-1","",8059703733133824,29321
+もう	副詞,,,,,,モウ,もう,もう,モー,もう,モー,和,"","","","","","",相,モウ,モウ,モウ,モウ,"0,1","","",10326896709607936,37569
+い	動詞,非自立可能,,,上一段-ア行,未然形-一般,イル,居る,い,イ,いる,イル,和,"","","","","","",用,イ,イル,イ,イル,"0","C4","M4@1",710568013079105,2585
+ない	助動詞,,,,助動詞-ナイ,終止形-一般,ナイ,ない,ない,ナイ,ない,ナイ,和,"","","","","","",助動,ナイ,ナイ,ナイ,ナイ,"","動詞%F3@0","",7542108634358443,27438
+じゃ	助動詞,,,,助動詞-ダ,連用形-融合,ダ,だ,じゃ,ジャ,だ,ダ,和,"","","","","","",助動,ジャ,ダ,ジャ,ダ,"","名詞%F1","",6299110739157638,22916
+ない	形容詞,非自立可能,,,形容詞,終止形-一般,ナイ,無い,ない,ナイ,ない,ナイ,和,"","","","","","",相,ナイ,ナイ,ナイ,ナイ,"1","C3","",7543208145986219,27442
+EOS
+</pre>
+ただこれだと結果の意味がわからないのでわかりやすくするとこうなる。
+<pre class="python">
+from IPython.display import display, HTML
+import MeCab
+import re
+import pandas as pd
+
+# ダブルクオートで囲まれていないカンマにマッチする正規表現
+split_pattern = re.compile(r',(?=[^"]*(?:"[^"]*"[^"]*)*$)')
+
+tagger = MeCab.Tagger('-d "C:/Program Files/MeCab/dic/unidic-csj-3.1.1-full"')
+cols = [  # C:/Program Files/MeCab/dic/unidic-csj-3.1.1-full/dicrc をみると各トークンの特徴名リストがある
+    'pos1', 'pos2', 'pos3', 'pos4', 'cType', 'cForm', 'lForm', 'lemma',
+    'orth', 'pron', 'orthBase', 'pronBase', 'goshu', 'iType', 'iForm', 'fType', 'fForm',
+    'iConType', 'fConType', 'type', 'kana', 'kanaBase',
+    'form', 'formBase', 'aType', 'aConType', 'aModType', 'lid', 'lemma_id']
+cols_ja = [  # https://clrd.ninjal.ac.jp/unidic/faq.html, https://hayashibe.jp/tr/mecab/dictionary/unidic/field
+    '品詞大分類', '品詞中分類', '品詞小分類', '品詞細分類', '活用型', '活用形', '語彙素読み', '語彙素',
+    '書字形出現形', '発音形出現形', '書字形基本形', '発音形基本形', '語種', '語頭変化化型', '語頭変化形',
+    '語末変化化型', '語末変化形', '語頭変化結合型', '語末変化結合型', '語彙素類', '仮名形出現形', '仮名形基本形',
+    '語形出現形', '語形基本形', 'アクセント型', 'アクセント結合型', 'アクセント修飾型', '語彙表ID', '語彙素ID']
+
+# 形態素解析結果を格納するデータフレーム
+df = pd.DataFrame(columns=pd.MultiIndex.from_tuples(
+    [('surface', '表層形')] + [(col, col_ja) for col, col_ja in zip(cols, cols_ja)], names=['feature name', '特徴名']))
+
+tokens = tagger.parse('ヒンメルはもういないじゃない').split('')
+for i_token, token in enumerate(tokens):
+    if token.strip() == 'EOS':
+        break
+    v = token.strip().split('\t')
+    info = split_pattern.split(v[1])
+    df.loc[i_token] = [v[0]] + info + [''] * (29 - len(info))
+
+display(HTML(df.to_html()))
+</pre>
+<div>
+<style type="text/css">
+#tbl_01 {
+  border-collapse: collapse;
+}
+#tbl_01 th, #tbl_01 td {
+  font-size: 84%;
+  vertical-align: top;
+  padding: 0 0.35em;
+  border-top: 1px solid darkgray;
+  border-bottom: 1px solid darkgray;
+  min-width: 70px;
+}
+</style>
+<table id="tbl_01"><thead><tr><th>feature name</th><th>surface</th><th>pos1</th><th>pos2</th><th>pos3</th><th>pos4</th><th>cType</th><th>cForm</th><th>lForm</th><th>lemma</th><th>orth</th><th>pron</th><th>orthBase</th><th>pronBase</th><th>goshu</th><th>iType</th><th>iForm</th><th>fType</th><th>fForm</th><th>iConType</th><th>fConType</th><th>type</th><th>kana</th><th>kanaBase</th><th>form</th><th>formBase</th><th>aType</th><th>aConType</th><th>aModType</th><th>lid</th><th>lemma_id</th></tr><tr><th>特徴名</th><th>表層形</th><th>品詞大分類</th><th>品詞中分類</th><th>品詞小分類</th><th>品詞細分類</th><th>活用型</th><th>活用形</th><th>語彙素読み</th><th>語彙素</th><th>書字形出現形</th><th>発音形出現形</th><th>書字形基本形</th><th>発音形基本形</th><th>語種</th><th>語頭変化化型</th><th>語頭変化形</th><th>語末変化化型</th><th>語末変化形</th><th>語頭変化結合型</th><th>語末変化結合型</th><th>語彙素類</th><th>仮名形出現形</th><th>仮名形基本形</th><th>語形出現形</th><th>語形基本形</th><th>アクセント型</th><th>アクセント結合型</th><th>アクセント修飾型</th><th>語彙表ID</th><th>語彙素ID</th></tr></thead><tbody><tr><th>0</th><td>ヒンメル</td><td>名詞</td><td>普通名詞</td><td>一般</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><th>1</th><td>は</td><td>助詞</td><td>係助詞</td><td></td><td></td><td></td><td></td><td>ハ</td><td>は</td><td>は</td><td>ワ</td><td>は</td><td>ワ</td><td>和</td><td>""</td><td>""</td><td>""</td><td>""</td><td>""</td><td>""</td><td>係助</td><td>ハ</td><td>ハ</td><td>ハ</td><td>ハ</td><td>""</td><td>"動詞%F2@0,名詞%F1,形容詞%F2@-1"</td><td>""</td><td>8059703733133824</td><td>29321</td></tr><tr><th>2</th><td>もう</td><td>副詞</td><td></td><td></td><td></td><td></td><td></td><td>モウ</td><td>もう</td><td>もう</td><td>モー</td><td>もう</td><td>モー</td><td>和</td><td>""</td><td>""</td><td>""</td><td>""</td><td>""</td><td>""</td><td>相</td><td>モウ</td><td>モウ</td><td>モウ</td><td>モウ</td><td>"0,1"</td><td>""</td><td>""</td><td>10326896709607936</td><td>37569</td></tr><tr><th>3</th><td>い</td><td>動詞</td><td>非自立可能</td><td></td><td></td><td>上一段-ア行</td><td>未然形-一般</td><td>イル</td><td>居る</td><td>い</td><td>イ</td><td>いる</td><td>イル</td><td>和</td><td>""</td><td>""</td><td>""</td><td>""</td><td>""</td><td>""</td><td>用</td><td>イ</td><td>イル</td><td>イ</td><td>イル</td><td>"0"</td><td>"C4"</td><td>"M4@1"</td><td>710568013079105</td><td>2585</td></tr><tr><th>4</th><td>ない</td><td>助動詞</td><td></td><td></td><td></td><td>助動詞-ナイ</td><td>終止形-一般</td><td>ナイ</td><td>ない</td><td>ない</td><td>ナイ</td><td>ない</td><td>ナイ</td><td>和</td><td>""</td><td>""</td><td>""</td><td>""</td><td>""</td><td>""</td><td>助動</td><td>ナイ</td><td>ナイ</td><td>ナイ</td><td>ナイ</td><td>""</td><td>"動詞%F3@0"</td><td>""</td><td>7542108634358443</td><td>27438</td></tr><tr><th>5</th><td>じゃ</td><td>助動詞</td><td></td><td></td><td></td><td>助動詞-ダ</td><td>連用形-融合</td><td>ダ</td><td>だ</td><td>じゃ</td><td>ジャ</td><td>だ</td><td>ダ</td><td>和</td><td>""</td><td>""</td><td>""</td><td>""</td><td>""</td><td>""</td><td>助動</td><td>ジャ</td><td>ダ</td><td>ジャ</td><td>ダ</td><td>""</td><td>"名詞%F1"</td><td>""</td><td>6299110739157638</td><td>22916</td></tr><tr><th>6</th><td>ない</td><td>形容詞</td><td>非自立可能</td><td></td><td></td><td>形容詞</td><td>終止形-一般</td><td>ナイ</td><td>無い</td><td>ない</td><td>ナイ</td><td>ない</td><td>ナイ</td><td>和</td><td>""</td><td>""</td><td>""</td><td>""</td><td>""</td><td>""</td><td>相</td><td>ナイ</td><td>ナイ</td><td>ナイ</td><td>ナイ</td><td>"1"</td><td>"C3"</td><td>""</td><td>7543208145986219</td><td>27442</td></tr></tbody></table>
+</div>
+<h3>ユーザ辞書を追加する</h3>
+<pre class="python">
+import MeCab
+import subprocess
+import os
+
+dic_dir = 'C:/Program Files/MeCab/dic/unidic-csj-3.1.1-full'
+
+# まずはユーザ辞書なしで形態素解析する
+tagger = MeCab.Tagger(f'-d "{dic_dir}"')
+node = tagger.parseToNode('葬送のフリーレン')
+while node:
+    print(node.surface)
+    node = node.next
+
+# ユーザ辞書を生成する
+csv_name = 'hoge.csv'
+dic_name = 'hoge.dic'
+with open(csv_name, mode='w', encoding='utf8', newline='\n') as ofile:
+    ofile.write('フリーレン,7166,4392,0,名詞,固有名詞,人名,一般,*,*\n')
+ret = subprocess.run(
+    ['C:/Program Files/MeCab/bin/mecab-dict-index.exe', '-d', dic_dir,
+     '-u', dic_name, '-f', 'utf-8', '-t', 'utf-8', csv_name],
+    capture_output=True, text=True)
+print(ret.stdout)
+
+# ユーザ辞書ありで形態素解析する
+tagger = MeCab.Tagger(f'-d "{dic_dir}" -u "{os.getcwd()}/{dic_name}"')
+node = tagger.parseToNode('葬送のフリーレン')
+while node:
+    print(node.surface)
+    node = node.next
+</pre>
+<pre>
+
+葬送
+の
+フリー
+レン
+
+reading hoge.csv ... 1
+emitting double-array: 100% |###########################################| 
+
+done!
+
+
+葬送
+の
+フリーレン
+
+</pre>
+<div class="categories">
+<a href="../categories/python.html">Python</a>
+</div>
+</div>
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>AWS - Cookipedia α-version</title>
+<!-- Prism start-->
+<link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-coy.min.css" integrity="sha512-LOT5F67SMZVdXMrvQe4S1ZHu5l6xk3CST2qqno9kY329OsJBBpybnq+fM9qG4ZSaNzPOjoGzHAeBamSSJyyuZg==" referrerpolicy="no-referrer" rel="stylesheet"/>
+<script crossorigin="anonymous" defer="" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+<!-- Prism end -->
+<link href="../css/style.css?v=2025-12-09" rel="stylesheet" type="text/css"/><link href="../css/cookipedia.css?v=2025-12-09" rel="stylesheet" type="text/css"/><script data-lang="ja" data-mainpage="false" data-repo="cookipedia" defer="True" id="app" src="../funcs.js?v=2025-12-09"></script></head>
+<body>
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>AWS</h1>
+<h2>参考文献</h2>
+<ol class="ref small">
+<li>インスタンスタイプ - Amazon EC2 | AWS. <a class="asis" href="https://aws.amazon.com/jp/ec2/instance-types/"></a> (2025年3月15日参照).</li>
+<li>Amazon EC2 Instance Comparison. <a class="asis" href="https://instances.vantage.sh/?region=ap-northeast-1"></a> (2025年3月15日参照).</li>
+</ol>
+<h2>Tips</h2>
+
+(注意) 以下の記述は VPC や SSM 用 VPC エンドポイントなどをすべて自分で作成していくような記述である。個人のアカウントでない場合は運用ルールにしたがい作成済みのものを使用するなどする。
+
+
+<h3>VPC を作成する</h3>
+VPC を自分で作成する場合は作成する (なお、AWS アカウントを私的に取得すると既に VPC が作成されているので、組織で発行したアカウントに VPC がないという場合は組織ポリシーによるもののようである)。
+
+<ul>
+<li>VPC ダッシュボードに移動し「VPC を作成」をクリックする。特に目的がなければ以下のように設定すれば、IP アドレス 32 個の VPC が作成され、その前半がパブリックサブネット、後半がプライベートサブネットになる (インスタンスは原則プライベートサブネットに作成する)。</li>
+<ul>
+<li>作成するリソース： VPC など</li>
+<li>名前タグ： (好きな名前)</li>
+<li>IPv4 CIDR： 10.0.0.0/27</li>
+<li>パブリックサブネットの数 ： 1</li>
+<li>プライベートサブネットの数 ： 1</li>
+<li>NAT ゲートウェイ ： 1 AZ 内 / なし</li>
+<ul><li>NAT ゲートウェイは、プライベートサブネットとインターネット間の直接通信を防ぎ、通信を一元管理するために作成すべきである。ただ、設定画面にあるように NAT ゲートウェイは有料で、何もしていなくても時間課金 ($0.062/h@東京) + データを通信すれば従量課金  ($0.062/GB@東京) があり [1]、インスタンスにインターネットから巨大データを取得するときなどは注意する必要がある。</li>
+<li>NAT ゲートウェイを作成せずにプライベートサブネット内のインスタンスからのインターネットアクセスを可能にするには、後からプライベートサブネットのルートテーブルに「送信先： 0.0.0.0/0」「ターゲット： インターネットゲートウェイ」を追加する。但しこの方法だと、</li><ul><li>もはやプライベートサブネットではなくなり、セキュリティリスクがある。</li><li>この方式では基本的にインスタンスにパブリック IP アドレスを割り当てないとインスタンスからインターネットへのアウトバウンド通信も上手くいかない。2023年12月現在では、インスタンスへのパブリック IP の自動割り当てや、稼働中インスタンスへの Elastic IP の割り当ては無料だが、2024年2月からこれも有料になる (ただ $0.005/h である) [2]。</li></ul>
+</ul>
+</ul>
+</ul>
+<h4>参考文献</h4>
+<ol class="ref small">
+<li>料金 - Amazon VPC | AWS. <a class="asis" href="https://aws.amazon.com/jp/vpc/pricing/"></a> (2023年12月9日参照).</li>
+<li>新着情報 – パブリック IPv4 アドレスの利用に対する新しい料金体系を発表 / Amazon VPC IP Address Manager が Public IP Insights の提供を開始 | Amazon Web Services ブログ. <a class="asis" href="https://aws.amazon.com/jp/blogs/news/new-aws-public-ipv4-address-charge-public-ip-insights/"></a> (2023年12月9日参照).</li>
+</ol><br/>
+<h3>インスタンスを作成する</h3>
+<style type="text/css">
+#tbl_01 {
+  border-collapse: collapse;
+}
+#tbl_01 th, #tbl_01 td {
+  vertical-align: top;
+  padding: 0.3em 0.4em;
+  border-top: 1px solid dimgray;
+  border-bottom: 1px solid dimgray;
+}
+</style>
+<table id="tbl_01">
+<tr>
+<th>項目</th>
+<th>説明</th>
+<th>選び方</th>
+</tr>
+<tr>
+<th>Application and OS Images (Amazon Machine Image)</th>
+<td>OS (及びプリインストールするアプリケーション) である。</td>
+<td>用途に応じて選ぶ。ただし、イメージによってはそれに合ったインスタンスタイプを選ばなければならないので注意する。また、選ぼうとしなければ選ぶことはないと思うが Marketplace AMI は有償であるので注意する。</td>
+</tr>
+<tr>
+<th>インスタンスタイプ</th>
+<td>CPU コア数、RAM 容量、必要ならば GPU 数を決定する (個別に指定するのではなくその組合せからなるインスタンスタイプを選択する)。</td>
+<td>用途に応じて選ぶ。このスペックに対してインスタンス稼働時間に応じて課金される (インスタンスタイプによっては無料利用枠もある) ので、その AWS アカウントにお金を出している人と相談して選択する。</td>
+</tr>
+<tr>
+<th>ネットワーク設定 &gt; ネットワーク、サブネット</th>
+<td>インスタンスを設置するサブネットである。設置するサブネットによってどこにどこ経由でアクセスできるかが決まる。</td>
+<td>個人アカウントの場合は最初のインスタンス作成前に自分で VPC 及びサブネットを作成する (明示的に作成しなくても作成されると思うが作成しておくとよいと思われる)。組織アカウントの場合は運用ルールにしたがう。</td>
+</tr>
+<tr>
+<th>ネットワーク設定 &gt; セキュリティグループ</th>
+<td>インスタンスからどこへのアクセスを許可するか、どこからインスタンスへのアクセスを許可するかのルール群である。</td>
+<td>既存のセキュリティグループがなければデフォルトで勝手に作成されるし後から適宜変更もできる。ただ既に作成済のものの流用でよければそれが便利である。組織アカウントの場合は運用ルールにしたがう。</td>
+</tr>
+<tr>
+<th>高度な詳細 &gt; IAM インスタンスプロフィール</th>
+<td>インスタンスが AWS 上のサービス (S3 や SSM) を利用できるかの権限の設定である。</td>
+<td>デフォルトでは設定されないが後から適宜プロフィールを作成して設定したり、既存のプロフィールを設定したりできる。組織アカウントの場合は運用ルールにしたがう。</td>
+</tr>
+</table><br/>
+<h3>インスタンスにセッションマネージャー経由で接続する</h3>
+インスタンスに以下の設定をすればセッションマネージャー接続のボタンが押せるようになるはずである (インスタンス作成後でもよい) (設定の反映には多少タイムラグがある)。
+  <ul>
+<li>インスタンスの IAM ロールに、「AmazonEC2RoleforSSM」を含む IAM インスタンスプロフィールを割り当てる (まだ IAM インスタンスプロフィールがないなら、誘導にしたがってクイックセットアップすればこのロールを含めるようにできるはずである)。</li>
+<li>インスタンスのあるサブネットに SSM 用 VPC エンドポイントを未作成の場合は作成する。</li><ul>
+<li>VPC ダッシュボードのサイドバーから「セキュリティグループ」を選択、「セキュリティグループを作成」を押下し、インバウンドルールに、「タイプ：HTTPS」「ソース：インスタンスのセキュリティグループ」を追加する。</li>
+<li>VPC ダッシュボードのサイドバーから「エンドポイント」を選択し、画面右上の「エンドポイントを作成」を押下し、サービスの検索フォームに .ssm と入力して com.amazonaws.[リージョン名].ssm を探し当て選択する。続けてインスタンスのある VPC とサブネットを選択し、最後に「セキュリティグループ」で先ほど作成したセキュリティグループを選択してエンドポイントを作成する。com.amazonaws.[リージョン名].ssmmessages, com.amazonaws.[リージョン名].ec2, com.amazonaws.[リージョン名].ec2messages に対しても同様に作成する。</li></ul>
+</ul><br/>
+<h3>インスタンスからインターネットにアウトバウンド接続する</h3>
+インスタンスからインターネットにアウトバウンド接続したい場合 (Ex. Python やそのパッケージのインストール)、以下の設定が必要である (インスタンス作成後でもよい)。
+  <ul>
+<li>インスタンスのセキュリティグループのアウトバウンドルールに、「送信先： 0.0.0.0/0」への許可を追加する (自動作成されたセキュリティグループではデフォルトで許可されている)。</li>
+<li>インスタンスのあるサブネットのルートテーブルに、「送信先： 0.0.0.0/0」「ターゲット：NAT ゲートウェイ (またはインターネットゲートウェイ)」を追加する。</li>
+<li>上記の設定で理論上はインターネットにアクセスできる (設定の反映には多少タイムラグがある) はずである。が、上手くいかない場合は、インスタンスにパブリック IP アドレスを割り当てると上手くいくことがある。例えば EC2 ダッシュボードのサイドバーから「Elastic IP」を選択して作成しインスタンスに割り当てることができる。</li>
+</ul><br/>
+<h3>GPU インスタンスを利用する</h3>
+<ul>
+<li>インスタンス作成時に例えば参考文献 [1] のような AMI (Amazon Machine Image) を選択すると GPU 機械学習環境をプリインストールしてくれる (はずである)。ただし、インスタンスタイプも GPU 系を選択しなければならない。かつ、その AMI がサポートしているインスタンスタイプでなければプリインストールが効かない。例えば [1] のリリースノートによると、P2 系インスタンスはサポートしていない。また、サポートされている場合でも GPU と連携しているのは Conda 仮想環境の Python であるなどが [1] にあるのでちゃんとリリースノートを読むこと。</li>
+<ul><li>私は仮想環境の Python が GPU と連携しているのに気付かずシステム環境に GPU 連携 Python を構築してしまったが、こうしてしまうと時間とディスク容量を浪費する。</li></ul>
+<li>サポートされていない組合せでインスタンスを作成してしまった場合でも、Ubuntu AMI であれば [2] の記事にしたがえばコマンド <code class="language-bash">nvidia-smi</code> を通せる (セッションマネージャーから接続している場合、再起動は管理画面から行う)。そうなれば後は [3] にしたがえば PyTorch for CUDA が入る。なお、2023年12月9日現在に [2] の記事にしたがうと CUDA 12.2 が入ってしまい、[3] でサポートされている CUDA 12.1 と食い違ってしまうが、こちらがやや新しい分にはたぶん何とかなる。何とかならなくなったら対処すること。</li>
+</ul>
+<h4>参考文献</h4>
+<ol class="ref small">
+<li>AWS Deep Learning AMI GPU PyTorch 2.1 (Ubuntu 20.04). <a class="asis" href="https://aws.amazon.com/jp/releasenotes/aws-deep-learning-ami-gpu-pytorch-2-1-ubuntu-20-04/"></a> (2023年12月9日参照).</li>
+<ul>
+<li><b>Supported EC2 Instances:</b> P5, P4de, P4d, P3, G5, G3, G4dn <b>(P2 is not supported)</b></li>
+<li><b>Python:</b> /opt/conda/envs/pytorch/bin/python</li>
+</ul>
+<li>EC2のGPUインスタンスにNvidiaドライバーとnvidia-dockerを利用してdockerコンテナ内にpython,cuda,cuDNNを導入する - Qiita#3-gpu環境構築. <a class="asis" href="https://qiita.com/carbscountry/items/dc98de3a2e03af5c9006#3-gpu%E7%92%B0%E5%A2%83%E6%A7%8B%E7%AF%89"></a> (2023年12月9日参照).</li>
+<li>Start Locally | PyTorch. <a class="asis" href="https://pytorch.org/get-started/locally/"></a> (2023年12月9日参照).</li>
+</ol><br/>
+<h3>同じサブネット内のインスタンス B からインスタンス A にアクセスする</h3>
+<pre class="language-bash"><code>
+# ----- インスタンス B からインスタンス A にアクセスしたいとき -----
+# 以下ではインスタンス A のプライベート IPv4 アドレス： 172.16.0.25
+# 以下ではインスタンス B のプライベート IPv4 アドレス： 172.16.0.21
+
+# (1) インスタンス B に行ってやること
+ssh-keygen -t rsa  # パスフレーズも訊かれるので決める
+cat ~/.ssh/id_rsa.pub  # この内容をコピー
+
+# (2) インスタンス A に行ってやること
+mkdir ~/.ssh/
+vi ~/.ssh/authorized_keys  # ここにペースト
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+
+# (3) インスタンス A の管理画面に行ってやること
+# セキュリティグループのインバウンドルールで
+# - タイプ：SSH
+# - ソース：インスタンス B のプライベート IPv4 アドレス (172.16.0.21/32) 
+# を許可
+
+# (4) インスタンス B に行ってやること
+ssh ssm-user@172.16.0.25  # インスタンス A にアクセスできる
+scp ssm-user@172.16.0.25:~/aaa/bbb/*.npy ~/ccc/ddd/  # インスタンス A から取り寄せられる
+</code></pre>
+<h4>参考文献</h4>
+<ol class="ref small">
+<li>異なるEC2インスタンス間でssh接続する - 箱のプログラミング日記。. <a class="asis" href="https://www.y-hakopro.com/entry/2020/10/31/175820"></a> (2023年12月9日参照).</li>
+</ol><br/>
+<h3>ディスク容量を大きくする</h3>
+参考文献 [1] にしたがって管理画面からボリュームのサイズを拡大した後、インスタンスにて例えば以下のような作業を行う (以下は Ubuntu の場合) (ブロックデバイス名とファイルシステム名は異なる場合がある)。
+<pre class="language-bash"><code>
+lsblk -fip  # xvda 以下の1つ目のブロックデバイス (マウントポイント / ) が大きくなっていない
+sudo growpart /dev/xvda 1
+lsblk -fip  # 大きくなっている
+
+df -hT  # ファイルシステム /dev/root (マウントポイント / ) のサイズが大きくなっていない
+sudo resize2fs /dev/root
+df -hT  # 大きくなっている
+</code></pre>
+<h4>参考文献</h4>
+<ol class="ref small">
+<li>AWS EC2インスタンスのディスク容量（EBSボリュームサイズ）を増やす方法. <a class="asis" href="https://zenn.dev/magavel/articles/aws-ebs-increase-volume"></a> (2023年12月11日参照).</li>
+</ol><br/>
+</div>
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>シューア補行列 - Cookipedia α-version</title>
+<link href="../css/style.css?v=2025-12-09" rel="stylesheet" type="text/css"/><link href="../css/cookipedia.css?v=2025-12-09" rel="stylesheet" type="text/css"/><script data-lang="ja" data-mainpage="false" data-mathjax="true" data-repo="cookipedia" defer="True" id="app" src="../funcs.js?v=2025-12-09"></script></head>
+<body>
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>シューア補行列</h1>
+<p>$A \in \mathbb{C}^{n \times n}, $ $B \in \mathbb{C}^{n \times m}, $ $C \in \mathbb{C}^{m \times n}, $ $D \in \mathbb{C}^{m \times m}, $ $M = \begin{pmatrix} A &amp; B \\ C &amp; D \end{pmatrix}$ とする。このとき、
+
+<ul>
+<li>$D$ が正則ならば $M$ は $(1)$ のようにブロック UDL 分解できる。ただし $S_D \equiv A - BD^{-1}C$ とする。さらに $S_D$ も正則ならば $M$ も正則であり $M^{-1}$ は $(2)$ の行列積でかける<a class="note" href="#note1">[注釈1]</a>。
+<div>
+$$
+M = \begin{pmatrix} I &amp; BD^{-1} \\ O &amp; I \end{pmatrix} \begin{pmatrix} S_D &amp; O \\ O &amp; D \end{pmatrix} \begin{pmatrix} I &amp; O \\ D^{-1}C &amp; I \end{pmatrix}
+\tag{1}
+$$
+$$
+M^{-1} = \begin{pmatrix} I &amp; O \\ -D^{-1}C &amp; I \end{pmatrix} \begin{pmatrix} S_D^{-1} &amp; O \\ O &amp; D^{-1} \end{pmatrix} \begin{pmatrix} I &amp; -BD^{-1} \\ O &amp; I \end{pmatrix}
+\tag{2}
+$$
+</div>
+</li>
+<li>$A$ が正則ならば $M$ は $(3)$ のようにブロック LDU 分解できる。ただし $S_A \equiv D - CA^{-1}B$ とする。さらに $S_A$ も正則ならば $M$ も正則であり $M^{-1}$ は $(4)$ の行列積でかける<a class="note" href="#note1">[注釈2]</a>。
+<div>
+$$
+M 
+= \begin{pmatrix} I &amp; O \\ CA^{-1} &amp; I \end{pmatrix} \begin{pmatrix} A &amp; O \\ O &amp; S_A \end{pmatrix} \begin{pmatrix} I &amp; A^{-1}B \\ O &amp; I \end{pmatrix}
+\tag{3}
+$$
+$$
+M^{-1}
+= \begin{pmatrix} I &amp; -A^{-1}B \\ O &amp; I \end{pmatrix} \begin{pmatrix} A^{-1} &amp; O \\ O &amp; S_A^{-1} \end{pmatrix} \begin{pmatrix} I &amp; O \\ -CA^{-1} &amp; I \end{pmatrix}
+\tag{4}
+$$
+</div>
+</li>
+</ul>
+が成り立つ。この $S_D$ を $M$ の $D$ に関するシューア補行列といい、$S_A$ を $M$ の $A$ に関するシューア補行列という。$(2)$ に着目すると、$S_D$ とは、「$M$ の逆行列の左上 $n \times n$ ブロックの逆行列」といえる。</p>
+<p>さらに $D, \; S_D, \; A, \; S_A$ が全て正則なとき、$(2), (4)$ の左上 $n \times n$ ブロックの比較から以下が成り立ち、これを Sherman-Morrison-Woodbury の公式という。
+<div>
+$$
+\begin{align}
+S_D^{-1} &amp;= A^{-1} + A^{-1} BS_A^{-1}CA^{-1} \\
+(A - BD^{-1}C)^{-1} &amp;= A^{-１} + A^{-1} B(D - CA^{-1}B)^{-1}CA^{-1}
+\end{align}
+$$
+</div>
+</p>
+<br/>
+<!--
+<div style="overflow: auto">
+$$
+$$
+</div>
+-->
+<h2>参考文献</h2>
+<ol class="ref small">
+<li><a href="https://tochikuji.hatenablog.jp/entry/20130813/1376371669">Sherman-Morrison-Woodburyの公式 (Schur補行列) - いんふらけいようじょのえにっき</a></li>
+<ul>
+<li>Sherman-Morrison-Woodbury の公式の証明があり、本記事の証明はこの文献の証明と全く同じである。文字の定義は多少異なる。</li>
+</ul>
+<li>C. M. ビショップ. パターン認識と機械学習 上. 丸善出版, 2012.<a class="note" href="https://www.amazon.co.jp/%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3%E8%AA%8D%E8%AD%98%E3%81%A8%E6%A9%9F%E6%A2%B0%E5%AD%A6%E7%BF%92-%E4%B8%8A-C-M-%E3%83%93%E3%82%B7%E3%83%A7%E3%83%83%E3%83%97/dp/4621061224">[amazon.co.jp]</a></li>
+<ul>
+<li>82ページ（初版第5刷）に「2.3.1 条件付きガウス分布」がある。</li>
+</ul>
+<li><a href="https://cookie-box.hatenablog.com/entry/2021/01/31/223006">雑記： 分散共分散行列のベイズ更新の話 - クッキーの日記</a></li>
+<li>Christopher Williams, Matthias Seeger. Using the Nyström Method to Speed Up Kernel Machines. In NIPS 2000.<a class="note" href="https://proceedings.neurips.cc/paper/2000/hash/19de10adbaa1b2ee13f77f679fa1483a-Abstract.html">[link]</a></li>
+<ul>
+<li>グラム行列の Nyström 近似の原論文である。</li>
+</ul>
+<li><a href="https://en.wikipedia.org/wiki/Schur_complement">Schur complement - Wikipedia</a></li>
+<ul>
+<li>英語版 Wikipedia のシューア補行列の記事である。</li>
+</ul>
+<li><a href="https://ja.wikipedia.org/wiki/%E3%82%B7%E3%83%A5%E3%83%BC%E3%82%A2%E8%A3%9C%E8%A1%8C%E5%88%97">シューア補行列 - Wikipedia</a></li>
+<ul>
+<li>日本語版 Wikipedia のシューア補行列の記事である。</li>
+</ul>
+</ol>
+<br/>
+<h2>線形ガウスモデルのベイズ推定におけるシューア補行列</h2>
+<p>ベイズ推定では観測 $y$ を得た下での状態 $x$ の事後共分散に興味がある。状態 $x$ の事後共分散とは、状態 $x$ と観測 $y$ の同時分布の $y$ を固定して $x$ の共分散のみを取り出したものといえる。$x \in \mathbb{R}^n$ と $y \in \mathbb{R}^m$ の同時分布が多変量正規分布にしたがう場合、同時密度関数は以下のようになる。
+<div>
+$$
+p(x, y) \propto \exp \left( - \frac{1}{2} \begin{pmatrix} (x - \mu_x)^{\top} &amp; (y - \mu_y)^{\top} \end{pmatrix} M^{-1} \begin{pmatrix} x - \mu_x \\ y - \mu_y \end{pmatrix} \right)
+$$
+</div>
+このとき $y$ を固定した $x$ の分布を求めるには上式を平方完成すればよいが、共分散行列については平方完成するまでもなく単に「$M^{-1}$ の左上 $n \times n$ ブロックの逆行列」になる。そしてこれは先述の $S_D$ 、つまり、「$M$ の右下 $m \times m$ ブロックに関するシューア補行列」に他ならない [2]。
+</p>
+<p>具体的に、カルマンフィルタの状況を考える。$x \in \mathbb{R}^n$ を $\mathcal{N}(0, V)$ にしたがう状態、$w \in \mathbb{R}^m$ を $\mathcal{N}(0, R)$ にしたがう状態と独立なノイズ、$H \in \mathbb{R}^{m \times n}$ を観測行列、$y = H x + w$ を観測とする。このときある $y$ を観測した下での $x$ の事後共分散行列を知りたい。$x$ と $y$ の同時密度関数を計算すると以下のようになる [3]。
+<div>
+$$
+p(x, y) \propto \exp \left( - \frac{1}{2} \begin{pmatrix} x^{\top} &amp; y^{\top} \end{pmatrix} \begin{pmatrix} V &amp; VH^\top \\ HV &amp; HVH^\top + R \end{pmatrix}^{-1} \begin{pmatrix} x \\ y \end{pmatrix} \right)
+$$
+</div>
+この共分散行列 $\begin{pmatrix} V &amp; VH^\top \\ HV &amp; HVH^\top + R \end{pmatrix}$ の右下 $m \times m$ ブロックに対するシューア補行列は $V - V H^{\top} (H V H^{\top} + R)^{-1} HV$ である。もっとも、同時分布を考えなくともカルマンフィルタの条件付き分布はベイズの定理よりただちに $(V^{-1} + H^{\top} R^{-1} H)^{-1}$ となり、これに Sherman-Morrison-Woodbury の公式を適用しても同じ結果になる。</p>
+<br/>
+<h2>グラム行列の Nyström 近似におけるシューア補行列</h2>
+<p>グラム行列 $K^{(n+m)}$ の左上 $n \times n$ ブロックに関するシューア補行列が、グラム行列の Nyström 近似 $\tilde{K}^{(n+m,n)}$ の右下 $m \times m$ ブロックの近似誤差になっている [4]。</p>
+<p>グラム行列 $K^{(n+m)}$ の左上 $n \times n$ ブロックに関するシューア補行列とは、ベイズ推定風に解釈すれば、「仮に $n+m$ 個のデータの分散共分散行列がグラム行列 $K^{(n+m)}$ そのものであったときに、最初の $n$ 個のデータを観測した下での残り $m$ 個のデータの分散共分散行列」といえる。実際、最初の $n$ 個のデータで残り $m$ 個のデータの不確かさ・依存関係が完全に特定できていれば零行列になるはずだし、最初の $n$ 個のデータと残り $m$ 個のデータの内積がゼロであれば（最初の $n$ 個のデータから残り $m$ 個のデータの情報を少しも特定できない状況） $D$ に等しくなるはずである。</p>
+<p>結局ベイズ推定でもグラム行列の Nyström 近似でも、シューア補行列とは「一部をみて残りを推定（近似）しようとしたときに残る不確かさ」といえるだろう。</p>
+<br/>
+<h2>注釈</h2>
+<ol class="note">
+<li id="note1">$M$ を UDL 分解するには以下を $M$ の区分けと比較し $X, Y, Z, W$ を求める。
+<div>
+$$
+M
+= \begin{pmatrix} I &amp; Z \\ O &amp; I \end{pmatrix} \begin{pmatrix} X &amp; O \\ O &amp; Y \end{pmatrix} \begin{pmatrix} I &amp; O \\ W &amp; I \end{pmatrix}
+= \begin{pmatrix} I &amp; Z \\ O &amp; I \end{pmatrix} \begin{pmatrix} X &amp; O \\ YW &amp; Y \end{pmatrix}
+= \begin{pmatrix} X + ZYW &amp; ZY \\ YW &amp; Y \end{pmatrix}
+$$
+</div>
+$M$ の逆行列を得るには以下を利用する。
+<div>
+$$
+\begin{pmatrix} I &amp; Z \\ O &amp; I \end{pmatrix}^{-1} = \begin{pmatrix} I &amp; -Z \\ O &amp; I \end{pmatrix}, \;
+\begin{pmatrix} X &amp; O \\ O &amp; Y \end{pmatrix}^{-1} = \begin{pmatrix} X^{-1} &amp; O \\ O &amp; Y^{-1} \end{pmatrix}, \;
+\begin{pmatrix} I &amp; O \\ W &amp; I \end{pmatrix}^{-1} = \begin{pmatrix} I &amp; O \\ -W &amp; I \end{pmatrix}
+$$
+</div>
+</li>
+<li id="note2">$M$ を LDU 分解するには以下を $M$ の区分けと比較する。[注釈1] の $X, Y, Z, W$ とは異なる。
+<div>
+$$
+M
+= \begin{pmatrix} I &amp; O \\ W &amp; I \end{pmatrix} \begin{pmatrix} X &amp; O \\ O &amp; Y \end{pmatrix} \begin{pmatrix} I &amp; Z \\ O &amp; I \end{pmatrix}
+= \begin{pmatrix} I &amp; O \\ W &amp; I \end{pmatrix} \begin{pmatrix} X &amp; XZ \\ O &amp; Y \end{pmatrix}
+= \begin{pmatrix} X &amp; XZ \\ WX &amp; WXZ + Y \end{pmatrix}
+$$
+</div>
+$M$ の逆行列を得るには [注釈1] と同様である。
+</li>
+</ol>
+<br/>
+</div>
+</main>
+</div>
+</body>
+</html>

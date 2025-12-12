@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>pandas - Cookipedia α-version</title>
+<!-- Prism start-->
+<link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-coy.min.css" integrity="sha512-LOT5F67SMZVdXMrvQe4S1ZHu5l6xk3CST2qqno9kY329OsJBBpybnq+fM9qG4ZSaNzPOjoGzHAeBamSSJyyuZg==" referrerpolicy="no-referrer" rel="stylesheet"/>
+<script crossorigin="anonymous" defer="" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script crossorigin="anonymous" defer="" integrity="sha512-AKaNmg8COK0zEbjTdMHJAPJ0z6VeNqvRvH4/d5M4sHJbQQUToMBtodq4HaV4fa+WV2UTfoperElm66c9/8cKmQ==" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<!-- Prism end -->
+<link href="../css/style.css?v=2025-12-09" rel="stylesheet" type="text/css"/><link href="../css/cookipedia.css?v=2025-12-09" rel="stylesheet" type="text/css"/><script data-lang="ja" data-mainpage="false" data-repo="cookipedia" defer="True" id="app" src="../funcs.js?v=2025-12-09"></script></head>
+<body>
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>pandas</h1>
+<h2>Snippets</h2>
+<h3>エクセルを読み込む</h3>
+<h4></h4>
+<pre class="language-python"><code>
+import os
+import pandas as pd
+in_file = '~/Downloads/xxxxxx.xlsx'
+in_file = os.path.expanduser(in_file)
+excel_file = pd.ExcelFile(in_file)
+print(excel_file.sheet_names)  # シート名のリストを表示する
+df = excel_file.parse(sheet_name='シート1')  # シートを読み込む
+</code></pre>
+<h3>エクセルに出力する</h3>
+<pre class="language-python"><code>
+import pandas as pd
+pd.io.formats.excel.ExcelFormatter.header_style = None
+
+df = pd.DataFrame()
+df['a'] = [0.9, 0.8, 0.7]
+df['b'] = ['qqq', 'www', 'eee']
+df['c'] = ['a' * 100, 's' * 100, 'd' * 100]
+
+xlsx_writer = pd.ExcelWriter('out.xlsx', engine='xlsxwriter')
+workbook  = xlsx_writer.book
+cell_format = workbook.add_format(
+    {'text_wrap': True, 'valign': 'top', 'font_size': 9})
+header_format = workbook.add_format({'align': 'center'})
+df.to_excel(xlsx_writer, sheet_name='hoge', index=False)
+worksheet = xlsx_writer.sheets['hoge']
+worksheet.set_column(0, 1, 10, cell_format)
+worksheet.set_column(2, 2, 20, cell_format)
+worksheet.set_row(0, None, header_format)
+xlsx_writer.close()
+</code></pre>
+<h3>雑然データにする</h3>
+<pre class="language-python"><code>
+import numpy as np
+import pandas as pd
+
+df_s = pd.DataFrame()
+df_s['a'] = [0.9, 0.8, 0.7]
+df_s['b'] = ['qqq', 'www', 'eee']
+df_s['c'] = ['aaa', 'sss', 'ddd']
+df_s['d'] = [10, 20, 30]
+print(df_s)
+
+n = 3
+target_cols = ['a', 'b', 'c']
+cols_l = [f'{col}_{i + 1}' for i in range(n) for col in target_cols]
+df_l = pd.DataFrame(columns=cols_l)
+df_l.loc[0] = np.concatenate([df_s.loc[i, target_cols].values for i in range(n)])
+print(df_l)
+</code></pre>
+<pre class="language-text"><code>
+     a    b    c   d
+0  0.9  qqq  aaa  10
+1  0.8  www  sss  20
+2  0.7  eee  ddd  30
+   a_1  b_1  c_1  a_2  b_2  c_2  a_3  b_3  c_3
+0  0.9  qqq  aaa  0.8  www  sss  0.7  eee  ddd
+</code></pre>
+<div class="categories">
+<a href="../categories/python.html">Python</a>
+</div>
+</div>
+</main>
+</div>
+</body>
+</html>

@@ -1,6 +1,3 @@
-a.logo:before {
-  content: '\01f4d8Cookipedia';
-}
 :root {
   --text-link: #047ac5;
 }
@@ -12,4 +9,20 @@ div.categories {
   border: 1px solid var(--border);
   margin: 0.5em 0 1.0em;
   padding: 0.75em 0.75em 0.75em;
+}
+h2.logo {
+  color: var(--text-link);
+}
+a.index-link:before {
+  content: 'Cookiepedia ';
+}
+a.index-link:after {
+  color: var(--text-link);
+  content: 'α-version';
+}
+div#sidebar > a.index-link:before {
+  display: block;
+}
+.version {
+  color: var(--text-link);
 }
