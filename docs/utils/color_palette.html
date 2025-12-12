@@ -1,11 +1,13 @@
 <!DOCTYPE HTML>
+
 <html>
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>カラーパレット - Cookipedia</title>
-<link href="../../css/style.css?v=2025-10-19" rel="stylesheet" type="text/css"/>
-<link href="../../css/cookipedia.css?v=2025-10-19" rel="stylesheet" type="text/css"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>カラーパレット - Cookipedia α-version</title>
+<link href="../css/style.css?v=2025-12-09" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2025-12-09" rel="stylesheet" type="text/css"/>
+<script data-repo="cookipedia" defer="" id="app" src="../funcs.js?v=2025-12-09"></script>
 <style type="text/css">
 <!--
 td {
@@ -51,7 +53,6 @@ table.cltb {
 }
 -->
 </style>
-<script data-lang="ja" data-mainpage="false" data-repo="cookipedia" defer="" id="app" src="../../funcs.js?v=2025-10-18"></script>
 <script type="text/javascript"><!--
 const vError = "#ff0000";
 const defaults = ["#a8d992", "#117da2", "#ffffff"];
@@ -380,82 +381,72 @@ function init_() {
 <div id="smartphone-header"></div>
 <div class="item">
 <h1>カラーパレット</h1>
-
 <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-
-  <div style="border: 1px solid var(--border); padding: 10px; display: flex; align-items: center; flex-wrap: wrap;">
-    <div style="padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 10px;">
-
-      <div id="area0" style="width: 90px; height: 90px; margin: 25px 0 15px;"></div>
-      <div><input type="color" id="color0" class="inputColor" /><!--
-      --><input type="text" id="hex0" class="inputText"/></div>
-
-      <div style="display: flex; gap: 10px;">
-      <div style="display: flex; flex-direction: column; align-items: end;">
-        <div>R <input type="text" id="rgb00" class="inputTextR" style="width: 32px;"/></div>
-        <div>G <input type="text" id="rgb01" class="inputTextR" style="width: 32px;"/></div>
-        <div>B <input type="text" id="rgb02" class="inputTextR" style="width: 32px;"/></div>
-      </div>
-      <div style="display: flex; flex-direction: column; align-items: end;">
-        <div>H <input type="text" id="hsl00" class="inputTextR" style="width: 54px;"/></div>
-        <div>S <input type="text" id="hsl01" class="inputTextR" style="width: 54px;"/></div>
-        <div>L <input type="text" id="hsl02" class="inputTextR" style="width: 54px;"/></div>
-      </div>
-      </div>
-    </div>
-
-        <table class="cltb">
-          <tr><td id="scale000"></td><td id="scale010"></td><td id="scale020"></td></tr>
-          <tr><td id="scale001"></td><td id="scale011"></td><td id="scale021"></td></tr>
-          <tr><td id="scale002"></td><td id="scale012"></td><td id="scale022"></td></tr>
-          <tr><td id="scale003"></td><td id="scale013"></td><td id="scale023"></td></tr>
-          <tr><td id="scale004"></td><td id="scale014"></td><td id="scale024"></td></tr>
-          <tr><td id="scale005"></td><td id="scale015"></td><td id="scale025"></td></tr>
-          <tr><td id="scale006"></td><td id="scale016"></td><td id="scale026"></td></tr>
-          <tr><td id="scale007"></td><td id="scale017"></td><td id="scale027"></td></tr>
-          <tr><td id="scale008"></td><td id="scale018"></td><td id="scale028"></td></tr>
-        </table>
-
-  </div>
-
-  <div style="border: 1px solid var(--border); padding: 10px; display: flex; flex-direction: column; align-items: center;">
-      <div><input type="color" id="color1" class="inputColor" /><!--
-      --><input type="text" id="hex1" class="inputText"/></div>
-      <table style="width: 100%; margin: 6px 0; text-align: center;">
-        <tr><td id="mix120"></td></tr>
-        <tr><td id="mix121"></td></tr>
-        <tr><td id="mix122"></td></tr>
-        <tr><td id="mix123"></td></tr>
-        <tr><td id="mix124"></td></tr>
-        <tr><td id="mix125"></td></tr>
-        <tr><td id="mix126"></td></tr>
-      </table>
-      <div><input type="color" id="color2" class="inputColor" /><!--
-      --><input type="text" id="hex2" class="inputText"/></div>
-  </div>
-
-  <div style="border: 1px solid var(--border); padding: 10px; display: flex; flex-direction: column; gap: 5px; align-items: start;">
-  <a href="https://matplotlib.org/stable/gallery/color/named_colors.html" class="asis"></a>
-  <select id="smcolors">
-    <option value="TABLEAU_COLORS">TABLEAU_COLORS</option>
-    <option value="CSS4_COLORS">CSS4_COLORS</option>
-    <option value="XKCD_COLORS_1">XKCD_COLORS_1</option>
-    <option value="XKCD_COLORS_2">XKCD_COLORS_2</option>
-    <option value="XKCD_COLORS_3">XKCD_COLORS_3</option>
-    <option value="XKCD_COLORS_4">XKCD_COLORS_4</option>
-    <option value="XKCD_COLORS_5">XKCD_COLORS_5</option>
-    <option value="XKCD_COLORS_6">XKCD_COLORS_6</option>
-    <option value="XKCD_COLORS_7">XKCD_COLORS_7</option>
-    <option value="XKCD_COLORS_8">XKCD_COLORS_8</option>
-    <option value="XKCD_COLORS_9">XKCD_COLORS_9</option>
-    <option value="XKCD_COLORS_10">XKCD_COLORS_10</option>
-  </select>
-  <div style="display: flex; flex-wrap: wrap; gap: 5px;" id="mcolors">
-  </div>
-  </div>
-
+<div style="border: 1px solid var(--border); padding: 10px; display: flex; align-items: center; flex-wrap: wrap;">
+<div style="padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 10px;">
+<div id="area0" style="width: 90px; height: 90px; margin: 25px 0 15px;"></div>
+<div><input class="inputColor" id="color0" type="color"/><!--
+--><input class="inputText" id="hex0" type="text"/></div>
+<div style="display: flex; gap: 10px;">
+<div style="display: flex; flex-direction: column; align-items: end;">
+<div>R <input class="inputTextR" id="rgb00" style="width: 32px;" type="text"/></div>
+<div>G <input class="inputTextR" id="rgb01" style="width: 32px;" type="text"/></div>
+<div>B <input class="inputTextR" id="rgb02" style="width: 32px;" type="text"/></div>
 </div>
-
+<div style="display: flex; flex-direction: column; align-items: end;">
+<div>H <input class="inputTextR" id="hsl00" style="width: 54px;" type="text"/></div>
+<div>S <input class="inputTextR" id="hsl01" style="width: 54px;" type="text"/></div>
+<div>L <input class="inputTextR" id="hsl02" style="width: 54px;" type="text"/></div>
+</div>
+</div>
+</div>
+<table class="cltb">
+<tr><td id="scale000"></td><td id="scale010"></td><td id="scale020"></td></tr>
+<tr><td id="scale001"></td><td id="scale011"></td><td id="scale021"></td></tr>
+<tr><td id="scale002"></td><td id="scale012"></td><td id="scale022"></td></tr>
+<tr><td id="scale003"></td><td id="scale013"></td><td id="scale023"></td></tr>
+<tr><td id="scale004"></td><td id="scale014"></td><td id="scale024"></td></tr>
+<tr><td id="scale005"></td><td id="scale015"></td><td id="scale025"></td></tr>
+<tr><td id="scale006"></td><td id="scale016"></td><td id="scale026"></td></tr>
+<tr><td id="scale007"></td><td id="scale017"></td><td id="scale027"></td></tr>
+<tr><td id="scale008"></td><td id="scale018"></td><td id="scale028"></td></tr>
+</table>
+</div>
+<div style="border: 1px solid var(--border); padding: 10px; display: flex; flex-direction: column; align-items: center;">
+<div><input class="inputColor" id="color1" type="color"/><!--
+--><input class="inputText" id="hex1" type="text"/></div>
+<table style="width: 100%; margin: 6px 0; text-align: center;">
+<tr><td id="mix120"></td></tr>
+<tr><td id="mix121"></td></tr>
+<tr><td id="mix122"></td></tr>
+<tr><td id="mix123"></td></tr>
+<tr><td id="mix124"></td></tr>
+<tr><td id="mix125"></td></tr>
+<tr><td id="mix126"></td></tr>
+</table>
+<div><input class="inputColor" id="color2" type="color"/><!--
+--><input class="inputText" id="hex2" type="text"/></div>
+</div>
+<div style="border: 1px solid var(--border); padding: 10px; display: flex; flex-direction: column; gap: 5px; align-items: start;">
+<a class="asis" href="https://matplotlib.org/stable/gallery/color/named_colors.html"></a>
+<select id="smcolors">
+<option value="TABLEAU_COLORS">TABLEAU_COLORS</option>
+<option value="CSS4_COLORS">CSS4_COLORS</option>
+<option value="XKCD_COLORS_1">XKCD_COLORS_1</option>
+<option value="XKCD_COLORS_2">XKCD_COLORS_2</option>
+<option value="XKCD_COLORS_3">XKCD_COLORS_3</option>
+<option value="XKCD_COLORS_4">XKCD_COLORS_4</option>
+<option value="XKCD_COLORS_5">XKCD_COLORS_5</option>
+<option value="XKCD_COLORS_6">XKCD_COLORS_6</option>
+<option value="XKCD_COLORS_7">XKCD_COLORS_7</option>
+<option value="XKCD_COLORS_8">XKCD_COLORS_8</option>
+<option value="XKCD_COLORS_9">XKCD_COLORS_9</option>
+<option value="XKCD_COLORS_10">XKCD_COLORS_10</option>
+</select>
+<div id="mcolors" style="display: flex; flex-wrap: wrap; gap: 5px;">
+</div>
+</div>
+</div>
 </div>
 </main>
 </div>
