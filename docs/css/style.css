@@ -202,6 +202,9 @@ ol.ref > li {
 ol.ref a {
   word-break: break-all;
 }
+.break-all {
+  word-break: break-all;
+}
 ol.ref > li:before {
   position: absolute;
   left: -2.25em;
@@ -416,10 +419,14 @@ span.pl-s1, span.pl-smi {
 }
 @media screen and (max-width: 900px) {
   div#sidebar {
-    width: 130px;
+    flex-basis: 150px;
+    min-width: 150px;
+  }
+  h2.logo {
+    font-size: 1.2em;
   }
   .main {
-    max-width: calc(100% - 130px);
+    max-width: calc(100% - 150px);
   }
 }
 @media screen and (max-width: 540px) {

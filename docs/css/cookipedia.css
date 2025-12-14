@@ -20,9 +20,10 @@ a.index-link:after {
   color: var(--text-link);
   content: 'α-version';
 }
-div#sidebar > a.index-link:before {
+div#sidebar > a.index-link:before, div#sidebar > a.index-link:after {
   display: block;
 }
-.version {
+span.version {
+  white-space: preserve nowrap;
   color: var(--text-link);
 }

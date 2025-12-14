@@ -89,15 +89,104 @@ function setButtonOpenClose(id0, id1) {
     });
 }
 
-function loadMathJax() {
-    window.MathJax = {tex: {inlineMath: [['$', '$']]}};
+function appendScriptOld(src, integrity) {
     const script = document.createElement('script');
-    script.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.0.0/tex-chtml.min.js";
-    script.defer = true;
+    script.src = src;
+    script.integrity = integrity;
     script.crossOrigin = "anonymous";
     script.referrerPolicy = "no-referrer";
-    script.integrity = "sha512-cHFHvgPwgoSbpMuTqgZCOWHzoFqt48aXErA98EcvAiZdN6v2bz416BjOqhZJ4tm+QzVkdeLY6NpEWYEjHBx49w==";
     document.head.appendChild(script);
+}
+
+function appendScript(src, integrity) {
+    return new Promise((resolve, reject) => {
+        const already = [...document.scripts].some(s => (s.src || '').includes(src));
+        if (already) {
+            console.debug(`Already exists: ${src}`);
+            return resolve();
+        }
+        const script = document.createElement('script');
+        script.src = src;
+        script.integrity = integrity;
+        script.crossOrigin = 'anonymous';
+        script.referrerPolicy = 'no-referrer';
+        script.async = false;
+        script.onload = () => resolve();
+        script.onerror = () => reject(new Error(`Failed to load script: ${src}`));
+        document.head.appendChild(script);
+    });
+}
+
+function appendLinkCss(href, integrity) {
+    const link = document.createElement('link');
+    link.rel = "stylesheet";
+    link.href = href;
+    link.integrity = integrity;
+    link.crossOrigin = "anonymous";
+    link.referrerPolicy = "no-referrer";
+    const anchor = document.head.querySelector('link[href*="style.css"]');
+    if (anchor) {
+        document.head.insertBefore(link, anchor);
+    } else {
+        document.head.appendChild(link);
+    }
+}
+
+async function loadMathJax() {
+    // https://cdnjs.com/libraries/mathjax
+    window.MathJax = {tex: {inlineMath: [['$', '$']]}};
+    await appendScript(
+        "https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.0.0/tex-chtml.min.js",
+        "sha512-cHFHvgPwgoSbpMuTqgZCOWHzoFqt48aXErA98EcvAiZdN6v2bz416BjOqhZJ4tm+QzVkdeLY6NpEWYEjHBx49w==",
+    );
+}
+
+async function loadPrism(prismLangs) {
+    // https://cdnjs.com/libraries/prism
+    appendLinkCss(
+        "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-coy.min.css",
+        "sha512-LOT5F67SMZVdXMrvQe4S1ZHu5l6xk3CST2qqno9kY329OsJBBpybnq+fM9qG4ZSaNzPOjoGzHAeBamSSJyyuZg==",
+    );
+    await appendScript(
+        "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js",
+        "sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==",
+    );
+    if (prismLangs.has('bash')) {
+        await appendScript(
+            "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js",
+            "sha512-whYhDwtTmlC/NpZlCr6PSsAaLOrfjVg/iXAnC4H/dtiHawpShhT2SlIMbpIhT/IL/NrpdMm+Hq2C13+VKpHTYw==",
+        );
+    }
+    if (prismLangs.has('latex')) {
+        await appendScript(
+            "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-latex.min.js",
+            "sha512-05ks1BpsV13hwvXwVHqPIXTdbxyMfC11RkXr+sxoyYc1wanbpgjqJvjWFbhtTghdyJkhgq95a8SKo83MnvjZog==",
+        );
+    }
+    if (prismLangs.has('python')) {
+        await appendScript(
+            "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js",
+            "sha512-AKaNmg8COK0zEbjTdMHJAPJ0z6VeNqvRvH4/d5M4sHJbQQUToMBtodq4HaV4fa+WV2UTfoperElm66c9/8cKmQ==",
+        );
+    }
+    if (prismLangs.has('sql')) {
+        await appendScript(
+            "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js",
+            "sha512-sijCOJblSCXYYmXdwvqV0tak8QJW5iy2yLB1wAbbLc3OOIueqymizRFWUS/mwKctnzPKpNdPJV3aK1zlDMJmXQ==",
+        );
+    }
+    if (prismLangs.has('toml')) {
+        await appendScript(
+            "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-toml.min.js",
+            "sha512-R9JG7uVdcjWlZvEWyP3KfxtexvT1uIlKUF/dYVmZRbvJyMobK6zGCpIM2gLVqYjLSYeL/zBjOVpP7vXxVtzfCw==",
+        );
+    }
+}
+
+function installPrismHooks() {
+    Prism.hooks.add('before-sanity-check', (env) => {
+        env.code = env.code.replace(/^(?:\r?\n|\r)/, '');
+    });
 }
 
 function secureExternalLinks(root = document) {
@@ -122,19 +211,32 @@ function init(repo, isIndex = false, isTop = false, lang = 'ja') {
     secureExternalLinks();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const s = document.getElementById('app');
+
+    const prismLangs = new Set();
+    if (s?.dataset.prism === 'true') prismLangs.add('');
+    if (s?.dataset.prismBash === 'true') prismLangs.add('bash');
+    if (s?.dataset.prismLatex === 'true') prismLangs.add('latex');
+    if (s?.dataset.prismPython === 'true') prismLangs.add('python');
+    if (s?.dataset.prismSql === 'true') prismLangs.add('sql');
+    if (s?.dataset.prismToml === 'true') prismLangs.add('toml');
+    if (prismLangs.size > 0) {
+        await loadPrism(prismLangs);
+        installPrismHooks();
+        Prism.highlightAll();
+    }
+
+    if (s?.dataset.mathjax === 'true') await loadMathJax();
+
     const repo = s?.dataset.repo || 'cookie-box';
     const isIndex = s?.dataset.isIndex === 'true';
     const linkTop = s?.dataset.linkTop === 'true';
     const lang = s?.dataset.lang || 'ja';
     init(repo, isIndex, linkTop, lang);
-    if (s?.dataset.mathjax === 'true') loadMathJax();
 });
 
 (function () {
     if (typeof Prism === 'undefined' || typeof document === 'undefined') return;
-    Prism.hooks.add('before-sanity-check', function (env) {
-        env.code = env.code.replace(/^(?:\r?\n|\r)/, '');
-    });
+    installPrismHooks();
 })();

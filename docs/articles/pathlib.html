@@ -1,0 +1,116 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>pathlib - Cookipedia α-version</title>
+<link href="../css/style.css?v=2025-12-09" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2025-12-09" rel="stylesheet" type="text/css"/>
+<script ,="" data-prism-python="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2025-12-14"></script>
+</head>
+<body>
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>pathlib</h1>
+<h2>参考文献</h2>
+<ol class="ref small">
+<li>pathlib --- オブジェクト指向のファイルシステムパス — Python 3.13.11 ドキュメント, <a class="asis" href="https://docs.python.org/ja/3.13/library/pathlib.html"></a>, 2025年12月13日参照.</li>
+</ol>
+<h2>Snippets</h2>
+<h3>パスの親・末尾・拡張子の取得</h3>
+<pre class="language-python"><code>
+from pathlib import Path
+
+p = Path('docs/articles/pathlib.html')
+assert p.parent.as_posix() == 'docs/articles'
+assert p.name == 'pathlib.html'
+assert p.stem == 'pathlib'
+assert p.suffix == '.html'
+</code></pre>
+<h3>ディレクトリの作成・削除 ＆ ファイルの読み書き・削除</h3>
+<pre class="language-python"><code>
+from pathlib import Path
+
+d = Path('hoge0/hoge1')
+f = d / 'hoge2.txt'
+assert not d.is_dir()
+assert not f.is_file()
+
+# ディレクトリ作成
+d.mkdir(parents=True)  # 親ディレクトリごと作成する場合
+d.mkdir(exist_ok=True)
+assert d.is_dir()
+
+# ファイル書き出し
+f.write_text('hello\nhello\n', newline='\n', encoding='utf8')
+assert f.is_file()
+
+# ファイル読み込み
+text = f.read_text(encoding='utf8')
+assert text == 'hello\nhello\n'
+
+# ファイル削除
+f.unlink()
+f.unlink(missing_ok=True)
+assert not f.is_file()
+
+# 空ディレクトリ削除
+d.rmdir()
+assert not d.is_dir()
+</code></pre>
+<h3>そのパス以下のファイルの取得</h3>
+<pre class="language-python"><code>
+from pathlib import Path
+
+Path('hoge0').mkdir()
+Path('hoge0/hoge1.txt').write_text('hello', encoding='utf8')
+Path('hoge0/hoge2.txt').write_text('hello', encoding='utf8')
+Path('hoge0/hoge3').mkdir()
+Path('hoge0/hoge3/hoge4.txt').write_text('hello', encoding='utf8')
+
+files = list(Path('hoge0').glob('*.txt'))  # そのパスの直下
+assert len(files) == 2
+assert files[0].as_posix() == 'hoge0/hoge1.txt'
+assert files[1].as_posix() == 'hoge0/hoge2.txt'
+
+files = list(Path('hoge0').glob('*/*.txt'))  # そのパスの1階層下
+assert len(files) == 1
+assert files[0].as_posix() == 'hoge0/hoge3/hoge4.txt'
+
+files = list(Path('hoge0').glob('**/*.txt'))  # そのパス以下すべて
+assert len(files) == 3
+assert files[0].as_posix() == 'hoge0/hoge1.txt'
+assert files[1].as_posix() == 'hoge0/hoge2.txt'
+assert files[2].as_posix() == 'hoge0/hoge3/hoge4.txt'
+
+Path('hoge0/hoge3/hoge4.txt').unlink()
+Path('hoge0/hoge3').rmdir()
+Path('hoge0/hoge1.txt').unlink()
+Path('hoge0/hoge2.txt').unlink()
+Path('hoge0').rmdir()
+</code></pre>
+<h3>内容に更新がある場合のみファイルを書き出す</h3>
+<pre class="language-python"><code>
+def write_text(path, text):
+    if path.exists():
+        current_text = path.read_text(encoding='utf8')
+        if current_text == text:
+            print(f'更新なし {path}')
+            return
+        print(f'更新あり {path}')
+    else:
+        print(f'新規作成 {path}')
+    path.write_text(text, newline='\n', encoding='utf8')
+</code></pre>
+<div class="categories">
+<a href="../categories/python.html">Python</a>
+</div>
+</div>
+</main>
+</div>
+</body>
+</html>

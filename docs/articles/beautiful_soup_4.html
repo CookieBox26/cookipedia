@@ -5,16 +5,10 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>Beautiful Soup 4 - Cookipedia α-version</title>
-<!-- Prism start-->
-<link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-coy.min.css" integrity="sha512-LOT5F67SMZVdXMrvQe4S1ZHu5l6xk3CST2qqno9kY329OsJBBpybnq+fM9qG4ZSaNzPOjoGzHAeBamSSJyyuZg==" referrerpolicy="no-referrer" rel="stylesheet"/>
-<script crossorigin="anonymous" defer="" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-<script crossorigin="anonymous" defer="" integrity="sha512-AKaNmg8COK0zEbjTdMHJAPJ0z6VeNqvRvH4/d5M4sHJbQQUToMBtodq4HaV4fa+WV2UTfoperElm66c9/8cKmQ==" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
-<!-- Prism end -->
-<!-- mathjax start --><!--
-<script src="../mathjax-config.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" defer></script>
-<!-- mathjax end -->
-<link href="../css/style.css?v=2025-12-09" rel="stylesheet" type="text/css"/><link href="../css/cookipedia.css?v=2025-12-09" rel="stylesheet" type="text/css"/><script data-lang="ja" data-mainpage="false" data-repo="cookipedia" defer="True" id="app" src="../funcs.js?v=2025-12-09"></script></head>
+<link href="../css/style.css?v=2025-12-09" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2025-12-09" rel="stylesheet" type="text/css"/>
+<script ,="" data-prism-python="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2025-12-14"></script>
+</head>
 <body>
 <div class="container">
 <div id="sidebar"></div>
@@ -58,6 +52,61 @@ df = pd.DataFrame()
 </ul>
 <!-- rel end -->
 <h2>Snippets</h2>
+<h3>HTML 要素を追加・削除 ＆ HTML 要素下の文字列を取得する</h3>
+<pre class="language-python"><code>
+from bs4 import BeautifulSoup
+
+def new_tag(soup, tag_name, string):
+    tag = soup.new_tag(tag_name)
+    tag.string = string
+    return tag
+
+text = (
+    '&lt;div id="hoge"&gt;'
+    '&lt;p&gt;Apple&lt;/p&gt;'
+    'Banana'
+    '&lt;/div&gt;'
+)
+soup = BeautifulSoup(text, 'html.parser')
+
+# 要素の追加
+p = soup.find('p')
+p.append(' Pie')  # &lt;p&gt; 内の末尾に文字列や要素を追加
+p.insert_before(new_tag(soup, 'b', 'Coffee'))
+p.insert_after(new_tag(soup, 'i', 'Milk'))
+assert str(soup) == (
+    '&lt;div id="hoge"&gt;'
+    '&lt;b&gt;Coffee&lt;/b&gt;'
+    '&lt;p&gt;Apple Pie&lt;/p&gt;'
+    '&lt;i&gt;Milk&lt;/i&gt;'
+    'Banana'
+    '&lt;/div&gt;'
+)
+
+# Tag.extract() は要素をツリーから取り除くが取り除いたものは手元に残る
+p.extract()
+assert str(soup) == (
+    '&lt;div id="hoge"&gt;'
+    '&lt;b&gt;Coffee&lt;/b&gt;'
+    '&lt;i&gt;Milk&lt;/i&gt;'
+    'Banana'
+    '&lt;/div&gt;'
+)
+assert str(p) == '&lt;p&gt;Apple Pie&lt;/p&gt;'
+
+# Tag.decompose() は要素を削除する
+soup.find('i').decompose()
+assert str(soup) == (
+    '&lt;div id="hoge"&gt;'
+    '&lt;b&gt;Coffee&lt;/b&gt;'
+    'Banana'
+    '&lt;/div&gt;'
+)
+
+# Tag.get_text() はその要素下の文字列を取得する
+div = soup.find('div')
+assert div.get_text() == 'CoffeeBanana'
+</code></pre>
 <h3>HTML ファイルが参照するスタイルシートのパスを修正する</h3>
 <code class="language-">soup.find()</code> で <code class="language-">href</code> 属性が <code class="language-">css/style.css</code> を含む要素をみつけるには引数 <code class="language-python">href=lambda v: v and 'css/style.css' in v</code> を指定すればよい。
 <pre class="language-python"><code>

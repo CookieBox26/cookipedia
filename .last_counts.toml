@@ -1,102 +1,102 @@
 [[pages]]
 rel_path = "articles/ailing_zeng_et_al_2021.html"
 timestamp = "2024-05-06"
-count = 1057
+count = 1022
 
 [[pages]]
 rel_path = "articles/albert_gu_et_al_2020.html"
 timestamp = "2022-04-17"
-count = 1708
+count = 1673
 
 [[pages]]
 rel_path = "articles/albert_gu_et_al_2021.html"
 timestamp = "2022-04-17"
-count = 1886
+count = 1851
 
 [[pages]]
 rel_path = "articles/albert_gu_et_al_2022.html"
 timestamp = "2022-04-17"
-count = 1873
+count = 1838
 
 [[pages]]
 rel_path = "articles/ali_shojaie_et_al_2021.html"
 timestamp = "2023-06-05"
-count = 1015
+count = 980
 
 [[pages]]
 rel_path = "articles/andrew_gordon_wilson_et_al_2016.html"
 timestamp = "2022-05-12"
-count = 964
+count = 929
 
 [[pages]]
 rel_path = "articles/andrew_gordon_wilson_et_al_2016b.html"
 timestamp = "2022-05-13"
-count = 938
+count = 903
 
 [[pages]]
 rel_path = "articles/aws.html"
 timestamp = "2025-03-15"
-count = 8906
+count = 8252
 
 [[pages]]
 rel_path = "articles/beautiful_soup_4.html"
 timestamp = "2025-12-12"
-count = 4150
+count = 4397
 
 [[pages]]
 rel_path = "articles/bryan_lim_et_al_2019.html"
 timestamp = "2025-05-08"
-count = 2332
+count = 1707
 
 [[pages]]
 rel_path = "articles/chi_squared_test.html"
 timestamp = "2022-05-11"
-count = 678
+count = 643
 
 [[pages]]
 rel_path = "articles/cholesky_decomposition.html"
 timestamp = "2024-10-27"
-count = 4028
+count = 3233
 
 [[pages]]
 rel_path = "articles/contiguity.html"
 timestamp = "2024-05-06"
-count = 1702
+count = 1667
 
 [[pages]]
 rel_path = "articles/css_flexible_box_layout.html"
 timestamp = "2024-10-27"
-count = 4994
+count = 4335
 
 [[pages]]
 rel_path = "articles/david_salinas_et_al_2017.html"
 timestamp = "2025-05-08"
-count = 2295
+count = 1670
 
 [[pages]]
 rel_path = "articles/dijkstra_algorithm.html"
 timestamp = "2025-03-15"
-count = 504677
+count = 503882
 
 [[pages]]
 rel_path = "articles/exponential_family.html"
 timestamp = "2022-05-05"
-count = 1214
+count = 1179
 
 [[pages]]
 rel_path = "articles/flask.html"
 timestamp = "2023-05-07"
-count = 3407
+count = 3478
 
 [[pages]]
 rel_path = "articles/git.html"
 timestamp = "2025-05-03"
-count = 2019
+count = 1224
 
 [[pages]]
 rel_path = "articles/github.html"
 timestamp = "2025-01-19"
-count = 1068
+count = 1033
 
 [[pages]]
 rel_path = "articles/haixu_wu_et_al_2021.html"
@@ -106,32 +106,32 @@ count = 0
 [[pages]]
 rel_path = "articles/haoyi_zhou_et_al_2021.html"
 timestamp = "2023-05-07"
-count = 1174
+count = 1139
 
 [[pages]]
 rel_path = "articles/hive.html"
 timestamp = "2022-04-10"
-count = 3402
+count = 3367
 
 [[pages]]
 rel_path = "articles/hypothesis_testing.html"
 timestamp = "2022-05-01"
-count = 3592
+count = 3557
 
 [[pages]]
 rel_path = "articles/iclr.html"
 timestamp = "2023-05-07"
-count = 964
+count = 929
 
 [[pages]]
 rel_path = "articles/integration_by_substitution.html"
 timestamp = "2022-04-10"
-count = 2931
+count = 2896
 
 [[pages]]
 rel_path = "articles/ipython.html"
 timestamp = "2023-07-28"
-count = 966
+count = 931
 
 [[pages]]
 rel_path = "articles/jinliang_deng_et_al_2023.html"
@@ -141,162 +141,167 @@ count = 0
 [[pages]]
 rel_path = "articles/krzysztof_marcin_choromanski_et_al_2020.html"
 timestamp = "2022-05-14"
-count = 950
+count = 915
 
 [[pages]]
 rel_path = "articles/le_cams_first_lemma.html"
 timestamp = "2023-06-13"
-count = 1729
+count = 1694
 
 [[pages]]
 rel_path = "articles/le_cams_third_lemma.html"
 timestamp = "2023-06-27"
-count = 1744
+count = 1709
 
 [[pages]]
 rel_path = "articles/lin_zheng_et_al_2022.html"
 timestamp = "2022-04-17"
-count = 1423
+count = 1388
 
 [[pages]]
 rel_path = "articles/linear_regression_model.html"
 timestamp = "2022-05-09"
-count = 9042
+count = 9007
 
 [[pages]]
 rel_path = "articles/linux_shell.html"
 timestamp = "2023-10-01"
-count = 1499
+count = 1464
 
 [[pages]]
 rel_path = "articles/matplotlib.html"
 timestamp = "2024-11-02"
-count = 3204
+count = 2409
 
 [[pages]]
 rel_path = "articles/matplotlib_named_colors.html"
 timestamp = "2024-11-02"
-count = 332519
+count = 331724
 
 [[pages]]
 rel_path = "articles/mecab.html"
 timestamp = "2024-05-04"
-count = 8268
+count = 8233
 
 [[pages]]
 rel_path = "articles/nginx.html"
 timestamp = "2025-03-15"
-count = 1757
+count = 1103
 
 [[pages]]
 rel_path = "articles/nyström_method.html"
 timestamp = "2022-04-10"
-count = 8219
+count = 8184
 
 [[pages]]
 rel_path = "articles/online_retail_data_set.html"
 timestamp = "2023-05-07"
-count = 1048
+count = 1013
 
 [[pages]]
 rel_path = "articles/openai_python_package.html"
 timestamp = "2024-05-04"
-count = 1438
+count = 1403
 
 [[pages]]
 rel_path = "articles/optuna.html"
 timestamp = "2024-05-04"
-count = 1206
+count = 1171
 
 [[pages]]
 rel_path = "articles/other_python_packages.html"
 timestamp = "2025-07-09"
-count = 4384
+count = 4349
 
 [[pages]]
 rel_path = "articles/pandas.html"
 timestamp = "2025-07-09"
-count = 3311
+count = 2516
 
 [[pages]]
 rel_path = "articles/pandas_io_formats_style_styler.html"
 timestamp = "2025-09-21"
-count = 6991
+count = 6196
+
+[[pages]]
+rel_path = "articles/pathlib.html"
+timestamp = "2025-12-13"
+count = 3217
 
 [[pages]]
 rel_path = "articles/pdf.html"
 timestamp = "2025-09-21"
-count = 3099
+count = 2060
 
 [[pages]]
 rel_path = "articles/portmanteau_lemma.html"
 timestamp = "2023-05-07"
-count = 875
+count = 840
 
 [[pages]]
 rel_path = "articles/pytest.html"
 timestamp = "2022-04-10"
-count = 1037
+count = 1002
 
 [[pages]]
 rel_path = "articles/python.html"
 timestamp = "2025-04-19"
-count = 6177
+count = 6142
 
 [[pages]]
 rel_path = "articles/pytorch.html"
 timestamp = "2024-05-04"
-count = 1458
+count = 1423
 
 [[pages]]
 rel_path = "articles/qr_decomposition.html"
 timestamp = "2022-04-10"
-count = 7251
+count = 7216
 
 [[pages]]
 rel_path = "articles/quentin_fournier_et_al_2021.html"
 timestamp = "2022-04-17"
-count = 1269
+count = 1234
 
 [[pages]]
 rel_path = "articles/radon_nikodým_theorem.html"
 timestamp = "2023-06-06"
-count = 806
+count = 771
 
 [[pages]]
 rel_path = "articles/redshift.html"
 timestamp = "2025-04-28"
-count = 6961
+count = 6166
 
 [[pages]]
 rel_path = "articles/schur_complement.html"
 timestamp = "2022-04-10"
-count = 7241
+count = 7206
 
 [[pages]]
 rel_path = "articles/sebastian_w_ober_et_al_2021.html"
 timestamp = "2022-05-12"
-count = 918
+count = 883
 
 [[pages]]
 rel_path = "articles/sebastian_zeng_et_al_2021.html"
 timestamp = "2022-04-13"
-count = 1431
+count = 1396
 
 [[pages]]
 rel_path = "articles/sentence_transformers.html"
 timestamp = "2024-05-04"
-count = 1075
+count = 1040
 
 [[pages]]
 rel_path = "articles/statsmodels_tsa.html"
 timestamp = "2023-06-13"
-count = 886
+count = 851
 
 [[pages]]
 rel_path = "articles/tian_zhou_et_al_2022.html"
 timestamp = "2024-05-06"
-count = 1378
+count = 1343
 
 [[pages]]
 rel_path = "articles/traffic_data_set.html"
@@ -306,42 +311,42 @@ count = 0
 [[pages]]
 rel_path = "articles/transformer.html"
 timestamp = "2022-04-10"
-count = 1720
+count = 1685
 
 [[pages]]
 rel_path = "articles/ubuntu.html"
 timestamp = "2025-03-16"
-count = 1414
+count = 760
 
 [[pages]]
 rel_path = "articles/unit_root.html"
 timestamp = "2023-06-05"
-count = 871
+count = 836
 
 [[pages]]
 rel_path = "articles/wei_fan_et_al_2022.html"
 timestamp = "2025-05-08"
-count = 2105
+count = 1480
 
 [[pages]]
 rel_path = "articles/xelatex.html"
 timestamp = "2025-03-16"
-count = 1957
+count = 1303
 
 [[pages]]
 rel_path = "articles/xiangfei_qiu_et_al_2024.html"
 timestamp = "2025-05-08"
-count = 3224
+count = 2599
 
 [[pages]]
 rel_path = "articles/yifan_chen_et_al_2021.html"
 timestamp = "2022-05-10"
-count = 2753
+count = 2718
 
 [[pages]]
 rel_path = "articles/yong_liu_et_al_2022.html"
 timestamp = "2022-09-30"
-count = 4614
+count = 4579
 
 [[pages]]
 rel_path = "categories/asymptotic_theory.html"
@@ -361,7 +366,7 @@ count = 894
 [[pages]]
 rel_path = "categories/python.html"
 timestamp = "2025-10-19"
-count = 1886
+count = 1984
 
 [[pages]]
 rel_path = "categories/time_series_forecasting.html"
@@ -381,5 +386,5 @@ count = 1071
 [[pages]]
 rel_path = "index.html"
 timestamp = "2025-12-12"
-count = 11363
+count = 11466
 

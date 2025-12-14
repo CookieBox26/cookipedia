@@ -11,6 +11,7 @@ if __name__ == '__main__':
     _run(['git', 'add', 'docs/css/cookipedia.css'])
     _run(['git', 'add', 'docs/articles/*'])
     _run(['git', 'add', 'docs/categories/*'])
+    _run(['git', 'add', 'docs/utils/color_palette.html'])
     _run(['git', 'add', 'docs/index.html'])
     _run(['git', 'add', 'templates/category_template.html'])
     _run(['git', 'add', 'templates/index_template.html'])
