@@ -306,6 +306,7 @@ div.summary > ul, div.summary > ol {
 
 span.index-ts {
   font-size: 0.8em;
+  white-space: preserve nowrap;
 }
 span.index-ts:before {
   content: 'Updated: ';

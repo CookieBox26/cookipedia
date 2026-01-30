@@ -189,6 +189,11 @@ timestamp = "2025-03-15"
 count = 1103
 
 [[pages]]
+rel_path = "articles/notepad-plus-plus.html"
+timestamp = "2026-01-30"
+count = 1221
+
+[[pages]]
 rel_path = "articles/nyström_method.html"
 timestamp = "2022-04-10"
 count = 8184
@@ -385,6 +390,6 @@ count = 1071
 
 [[pages]]
 rel_path = "index.html"
-timestamp = "2025-12-12"
-count = 11466
+timestamp = "2026-01-30"
+count = 11495
 
