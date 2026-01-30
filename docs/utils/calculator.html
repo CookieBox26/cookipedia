@@ -1,10 +1,11 @@
 <!DOCTYPE HTML>
+
 <html>
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title></title>
-<link rel="stylesheet" type="text/css" href="../style.css">
+<link href="../style.css" rel="stylesheet" type="text/css"/>
 <style type="text/css">
 <!--
 table.tbl_01 {
@@ -19,7 +20,7 @@ table.tbl_01 td {
 }
 -->
 </style>
-<script src="../funcs.js"></script>
+<script src="../funcs.js?v=2025-12-14"></script>
 </head>
 <body onload="init_()">
 <div class="container">
@@ -28,31 +29,28 @@ table.tbl_01 td {
 <div id="smartphone-header"></div>
 <div class="item">
 <h1>電卓</h1>
-
 <h2>時間計算</h2>
 <h4>予定</h4>
-<label><input type="number" id="inputHours" value="7" style="width: 3em;"></label> 時間
-<label><input type="number" id="inputMinutes" value="15" style="width: 3em;"></label> 分<br>
+<label><input id="inputHours" style="width: 3em;" type="number" value="7"/></label> 時間
+<label><input id="inputMinutes" style="width: 3em;" type="number" value="15"/></label> 分<br/>
 <h4>実績</h4>
-<textarea id="input" rows="3" cols="36" style="resize: none;">
+<textarea cols="36" id="input" rows="3" style="resize: none;">
 作業開始時刻：2025年5月3日 5:30 JST
 作業終了時刻：2025年5月3日 13:40 JST
-</textarea><br>
+</textarea><br/>
 <button onclick="calcTime()" style="margin: 0.5em 0; padding: 0.3em 1.0em;">時間計算</button>
 <p id="result" style="margin: 0; height: 2.6em;"></p>
-
 <h2>コスト計算</h2>
 <ul>
 <li>インスタンスタイプ - Amazon EC2 | AWS. <a class="asis" href="https://aws.amazon.com/jp/ec2/instance-types/"></a> (2025年3月15日参照).</li>
 <li>Amazon EC2 Instance Comparison. <a class="asis" href="https://instances.vantage.sh/?region=ap-northeast-1"></a> (2025年3月15日参照).</li>
 </ul>
-コスト＄/h &nbsp;<input type="text" id="dollarsHourly"/><br/>
-換算レート &nbsp;<input type="text" id="rate"/><br/>
-オプション &nbsp;<input type="text" id="options-h"/><br/>
-オプション &nbsp;<input type="text" id="options-d"/><br/>
+コスト＄/h  <input id="dollarsHourly" type="text"><br>
+換算レート  <input id="rate" type="text"><br>
+オプション  <input id="options-h" type="text"/><br/>
+オプション  <input id="options-d" type="text"/><br/>
 <div id="tableContainer"></div>
-
-</div>
+</br></input></br></input></div>
 </main>
 </div>
 <script type="text/javascript"><!--
