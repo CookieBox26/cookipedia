@@ -8,7 +8,6 @@
 # rev = "7a25c9d6e466867d3c90bd403c67e2fdc4cfa965"
 # ///
 from pathlib import Path
-import subprocess
 from cookies_site_utils import index_generation, IndexPage, validate
 
 
@@ -31,11 +30,3 @@ if __name__ == '__main__':
             ['funcs.js', 'index.html'],  # 存在してよいファイル
             ['css', 'articles', 'categories', 'utils'],  # 存在してよいフォルダ
         )
-
-    # ローカルと HEAD に差分がないことの確認
-    _run = lambda command: subprocess.run(command, capture_output=True, text=True, check=True)
-    ret = _run(['git', 'status', '-s']).stdout.rstrip('\n')
-    if ret != '':
-        ret_diff = _run(['git', 'diff', '--name-only']).stdout.rstrip('\n')
-        msg = 'Unstaged changes detected' if ret_diff != '' else 'No unstaged changes'
-        raise ValueError(f'Differences between HEAD and working tree ({msg})\n{ret}')
