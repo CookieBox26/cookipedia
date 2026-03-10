@@ -16,11 +16,14 @@
 <div id="smartphone-header"></div>
 <div class="item">
 <h1>pathlib</h1>
+
 <h2>参考文献</h2>
 <ol class="ref small">
 <li>pathlib --- オブジェクト指向のファイルシステムパス — Python 3.13.11 ドキュメント, <a class="asis" href="https://docs.python.org/ja/3.13/library/pathlib.html"></a>, 2025年12月13日参照.</li>
 </ol>
+
 <h2>Snippets</h2>
+
 <h3>パスの親・末尾・拡張子の取得</h3>
 <pre class="language-python"><code>
 from pathlib import Path
@@ -31,6 +34,7 @@ assert p.name == 'pathlib.html'
 assert p.stem == 'pathlib'
 assert p.suffix == '.html'
 </code></pre>
+
 <h3>ディレクトリの作成・削除 ＆ ファイルの読み書き・削除</h3>
 <pre class="language-python"><code>
 from pathlib import Path
@@ -62,6 +66,7 @@ assert not f.is_file()
 d.rmdir()
 assert not d.is_dir()
 </code></pre>
+
 <h3>そのパス以下のファイルの取得</h3>
 <pre class="language-python"><code>
 from pathlib import Path
@@ -93,6 +98,7 @@ Path('hoge0/hoge1.txt').unlink()
 Path('hoge0/hoge2.txt').unlink()
 Path('hoge0').rmdir()
 </code></pre>
+
 <h3>内容に更新がある場合のみファイルを書き出す</h3>
 <pre class="language-python"><code>
 def write_text(path, text):
@@ -109,6 +115,7 @@ def write_text(path, text):
 <div class="categories">
 <a href="../categories/python.html">Python</a>
 </div>
+
 </div>
 </main>
 </div>
