@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Stylus (ブラウザ拡張機能) - Cookipedia α-version</title>
+<link href="../css/style.css?v=2026-01-30" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2025-12-09" rel="stylesheet" type="text/css"/>
+<script ,="" data-prism="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2025-12-14"></script>
+</head>
+<body>
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>Stylus (ブラウザ拡張機能)</h1>
+Stylus は Web サイトの CSS を上書きするブラウザ拡張機能である。
+
+<h3><code class="language-">chatgpt.com</code> のカスタム例</h3>
+<pre class="language-css"><code>
+/*----- 色の変更 -----*/
+.\@container\/main {
+  background-color: #fdfcf5;  /* メイン画面背景色 */
+}
+.light {
+  --text-primary: #564c3e;  /* 文字色 */
+  --theme-submit-btn-bg: #564c3e;  /* 入力フォームの音声モードボタン背景色 */
+  --bg-elevated-secondary: #b7e6e5;  /* サイドバー背景色 */
+  --main-surface-primary: #96ccde;  /* ヘッダ背景色 */
+  --bg-primary: #f0f0f0;  /* 入力フォーム及びメイン画面下部背景色 */
+  --sidebar-surface-primary: #f0f0f0; /* コードブロック背景色 */
+}
+.\@w-xl\/main\:bg-transparent {
+  /* ウィンドウ幅に関わらずヘッダ色を --main-surface-primary に */
+  background-color: var(--main-surface-primary);
+}
+.bg-black,
+[data-radix-popper-content-wrapper] div,
+[data-radix-popper-content-wrapper] div:hover {
+  /* オンマウスで出てくる吹き出し */
+  background-color: #564c3e;
+  color: #fdfcf5;
+}
+
+/*----- フォント・フォントサイズ・行間の変更 -----*/
+:host, html {
+  /* 基準のフォント・フォントサイズ */
+  font-family: 'IBM Plex Sans JP', sans-serif;
+  font-size: 15px;
+}
+.__menu-item {
+  /* サイドバーの行間 */
+  padding-top: 0;
+  padding-bottom: 0;
+  min-height: 1.6rem;
+}
+.pb-\[calc\(var\(--sidebar-section-margin-top\)-var\(--sidebar-section-first-margin-top\)\)\] {
+  /* サイドバーのスクロール可能部の上部がやや隠れるため余白追加 */
+  padding-top: 0.5rem;
+}
+.text-base, .prose {
+  /* 自分のメッセージとシステム回答のフォントと行間 */
+  font-size: .9rem;
+  line-height: 1.25rem;
+}
+
+/*----- その他の変更 -----*/
+.\@w-sm\/main\:\[scrollbar-gutter\:stable_both-edges\]{
+  /* スクロールバーガターが両サイドに出るのを規定値に直す */
+  scrollbar-gutter: auto;
+}
+</code></pre>
+
+<h3><code class="language-">simplenote.com</code> のカスタム例</h3>
+Simplenote の Web UI である <code class="language-">simplenote.com</code> は、サイドバー幅は調整できるが、サイドバー内のメニュー高さ・本文行高さ・本文改行位置は内部で計算されて直接設定されているのでカスタムが容易ではない。かつ、フォントを変更すると本文がはみ出して見えなくなる場合がある。これを防ぐにはフォントを小さくする (小さすぎると感じられる場合はブラウザ側で拡大する)。
+<pre class="language-css"><code>
+/* サイドバーを狭くする */
+.app-layout__source-column {
+  width: 250px;
+}
+/* フォントを変更する */
+body, input, button, select, textarea,
+.view-lines, .note-preview {
+  font-family: Armata, "IBM Plex Sans JP" !important;
+}
+/* フォントを小さくする (はみ出しへの対処のため小さく) */
+.view-line, .note-list-item .note-list-item-title,
+.search-field input {
+  font-size: 13px !important;
+}
+/* タグの余白と色を変更する */
+.tag-chip {
+  padding-top: 3px;
+  background-color: lightpink;
+}
+</code></pre>
+
+</div>
+</main>
+</div>
+</body>
+</html>
