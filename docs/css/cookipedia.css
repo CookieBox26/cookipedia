@@ -27,3 +27,15 @@ span.version {
   white-space: preserve nowrap;
   color: var(--text-link);
 }
+span.index-ts-c {
+  font-size: 0.8em;
+  white-space: preserve nowrap;
+}
+span.index-ts-c:before {
+  content: 'Created: ';
+}
+span.tag {
+  font-size: 0.8em;
+  background: var(--summary-surface);
+  padding: 0.1em 0.3em;
+}

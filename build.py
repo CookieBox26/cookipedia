@@ -5,7 +5,7 @@
 # ]
 # [tool.uv.sources.cookies_site_utils]
 # git = "https://github.com/CookieBox26/cookies-site-utils"
-# rev = "1d31318ba565f7028528316f6b8f7e32bf328886"
+# rev = "1a19cfb034582a788bda4c5d6e71253dd392f900"
 # ///
 from pathlib import Path
 from cookies_site_utils import index_generation, IndexPage, validate
