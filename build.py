@@ -5,10 +5,15 @@
 # ]
 # [tool.uv.sources.cookies_site_utils]
 # git = "https://github.com/CookieBox26/cookies-site-utils"
-# rev = "1a19cfb034582a788bda4c5d6e71253dd392f900"
+# rev = "1e2db74afb9eb3402646dab686cd1d3b5c9a3801"
 # ///
+from cookies_site_utils.builder import build_index, IndexPage, validate
 from pathlib import Path
-from cookies_site_utils import index_generation, IndexPage, validate
+import logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='[%(levelname)s] %(message)s',
+)
 
 
 if __name__ == '__main__':
@@ -18,15 +23,17 @@ if __name__ == '__main__':
     funcs_js = site_root / 'funcs.js'
     last_counts_path = work_root / '.last_counts.toml'
 
-    with index_generation(
-        site_root, style_css, funcs_js, last_counts_path, domain='',
+    with build_index(
+        site_root, style_css, funcs_js, last_counts_path,
         force_keep_timestamp=False,
     ):
-        # クッキペディアインデックスページ生成
-        index_cookipedia = IndexPage(site_root)
-        index_cookipedia.build(work_root / 'templates', 'Cookipedia α-version')
+        _ = IndexPage(
+            site_root,
+            work_root / 'templates',
+            'Cookipedia α-version',
+        )
         validate(
             site_root,
-            ['funcs.js', 'index.html'],  # 存在してよいファイル
-            ['css', 'articles', 'categories', 'utils'],  # 存在してよいフォルダ
+            ['funcs.js', 'index.html'],
+            ['css', 'articles', 'categories', 'utils'],
         )
