@@ -38,6 +38,7 @@ import argparse
 import os
 import re
 import toml
+import html
 import logging
 from colorama import Fore, init
 logging.basicConfig(level=logging.INFO, format='[%(levelname)s] %(message)s')
@@ -110,7 +111,7 @@ def get_items(
 
 def item_to_str(item):
     url = item['url']
-    title = item['title'].strip()
+    title = html.escape(item['title'].strip(), quote=False)
     date = item['created_at'][:10]
     tags = ' '.join([
         '<span class="tag">' + tag['name'] + '</span>'
