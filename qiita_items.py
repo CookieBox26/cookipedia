@@ -7,6 +7,8 @@ python qiita_items.py -f  # 強制的に新規取得する
 python qiita_items.py -i  # 設定ファイルを新規作成する
 python qiita_items.py -t TAG  # 指定タグの記事を検索する
 python qiita_items.py -d  # 設定ファイルと HTML の差分を表示する
+python qiita_items.py -w
+python qiita_items.py -w --today 20260101
 ```
 
 ### 備考
@@ -29,6 +31,7 @@ EOF
 )"
 ```
 """
+from pathlib import Path
 from contextlib import suppress
 import difflib
 import keyring
@@ -39,10 +42,19 @@ import os
 import re
 import toml
 import html
+import datetime
+import subprocess
+from colorama import Fore
 import logging
-from colorama import Fore, init
 logging.basicConfig(level=logging.INFO, format='[%(levelname)s] %(message)s')
-init(autoreset=True)
+
+
+def color_diff(diff):
+    color = {'@': Fore.CYAN + '@'}
+    for line in diff:
+        yield color.get(line[0], line[0]) + line[1:] + Fore.RESET
+        if line[0] == '@':
+            color.update({'-': Fore.RED + '-', '+': Fore.GREEN + '+'})
 
 
 def fetch_all_pages(url, headers=None, params=None):
@@ -61,11 +73,7 @@ def fetch_all_pages(url, headers=None, params=None):
     return items
 
 
-def get_items(
-    force=False,
-    cache_file='cache_qiita_items.json',
-    user_id='CookieBox26',
-):
+def get_items(force, cache_file, user_id='CookieBox26'):
     """
     Qiita API から自分のすべての Qiita 記事を取得します。
 
@@ -104,12 +112,17 @@ def get_items(
         logging.error('記事の取得に失敗しました')
         return None
 
+    Path(cache_file).parent.mkdir(parents=True, exist_ok=True)
     with open(cache_file, 'w', encoding='utf-8') as f:
         json.dump(items, f, ensure_ascii=False, indent=2)
     return items
 
 
-def item_to_str(item):
+def item_to_line(item):
+    return f'{item["id"]} {item["created_at"][:10]} {item["title"].strip()}'
+
+
+def item_to_html(item):
     url = item['url']
     title = html.escape(item['title'].strip(), quote=False)
     date = item['created_at'][:10]
@@ -126,11 +139,12 @@ def item_to_str(item):
 
 
 def extract_ids_from_tag(target_tags, items):
+    logging.info(f'タグ検索します: {target_tags}')
+    target_tags_lower = {tag.lower() for tag in target_tags}
     for item in items:
-        tags = set([tag['name'] for tag in item['tags']])
-        if tags & target_tags:
-            date = item['created_at'][:10]
-            print(item['id'], date, item['title'].strip())
+        tags = set([tag['name'].lower() for tag in item['tags']])
+        if tags & target_tags_lower:
+            print(item_to_line(item))
 
 
 def show_cache_conf_diff(cats, items):
@@ -142,9 +156,8 @@ def show_cache_conf_diff(cats, items):
             toml_ids = {line.split(' ', 1)[0] for line in lines}
             for item in items:
                 if item['id'] not in toml_ids:
-                    date = item['created_at'][:10]
-                    print(f'[{key}] キャッシュにあるが TOML にない:')
-                    print(Fore.GREEN + f'  + {item["id"]} {date} {item["title"]}')
+                    print(f'[{key}] TOML にない:' + Fore.GREEN)
+                    print(f'+ {item_to_line(item)}' + Fore.RESET)
             continue
         for line in lines:
             parts = line.split(' ', 2)
@@ -156,14 +169,12 @@ def show_cache_conf_diff(cats, items):
             new_line = f'{item_id} {date} {item["title"]}'.strip()
             if new_line != line:
                 print(f'[{key}]')
-                print(Fore.RED + f'  - {line}')
-                print(Fore.GREEN + f'  + {new_line}')
+                print(Fore.RED + f'  - {line}' + Fore.RESET)
+                print(Fore.GREEN + f'  + {new_line}' + Fore.RESET)
 
 
-def show_conf_html_diff(cats, items, html_file):
+def show_conf_html_diff(cats, items, html_lines):
     logging.info('設定ファイルと HTML の差分を確認します')
-    with open(html_file, 'r', encoding='utf-8') as f:
-        html_lines = f.readlines()
 
     # HTML からカテゴリごとのセクションを抽出
     html_cats = {}
@@ -186,26 +197,16 @@ def show_conf_html_diff(cats, items, html_file):
         elif in_ul:
             html_cats[current_key].append(line)
 
-    id_to_item = {item['id']: item for item in items}
-
     def print_diff(actual, expected, from_label, to_label):
-        diff = list(difflib.unified_diff(
-            actual, expected,
-            fromfile=from_label,
-            tofile=to_label,
+        for line in color_diff(difflib.unified_diff(
+            actual, expected, fromfile=from_label, tofile=to_label,
             lineterm='',
-        ))
-        if diff:
-            for line in diff:
-                if line.startswith('-'):
-                    print(Fore.RED + line)
-                elif line.startswith('+'):
-                    print(Fore.GREEN + line)
-                else:
-                    print(line)
+        )):
+            print(line)
 
     # カテゴリ別の差分
     no_suffix = {'すべての記事', '作業効率化'}
+    id_to_item = {item['id']: item for item in items}
     for key, s in cats.items():
         html_key = key if key in no_suffix else key + ' 関連'
         tag = 'h2' if key == 'すべての記事' else 'h3'
@@ -213,10 +214,54 @@ def show_conf_html_diff(cats, items, html_file):
         for line in s.strip().split('\n'):
             item_id = line.split(' ', 1)[0]
             if item_id in id_to_item:
-                li_lines.append(item_to_str(id_to_item[item_id]))
+                li_lines.append(item_to_html(id_to_item[item_id]))
         expected = [f'<{tag}>{html_key}</{tag}>', '<ul>'] + li_lines + ['</ul>']
         actual = html_cats.get(html_key, [])
         print_diff(actual, expected, f'HTML ({html_key})', f'TOML ({key})')
+
+
+def updates_this_week(today, items):
+    if isinstance(today, str):
+        today = datetime.datetime.strptime(today, '%Y%m%d').date()
+    days_since_monday = today.weekday()  # monday=0, sunday=6
+    monday = today - datetime.timedelta(days=days_since_monday)
+    sunday = monday + datetime.timedelta(days=6)
+    weekly_items = []
+    for item in items:
+        created_at = datetime.datetime.fromisoformat(
+            item['created_at'].replace('Z', '+00:00'),
+        )
+        created_date = created_at.date()
+        if monday <= created_date <= today:
+            weekly_items.append((created_at, item))
+    weekly_items.sort(key=lambda x: x[0])
+
+    lines = [
+        '今週は Qiita に以下の記事を書きました。',
+        (
+            'これまでに書いた記事一覧は'
+            '[https://cookiebox26.github.io/cookipedia/'
+            'utils/qiita_items.html:title=こちら]です。'
+        ),
+        '<div class="con-box">', '[:contents]', '</div>',
+        '<div class="h5-margin-bottom-02">',
+    ]
+    for _, item in weekly_items:
+        title = html.escape(item['title'].strip(), quote=False)
+        lines.append('*** ' + title)
+        tags = ' '.join([
+            '<span class="tag">' + tag['name'] + '</span>'
+            for tag in item['tags']
+        ])
+        lines.append(tags)
+        lines.append('[' + item['url'] + ':embed:cite]')
+    lines.append('</div>')
+
+    year, week, _ = sunday.isocalendar()
+    subject = f'今週書いた Qiita 記事 ({year}年第{week}週)'
+    print(sunday)
+    print(subject)
+    print('\n'.join(lines))
 
 
 def main():
@@ -225,32 +270,48 @@ def main():
     parser.add_argument('--cache', default='.cache/qiita_items.json')
     parser.add_argument('--toml', default='.qiita_items.toml')
     parser.add_argument('--html', default='docs/utils/qiita_items.html')
+    parser.add_argument(
+        '--editor', default='C:\\Program Files (x86)\\sakura\\sakura.exe',
+    )
+    parser.add_argument('--today', default=None)
+    parser.add_argument('-o', '--open', action='store_true')
+
     group = parser.add_mutually_exclusive_group()
-    group.add_argument('-i', '--init', action='store_true', help='設定新規作成')
-    group.add_argument('-t', '--tags', nargs='+', help='タグ検索')
-    group.add_argument('-d', '--show_diff', action='store_true', help='差分表示')
+    group.add_argument('-i', '--init', action='store_true')
+    group.add_argument('-t', '--tags', nargs='+')
+    group.add_argument('-d', '--diff', action='store_true')
+    group.add_argument('-w', '--week', action='store_true')
+
     args = parser.parse_args()
 
-    items = get_items(args.force, cache_file=args.cache)
     if args.init:
         if os.path.exists(args.toml):
             logging.error(f'{args.toml} はすでに存在します')
             raise SystemExit(1)
-        lines = [
-            f'{item["id"]} {item["created_at"][:10]} {item["title"].strip()}'
-            for item in items
-        ]
+        items = get_items(args.force, cache_file=args.cache)
+        lines = [item_to_line(item) for item in items]
         with open(args.toml, 'w', encoding='utf-8') as f:
             f.write('[cats]\n"すべての記事" = """\n')
-            f.write('\n'.join(lines))
-            f.write('\n"""\n')
+            f.write('\n'.join(lines) + '\n"""\n')
     elif args.tags:
+        items = get_items(args.force, cache_file=args.cache)
         extract_ids_from_tag(set(args.tags), items)
-    elif args.show_diff:
-        with open(args.toml, 'r', encoding='utf-8') as f:
-            cats = toml.load(f)['cats']
+    elif args.diff:
+        items = get_items(args.force, cache_file=args.cache)
+        cats = toml.loads(Path(args.toml).read_text(encoding='utf8'))['cats']
+        html_lines = Path(args.html).read_text(encoding='utf8').splitlines()
         show_cache_conf_diff(cats, items)
-        show_conf_html_diff(cats, items, html_file=args.html)
+        show_conf_html_diff(cats, items, html_lines)
+    elif args.week:
+        items = get_items(args.force, cache_file=args.cache)
+        today = args.today or datetime.datetime.now().date()
+        updates_this_week(today, items)
+    else:
+        logging.warning(f'操作が指定されていません (-i/-t/-d)')
+
+    if args.open:
+        subprocess.Popen([args.editor, args.toml])
+        subprocess.Popen([args.editor, args.html])
 
 
 if __name__ == '__main__':
