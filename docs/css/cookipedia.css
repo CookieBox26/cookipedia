@@ -50,3 +50,7 @@ ol.ref ul {
 .MathJax {
   font-size: 1.1em !important;
 }
+.overflow-y-container {
+  overflow-y: hidden;
+  max-width: 100%;
+}

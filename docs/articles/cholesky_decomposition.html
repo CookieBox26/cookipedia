@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>コレスキー分解 - Cookipedia α-version</title>
 <link href="../css/style.css?v=2026-01-30" rel="stylesheet" type="text/css"/>
-<link href="../css/cookipedia.css?v=2025-12-09" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-03-24" rel="stylesheet" type="text/css"/>
 <script data-mathjax="true" data-prism-python="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2025-12-14"></script>
 </head>
 <body>
@@ -17,7 +17,7 @@
 <div class="item">
 <h1>コレスキー分解</h1>
 <p>コレスキー分解（Cholesky decomposition）とは、<u>半正定値エルミート行列を下三角行列とその共役転置行列の積に分解すること</u>である。このような分解は常に存在し、かつ、下三角行列の対角成分を非負実数にできる。
-<div>
+<div class="overflow-y-container">
 $$
 \begin{align}
 &amp;
@@ -44,7 +44,7 @@ r_{1,1} &amp; \overline{r_{1,2}} &amp; \cdots &amp; \overline{r_{1, n}} \\
 $$
 </div>
 元の行列が実対称行列の場合は、下三角行列とその転置行列の積への分解が存在する。
-<div>
+<div class="overflow-y-container">
 $$
 \begin{align}
 &amp;
@@ -73,12 +73,18 @@ $$
 </div>
 また、元の行列が正定値の場合は、下三角行列の対角成分が正の実数にでき、かつ、そのような分解が一意に定まる。
 </p>
+
+
 <h2>参考文献</h2>
 <ol class="ref small">
 <li>Cholesky decomposition - Wikipedia. <a href="https://en.wikipedia.org/wiki/Cholesky_decomposition">https://ja.wikipedia.org/wiki/QR%E5%88%86%E8%A7%A3</a>（2022年3月29日参照）.</li>
 </ol>
+
+
 <h2>正定値実対称行列のコレスキー分解の一意性の証明</h2>
 <p><a href="https://cookie-box.hatenablog.com/entry/2022/04/01/235825">雑記 - クッキーの日記</a></p>
+
+
 <h2>コレスキ―分解を得る方法</h2>
 参考文献 [1] の例を numpy の関数で得ると以下である。
 <pre class="language-python"><code>
@@ -96,13 +102,18 @@ print(R)
  [ 6.  1.  0.]
  [-8.  5.  3.]]
 </code></pre>
+
+
 <h2>関連記事</h2>
 <ul>
 <li><a href="schur_complement.html">シューア補行列</a></li>
 </ul>
+
+
 <div class="categories">
 <a href="../categories/matrix.html">行列</a>
 </div>
+
 </div>
 </main>
 </div>
