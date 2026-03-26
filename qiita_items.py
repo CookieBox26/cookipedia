@@ -307,7 +307,7 @@ def main():
         today = args.today or datetime.datetime.now().date()
         updates_this_week(today, items)
     else:
-        logging.warning(f'操作が指定されていません (-i/-t/-d)')
+        logging.warning('操作が指定されていません (-i/-t/-d)')
 
     if args.open:
         subprocess.Popen([args.editor, args.toml])

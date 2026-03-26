@@ -39,6 +39,11 @@ timestamp = "2025-03-15"
 count = 8252
 
 [[pages]]
+rel_path = "articles/bash.html"
+timestamp = "2026-03-26"
+count = 1682
+
+[[pages]]
 rel_path = "articles/beautiful_soup_4.html"
 timestamp = "2025-12-12"
 count = 4397
@@ -99,11 +104,6 @@ timestamp = "2025-01-19"
 count = 1033
 
 [[pages]]
-rel_path = "articles/haixu_wu_et_al_2021.html"
-timestamp = "2023-07-17"
-count = 0
-
-[[pages]]
 rel_path = "articles/haoyi_zhou_et_al_2021.html"
 timestamp = "2023-05-07"
 count = 1139
@@ -134,11 +134,6 @@ timestamp = "2023-07-28"
 count = 931
 
 [[pages]]
-rel_path = "articles/jinliang_deng_et_al_2023.html"
-timestamp = "2023-07-17"
-count = 0
-
-[[pages]]
 rel_path = "articles/krzysztof_marcin_choromanski_et_al_2020.html"
 timestamp = "2022-05-14"
 count = 915
@@ -162,11 +157,6 @@ count = 1388
 rel_path = "articles/linear_regression_model.html"
 timestamp = "2022-05-09"
 count = 9007
-
-[[pages]]
-rel_path = "articles/linux_shell.html"
-timestamp = "2023-10-01"
-count = 1464
 
 [[pages]]
 rel_path = "articles/matplotlib.html"
@@ -314,11 +304,6 @@ timestamp = "2024-05-06"
 count = 1343
 
 [[pages]]
-rel_path = "articles/traffic_data_set.html"
-timestamp = "2023-07-17"
-count = 0
-
-[[pages]]
 rel_path = "articles/transformer.html"
 timestamp = "2022-04-10"
 count = 1685
@@ -396,5 +381,5 @@ count = 910
 [[pages]]
 rel_path = "index.html"
 timestamp = "2026-03-23"
-count = 11649
+count = 11560
 

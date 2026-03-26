@@ -51,6 +51,7 @@ ol.ref ul {
   font-size: 1.1em !important;
 }
 .overflow-y-container {
+  overflow-x: auto;
   overflow-y: hidden;
   max-width: 100%;
 }

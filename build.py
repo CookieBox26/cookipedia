@@ -8,8 +8,9 @@
 # rev = "eb6eff85f5ad23d9977cd0a5371442e61075f3f6"
 # ///
 from cookies_site_utils.resources import sync_resource
-from cookies_site_utils.builder import build_index, IndexPage, find_disallowed
+from cookies_site_utils.builder import build_index, IndexPage, find_disallowed, Page
 from pathlib import Path
+import logging
 
 
 if __name__ == '__main__':
@@ -28,6 +29,16 @@ if __name__ == '__main__':
             work_root / 'templates',
             'Cookipedia α-version',
         )
+
+        targets = set()
+        for rel_path in Page.last_counts.keys():
+            if not (site_root / rel_path).is_file():
+                logging.info('Not exist: ' + rel_path)
+                targets.add(rel_path)
+        Page.last_counts = {
+            k: v for k, v in Page.last_counts.items()
+            if k not in targets
+        }
 
     find_disallowed(site_root, allowlist=[
         'funcs.js',

@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Bash - Cookipedia α-version</title>
+<link href="../css/style.css?v=2026-01-30" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2025-12-09" rel="stylesheet" type="text/css"/>
+<script data-prism-bash="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2025-12-14"></script>
+</head>
+<body>
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>Bash</h1>
+
+<h2>Snippets</h2>
+
+<h3>重複排除してソート</h3>
+<code class="language-">-u</code> で重複排除する。
+<pre class="language-bash"><code>
+#!/bin/bash
+fruits=(
+  "banana"
+  "apple"
+  "banana"
+  "lemon"
+  "apple"
+)
+fruits=($(for v in "${fruits[@]}"; do echo "$v"; done | sort -u ))
+for fruit in "${fruits[@]}"; do
+  echo $fruit
+done
+</code></pre>
+<pre class="language-text"><code>
+apple
+banana
+lemon
+</code></pre>
+
+<h3>キーを指定して数値降順にソート</h3>
+<code class="language-">-k 2 -t @</code> で <code class="language-">@</code> をデリミタとして 2 列目をキーとする。<code class="language-">-n -r</code> で数値降順にソートする。
+<pre class="language-bash"><code>
+#!/bin/bash
+members=(
+  "Taro=engineer@35"
+  "Jiro=dentist@30"
+  "Saburo=lawyer@25"
+  "Shiro=chef@40"
+)
+members=($(
+  for v in "${members[@]}"; do
+    echo "$v"
+  done | sort -k 2 -t @ -n -r
+))
+for member in "${members[@]:0:3}"; do
+  name=${member%=*}
+  occupation=${member#*=}
+  occupation=${occupation%@*}
+  age=${member#*@}
+  echo $name $occupation $age
+done
+</code></pre>
+<pre class="language-text"><code>
+Shiro chef 40
+Taro engineer 35
+Jiro dentist 30
+</code></pre>
+
+</div>
+</main>
+</div>
+</body>
+</html>
