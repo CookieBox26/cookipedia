@@ -16,22 +16,25 @@
 <div id="smartphone-header"></div>
 <div class="item long-title">
 <h1>Are Transformers Effective for Time Series Forecasting?</h1>
-<p>Are Transformers Effective for Time Series Forecasting? [1] は線形層のみからなるニューラル時系列予測モデルを提案する論文である。香港中文大学の Ailing Zeng らによって著された。2022 年に arXiv にプレプリントが発表され、2023 年の AAAI に採択された。</p>
+<p>Are Transformers Effective for Time Series Forecasting? [LTSF-Lin] は線形層のみからなるニューラル時系列予測モデルを提案する論文である。香港中文大学の Ailing Zeng らによって著された。2022 年に arXiv にプレプリントが発表され、2023 年の AAAI に採択された。</p>
 <p>論文の要旨には、Transformer は遠く離れた単語間の関係を学ぶことに成功しているが、時系列予測では連続値の列の時刻間の関係を抽出しなければならないといった旨のことが書かれている。その続きを意訳すると、「Transformer は位置エンコーディングによって位置情報は付加するものの、self-attention 自体は時刻の関係を考慮するものではないため、『何ステップ前にこうなったらこうなる』を学習するには不利である」ということと思われる。</p>
 
 
 <h2>参考文献</h2>
-<ol class="ref small">
-<li>
+<dl class="ref small">
+<dt>LTSF-Lin</dt>
+<dd>
 Ailing Zeng, Muxi Chen, Lei Zhang, Qiang Xu. Are transformers effective for time series forecasting? <i>Proceedings of the AAAI Conference on Artificial Intelligence (AAAI 2023),</i> vol. 37, pp. 11121–11128, 2023.
 <ul>
 <li><a class="asis" href="https://arxiv.org/abs/2205.13504"></a>, 2026年03月23日参照.</li>
 <li><a class="asis" href="https://github.com/cure-lab/LTSF-Linear"></a>, 2026年03月23日参照.</li>
 </ul>
-</li>
-<li><a class="asis" href="https://github.com/thuml/Time-Series-Library/blob/7c2820986dcdc7a73b003f26fea49a77d22aaba6/models/DLinear.py#L38-L41"></a>, 2026年03月23日参照.</li>
-<li><a class="asis" href="https://github.com/sktime/pytorch-forecasting/blob/5600398190f6a4cdac8a72e0578373a4664d5fd3/pytorch_forecasting/models/dlinear/_dlinear_v2.py#L112"></a>, 2026年03月23日参照.</li>
-</ol>
+</dd>
+<dt>TSLib</dt>
+<dd><a class="asis" href="https://github.com/thuml/Time-Series-Library/blob/7c2820986dcdc7a73b003f26fea49a77d22aaba6/models/DLinear.py#L38-L41"></a>, 2026年03月23日参照.</dd>
+<dt>PyTorchF</dt>
+<dd><a class="asis" href="https://github.com/sktime/pytorch-forecasting/blob/5600398190f6a4cdac8a72e0578373a4664d5fd3/pytorch_forecasting/models/dlinear/_dlinear_v2.py#L112"></a>, 2026年03月23日参照.</dd>
+</dl>
 
 
 <h2>DLinear のモデル構造</h2>
@@ -44,7 +47,7 @@ $$
 </div>
 その後、各成分に対し、入力長 $L_{\rm in}$ から予測長 $L_{\rm out}$ に変換する線形層を適用する (活性化関数は適用しない)。最後に、2つの線形層の出力を足し合わせた形状 $[B, L_{\rm out}, C]$ のテンソルを返す。
 <ul>
-<li>線形層の重みを $1/L_{\rm in}$ で初期化する実装もあり [2][3]、これは「予測期間ずっと入力期間の単純平均値が続く」という初期化になっている。</li>
+<li>線形層の重みを $1/L_{\rm in}$ で初期化する実装もあり [TSLib][PyTorchF]、これは「予測期間ずっと入力期間の単純平均値が続く」という初期化になっている。</li>
 </ul>
 
 

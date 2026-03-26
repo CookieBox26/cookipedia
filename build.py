@@ -10,10 +10,15 @@
 from cookies_site_utils.resources import sync_resource
 from cookies_site_utils.builder import build_index, IndexPage, find_disallowed, Page
 from pathlib import Path
+import argparse
 import logging
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-f', '--force_keep_timestamp', action='store_true')
+    args = parser.parse_args()
+
     work_root = Path(__file__).resolve().parent
     site_root = work_root / 'docs'
     sync_resource(site_root / 'css/style.css')
@@ -22,7 +27,7 @@ if __name__ == '__main__':
     with build_index(
         site_root,
         last_counts_path=(work_root / '.last_counts.toml'),
-        force_keep_timestamp=False,
+        force_keep_timestamp=args.force_keep_timestamp,
     ):
         _ = IndexPage(
             site_root,
