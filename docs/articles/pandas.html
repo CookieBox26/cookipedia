@@ -5,8 +5,8 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>pandas - Cookipedia α-version</title>
-<link href="../css/style.css?v=2026-01-30" rel="stylesheet" type="text/css"/>
-<link href="../css/cookipedia.css?v=2025-12-09" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css?v=2026-03-27" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-03-27" rel="stylesheet" type="text/css"/>
 <script data-prism-python="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2025-12-14"></script>
 </head>
 <body>
@@ -16,7 +16,10 @@
 <div id="smartphone-header"></div>
 <div class="item">
 <h1>pandas</h1>
+
+
 <h2>Snippets</h2>
+
 <h3>エクセルを読み込む</h3>
 <h4></h4>
 <pre class="language-python"><code>
@@ -28,6 +31,7 @@ excel_file = pd.ExcelFile(in_file)
 print(excel_file.sheet_names)  # シート名のリストを表示する
 df = excel_file.parse(sheet_name='シート1')  # シートを読み込む
 </code></pre>
+
 <h3>エクセルに出力する</h3>
 <pre class="language-python"><code>
 import pandas as pd
@@ -50,6 +54,7 @@ worksheet.set_column(2, 2, 20, cell_format)
 worksheet.set_row(0, None, header_format)
 xlsx_writer.close()
 </code></pre>
+
 <h3>雑然データにする</h3>
 <pre class="language-python"><code>
 import numpy as np
@@ -77,9 +82,12 @@ print(df_l)
    a_1  b_1  c_1  a_2  b_2  c_2  a_3  b_3  c_3
 0  0.9  qqq  aaa  0.8  www  sss  0.7  eee  ddd
 </code></pre>
+
+
 <div class="categories">
 <a href="../categories/python.html">Python</a>
 </div>
+
 </div>
 </main>
 </div>

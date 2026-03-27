@@ -5,8 +5,8 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>Hive - Cookipedia α-version</title>
-<link href="../css/style.css?v=2026-01-30" rel="stylesheet" type="text/css"/>
-<link href="../css/cookipedia.css?v=2025-12-09" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css?v=2026-03-27" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-03-27" rel="stylesheet" type="text/css"/>
 <script data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2025-12-14"></script>
 </head>
 <body>
@@ -16,11 +16,15 @@
 <div id="smartphone-header"></div>
 <div class="item">
 <h1>Hive</h1>
+
+
 <h2>参考文献</h2>
 <ol class="ref small">
 <li>https://cwiki.apache.org/confluence/display/hive/Languagemanual+udf</li>
 </ol>
 <br/>
+
+
 <h2>トイデータを定義する</h2>
 各データを配列として定義し、さらに全データを配列に束ね、LATERAL VIEW で各データを各レコードに展開し、インデックスで各列の値をとっているだけである。
 <pre>
@@ -54,6 +58,8 @@ SELECT * FROM tenki;
 +--------------+---------------+---------------+---------------+--+
 </pre>
 <br/>
+
+
 <h2>各レコードの V1～V3 列の値のユニークセットをとる</h2>
 COLLECT_SET は aggregate function なので、V1～V3 列を同名の列にしておいて aggregate する必要がある。
 <pre>
@@ -108,6 +114,8 @@ GROUP BY
 +--------+------------------+--+
 </pre>
 <br/>
+
+
 <h2>ひらがなをカタカナにする</h2>
 無理やりである。
 <pre>
@@ -135,6 +143,7 @@ SELECT
 +---------------+--+
 </pre>
 <br/>
+
 </div>
 </main>
 </div>

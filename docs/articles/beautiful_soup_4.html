@@ -5,8 +5,8 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>Beautiful Soup 4 - Cookipedia α-version</title>
-<link href="../css/style.css?v=2026-01-30" rel="stylesheet" type="text/css"/>
-<link href="../css/cookipedia.css?v=2025-12-09" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css?v=2026-03-27" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-03-27" rel="stylesheet" type="text/css"/>
 <script ,="" data-prism-python="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2025-12-14"></script>
 </head>
 <body>
@@ -23,6 +23,8 @@
 </ul>
 -->
 <h1>Beautiful Soup 4</h1>
+
+
 <h2>
 参考文献
 </h2>
@@ -51,7 +53,10 @@ df = pd.DataFrame()
 <li><a href="le_cams_first_lemma.html">Le Cam の第一補題</a></li>
 </ul>
 <!-- rel end -->
+
+
 <h2>Snippets</h2>
+
 <h3>HTML 要素を追加・削除 ＆ HTML 要素下の文字列を取得する</h3>
 <pre class="language-python"><code>
 from bs4 import BeautifulSoup
@@ -107,6 +112,7 @@ assert str(soup) == (
 div = soup.find('div')
 assert div.get_text() == 'CoffeeBanana'
 </code></pre>
+
 <h3>HTML ファイルが参照するスタイルシートのパスを修正する</h3>
 <code class="language-">soup.find()</code> で <code class="language-">href</code> 属性が <code class="language-">css/style.css</code> を含む要素をみつけるには引数 <code class="language-python">href=lambda v: v and 'css/style.css' in v</code> を指定すればよい。
 <pre class="language-python"><code>
@@ -128,6 +134,7 @@ if __name__ == '__main__':
 
         article_path.write_text(str(soup), newline='\n', encoding='utf8')
 </code></pre>
+
 <h3>HTML ファイル内の title 要素を修正する</h3>
 <pre class="language-python"><code>
 from bs4 import BeautifulSoup
@@ -144,10 +151,13 @@ if __name__ == '__main__':
         article_path.write_text(str(soup), newline='\n', encoding='utf8')
 </code></pre>
 <!-- category start -->
+
+
 <div class="categories">
 <a href="../categories/python.html">Python</a>
 </div>
 <!-- category end -->
+
 </div>
 </main>
 </div>

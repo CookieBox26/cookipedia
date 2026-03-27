@@ -211,6 +211,39 @@ ol.ref > li:before {
   counter-increment: li;
   content: '['counter(li)']';
 }
+ol.ref ul {
+  margin-block-start: 0.25em;
+  margin-block-end: 0.25em;
+}
+dl ul, dl ol {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+dl.ref {
+  padding-left: 0.25em;
+  display: grid;
+  grid-template-columns: auto 1fr;
+}
+dl.ref a {
+  word-break: break-all;
+}
+dl.ref > dt {
+  grid-column: 1;
+}
+
+dl.ref > dt:before {
+  left: 0.25em;
+  content: '[';
+}
+dl.ref > dt:after {
+  left: 0.25em;
+  content: ']';
+}
+dl.ref > dd {
+  grid-column: 2;
+  margin: 0;
+  padding-left: 0.5em;
+}
 ol.parenthesis {
   counter-reset: li;
   padding-left: 2.25em;
@@ -252,7 +285,14 @@ ol.note > li:before {
   counter-increment: li;
   content: '[注釈'counter(li)']';
 }
-
+.MathJax {
+  font-size: 1.1em !important;
+}
+.overflow-x-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+}
 span.doughnut {
   color: var(--doughnut);
 }

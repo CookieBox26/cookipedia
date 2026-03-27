@@ -12,8 +12,8 @@ div#sidebar { background: mistyrose; }
 main.main { background: lightcyan; }
 -->
 </style>
-<link href="../css/style.css?v=2026-01-30" rel="stylesheet" type="text/css"/>
-<link href="../css/cookipedia.css?v=2025-12-09" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css?v=2026-03-27" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-03-27" rel="stylesheet" type="text/css"/>
 <script data-prism="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2025-12-14"></script>
 </head>
 <body>
@@ -24,13 +24,18 @@ main.main { background: lightcyan; }
 <div class="item">
 <h1>CSS フレックスボックスレイアウト</h1>
 CSS のフレックスボックスを用いると、要素を横/縦/複数行に直感的に並べることができる。
+
+
 <h2>参考文献</h2>
 <ol class="ref small">
 <li><a class="asis" href="https://developer.mozilla.org/ja/docs/Web/CSS/CSS_flexible_box_layout/Basic_concepts_of_flexbox"></a></li>
 <li><a class="asis" href="https://developer.mozilla.org/ja/docs/Web/CSS/position"></a></li>
 <li><a class="asis" href="https://developer.mozilla.org/ja/docs/Web/CSS/overscroll-behavior"></a></li>
 </ol>
+
+
 <h2>Examples</h2>
+
 <h3>サイドバー</h3>
 この Cookipedia はフレックスボックスを用いることでサイドバーとメイン画面を左右に並べている。模式的 (でもなくそのものであるが) には以下である。このページも各要素がわかりやすいように色を付けている。
 <pre class="language-html"><code>
@@ -95,6 +100,7 @@ main.main&gt;div.item {
 <li>ここで、ピンク色のサイドバーについては position: sticky; top: 0; とすることで、淡い緑色のコンテナから浮き上がり、画面が切り取るコンテナの上辺から 0 の位置に常に配置される。ただし、コンテナ内にいなければならないので、ピンク色のサイドバーが画面下に x だけはみ出している場合、スクロールしていってコンテナの画面下のはみ出しが x 未満になるタイミングからコンテナと連動してスクロールされることになる。</li>
 </ul>
 </ul>
+
 <h3>ヘッダーとフッター</h3>
 <style type="text/css">
 <!--
@@ -108,7 +114,6 @@ main.main&gt;div.item {
 -->
 </style>
 ヘッダーは左揃え、メイン画面は中央揃え、フッターは右揃えにできる。そうしたいかはさておき。
-
 <div class="overflow-auto">
 <div>
 <div>ヘッダー</div>
@@ -121,7 +126,6 @@ main.main&gt;div.item {
 </div>
 
 なお、モバイルブラウザでのオーバースクロール (画面の上/下の方をみていこうとスクロールしたときにその勢いのままに本来スクロールできない領域まで一旦スクロールされてしまい (その後に跳ね返る)、上の方にスクロールしたときはページがリロードされることが多い) を防ぐためには overscroll-behavior: none; を設定する (以下では overflow: auto; をもつ div 要素に設定しているが実際には html 要素などに設定するはずである) [3]。
-
 <div class="overflow-auto">
 <div>
 <div>ヘッダー</div>

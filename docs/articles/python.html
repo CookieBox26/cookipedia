@@ -5,8 +5,8 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>Python - Cookipedia α-version</title>
-<link href="../css/style.css?v=2026-01-30" rel="stylesheet" type="text/css"/>
-<link href="../css/cookipedia.css?v=2025-12-09" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css?v=2026-03-27" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-03-27" rel="stylesheet" type="text/css"/>
 <script data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2025-12-14"></script>
 </head>
 <body>
@@ -16,12 +16,16 @@
 <div id="smartphone-header"></div>
 <div class="item">
 <h1>Python</h1>
+
+
 <h2>Gists</h2>
 <ul>
 <li><a href="https://gist.github.com/CookieBox26/381f9ba4be66b1c0da8b929cf2ec2555">OpenAI API を叩く</a></li>
 <li><a href="https://github.com/CookieBox26/cookies-backpack/blob/main/cookies_backpack/text_editor_interface.py">テキストエディタで入力値の記入を促し、それに対する出力値を取得・記入して提示する</a></li>
 <li><a href="https://gist.github.com/CookieBox26/56af158266bafb07b29ca7f91105f3d0">指定の文字列を含むファイルを探す</a></li>
 </ul>
+
+
 <h2>参考文献</h2>
 <ol class="ref small">
 <li><a class="asis" href="https://docs.python.org/ja/3/library/stdtypes.html#context-manager-types"></a></li>
@@ -32,7 +36,10 @@
 <li>#strftime-strptime-behavior に strptime() の書式コードがある。</li>
 </ul>
 </ol>
+
+
 <h2>Snippets</h2>
+
 <h3>コンテキストマネージャ型</h3>
 <pre class="python">
 import http.client
@@ -60,6 +67,7 @@ with MyClient() as cli:
     data = cli.get('/bentou?type=A')
     print(data)
 </pre>
+
 <h3>contextlib.contextmanager デコレータ</h3>
 <pre class="python">
 import http.client
@@ -80,6 +88,7 @@ with my_connection() as conn:
     data = json.loads(resp.read().decode())
     print(data)
 </pre>
+
 <h3>フィボナッチ数列を返すイテレータオブジェクト</h3>
 イテレータオブジェクトの構成プロトコルは、イテレータオブジェクト自体を返す<pre class="inline">__iter__()</pre>と次のアイテムを返す<pre class="inline">__next__()</pre>とのことなので[2]、これらのメソッドを実装する。以下のイテレータオブジェクトは100に達するまでフィボナッチ数列を出力する。
 <pre class="python">
@@ -161,6 +170,7 @@ class Fibonacci:
         self.b = c
         return c
 </pre>
+
 <h3>文字列を datetime 型に変換しユニックス秒に変換する</h3>
 datetime.datetime.strptime() で datetime 型にできる。timestamp() メソッドでユニックス秒にできる。タイムゾーン情報をパースしないと datetime 型は自分のタイムゾーンについて無知になる。その場合でも timestamp() メソッドではシステムのタイムゾーンが適用される。タイムゾーン情報をパースさせれば datetime 型は自分のタイムゾーンを認識する。日本時間の1時より協定世界時の1時の方が未来である。
 <pre class="python">
@@ -220,9 +230,12 @@ print(dt, dt.tzinfo)
 
 2022-03-12 16:23:45+00:00 UTC
 </pre>
+
+
 <div class="categories">
 <a href="../categories/python.html">Python</a>
 </div>
+
 </div>
 </main>
 </div>

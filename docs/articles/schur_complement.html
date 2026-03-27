@@ -5,8 +5,8 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>シューア補行列 - Cookipedia α-version</title>
-<link href="../css/style.css?v=2026-01-30" rel="stylesheet" type="text/css"/>
-<link href="../css/cookipedia.css?v=2025-12-09" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css?v=2026-03-27" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-03-27" rel="stylesheet" type="text/css"/>
 <script data-mathjax="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2025-12-14"></script>
 </head>
 <body>
@@ -64,6 +64,8 @@ $$
 $$
 </div>
 -->
+
+
 <h2>参考文献</h2>
 <ol class="ref small">
 <li><a href="https://tochikuji.hatenablog.jp/entry/20130813/1376371669">Sherman-Morrison-Woodburyの公式 (Schur補行列) - いんふらけいようじょのえにっき</a></li>
@@ -89,6 +91,8 @@ $$
 </ul>
 </ol>
 <br/>
+
+
 <h2>線形ガウスモデルのベイズ推定におけるシューア補行列</h2>
 <p>ベイズ推定では観測 $y$ を得た下での状態 $x$ の事後共分散に興味がある。状態 $x$ の事後共分散とは、状態 $x$ と観測 $y$ の同時分布の $y$ を固定して $x$ の共分散のみを取り出したものといえる。$x \in \mathbb{R}^n$ と $y \in \mathbb{R}^m$ の同時分布が多変量正規分布にしたがう場合、同時密度関数は以下のようになる。
 <div>
@@ -106,11 +110,15 @@ $$
 </div>
 この共分散行列 $\begin{pmatrix} V &amp; VH^\top \\ HV &amp; HVH^\top + R \end{pmatrix}$ の右下 $m \times m$ ブロックに対するシューア補行列は $V - V H^{\top} (H V H^{\top} + R)^{-1} HV$ である。もっとも、同時分布を考えなくともカルマンフィルタの条件付き分布はベイズの定理よりただちに $(V^{-1} + H^{\top} R^{-1} H)^{-1}$ となり、これに Sherman-Morrison-Woodbury の公式を適用しても同じ結果になる。</p>
 <br/>
+
+
 <h2>グラム行列の Nyström 近似におけるシューア補行列</h2>
 <p>グラム行列 $K^{(n+m)}$ の左上 $n \times n$ ブロックに関するシューア補行列が、グラム行列の Nyström 近似 $\tilde{K}^{(n+m,n)}$ の右下 $m \times m$ ブロックの近似誤差になっている [4]。</p>
 <p>グラム行列 $K^{(n+m)}$ の左上 $n \times n$ ブロックに関するシューア補行列とは、ベイズ推定風に解釈すれば、「仮に $n+m$ 個のデータの分散共分散行列がグラム行列 $K^{(n+m)}$ そのものであったときに、最初の $n$ 個のデータを観測した下での残り $m$ 個のデータの分散共分散行列」といえる。実際、最初の $n$ 個のデータで残り $m$ 個のデータの不確かさ・依存関係が完全に特定できていれば零行列になるはずだし、最初の $n$ 個のデータと残り $m$ 個のデータの内積がゼロであれば（最初の $n$ 個のデータから残り $m$ 個のデータの情報を少しも特定できない状況） $D$ に等しくなるはずである。</p>
 <p>結局ベイズ推定でもグラム行列の Nyström 近似でも、シューア補行列とは「一部をみて残りを推定（近似）しようとしたときに残る不確かさ」といえるだろう。</p>
 <br/>
+
+
 <h2>注釈</h2>
 <ol class="note">
 <li id="note1">$M$ を UDL 分解するには以下を $M$ の区分けと比較し $X, Y, Z, W$ を求める。
@@ -144,6 +152,7 @@ $M$ の逆行列を得るには [注釈1] と同様である。
 </li>
 </ol>
 <br/>
+
 </div>
 </main>
 </div>

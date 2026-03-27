@@ -5,8 +5,8 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>PDF - Cookipedia α-version</title>
-<link href="../css/style.css?v=2026-01-30" rel="stylesheet" type="text/css"/>
-<link href="../css/cookipedia.css?v=2025-12-09" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css?v=2026-03-27" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-03-27" rel="stylesheet" type="text/css"/>
 <script data-prism-python="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2025-12-14"></script>
 </head>
 <body>
@@ -26,7 +26,10 @@
 </p>
 -->
 <h1>PDF</h1>
+
+
 <h2>Python Snippets</h2>
+
 <h3>PDF から特定のページ範囲のみ切り出す</h3>
 <pre class="language-python"><code>
 from PyPDF2 import PdfReader, PdfWriter
@@ -38,6 +41,7 @@ for i in range(54 - 1, 57):
 with open('Downloads/extracted.pdf', 'wb') as f:
     writer.write(f)
 </code></pre>
+
 <h3>PDF をマージする</h3>
 <pre class="language-python"><code>
 import pypdf
@@ -47,6 +51,7 @@ for i in range(16):
 merger.write('merged.pdf')
 merger.close()
 </code></pre>
+
 <h3>PDF をテキスト化する</h3>
 <p>
 <a href="https://pdfminersix.readthedocs.io/en/latest/">pdfminer.six</a> を用いた方法は以下である。<br/>
@@ -74,6 +79,7 @@ for i_page, page in enumerate(doc):
   <a href="../categories/category_asymptotic_theory.html">漸近理論</a>
 </div>
 <!-- category end -->
+
 </div>
 </main>
 </div>

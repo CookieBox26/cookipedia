@@ -5,8 +5,8 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>Redshift - Cookipedia α-version</title>
-<link href="../css/style.css?v=2026-01-30" rel="stylesheet" type="text/css"/>
-<link href="../css/cookipedia.css?v=2025-12-09" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css?v=2026-03-27" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-03-27" rel="stylesheet" type="text/css"/>
 <script data-prism-sql="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2025-12-14"></script>
 </head>
 <body>
@@ -16,7 +16,10 @@
 <div id="smartphone-header"></div>
 <div class="item">
 <h1>Redshift</h1>
+
+
 <h2>Snippets</h2>
+
 <h3>動作確認用のデータを用意する</h3>
 1 列の場合は以下などの方法がある。
 <pre class="language-sql"><code>
@@ -54,6 +57,7 @@ fruit,  price
 apple,  200
 banana, 100
 </code></pre>
+
 <h3>月曜日に丸める</h3>
 Redshift の DOW (曜日番号) は日曜日が 0, ... 土曜日が 6 なので、日曜日を除いては「DOW - 1」日前の日付をとればよい。日曜日については 6 日前の日付をとればよい。
 <ul>
@@ -87,6 +91,7 @@ ts_jst,              week_0,     week_1
 2024-03-31 09:00:00, 2024-03-25, 2024-03-25
 2024-04-01 09:00:00, 2024-04-01, 2024-04-01
 </code></pre>
+
 <h3>基準日から N×X 日に丸める</h3>
 基準日があり、そこから 7 日間や 28 日間などの区間で区切っていきたいときは以下の方法がある。なお、<code class="language-sql">DATEDIFF</code> で日数の差をとるときは、日付部分の差が取られるので、先に目的のタイムゾーンにしなければ意図通りにならない (i.e. 20240325 00:00+09 と 20240325 09:00+09 は同じ日なので日数の差は 0 になってほしいが、これらを協定世界時 20240324 15:00+00 と 20240325 00:00+00 として扱うと別々の日になり日数の差が 1 となってしまう)。
 <pre class="language-sql"><code>
@@ -129,11 +134,13 @@ ts_jst,              diff, week,       week4
 2024-05-19 09:00:00, 55,   2024-05-13, 2024-04-22
 2024-05-20 09:00:00, 56,   2024-05-20, 2024-05-20
 </code></pre>
+
 <h3>プレフィクスを除去する</h3>
 <code class="language-sql">REPLACE('hoge_xxx', 'hoge_', '')</code> でもよいがプレフィクスであれば以下の方が速い。
 <pre class="language-sql"><code>
 SELECT SUBSTRING('hoge_xxx', LENGTH('hoge_') + 1)
 </code></pre>
+
 <h3>グループごとの値の登場数ランキングを集計する</h3>
 各人の好きな果物テーブルからクラスごとの好きな果物ランキングを集計する。登場数が同じなら果物名で順位を付ける場合は <code class="language-sql">ORDER BY COUNT(*) DESC, fruit</code> とする。
 <pre class="language-sql"><code>
@@ -170,6 +177,7 @@ class_, n_student, fruit_1,  fruit_2,  fruit_3
 1年1組, 5,         バナナ(3), りんご(2), 
 1年2組, 6,         みかん(4), キウイ(1), バナナ(1)
 </code></pre>
+
 </div>
 </main>
 </div>

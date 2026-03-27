@@ -5,8 +5,8 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>その他の Python パッケージ - Cookipedia α-version</title>
-<link href="../css/style.css?v=2026-01-30" rel="stylesheet" type="text/css"/>
-<link href="../css/cookipedia.css?v=2025-12-09" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css?v=2026-03-27" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-03-27" rel="stylesheet" type="text/css"/>
 <script data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2025-12-14"></script>
 </head>
 <body>
@@ -16,7 +16,10 @@
 <div id="smartphone-header"></div>
 <div class="item">
 <h1>その他の Python パッケージ</h1>
+
+
 <h2>Snippets</h2>
+
 <h3>HTML ファイルをパースする</h3>
 <pre class="python">
 import bs4
@@ -31,6 +34,7 @@ for tag in soup.select('h1, h2, h3, p'):
     else:
         print(tag.get_text())
 </pre>
+
 <h3>WAV を MP3 に変換する</h3>
 サンプリングレートを下げないとビットレートは下がらない。<br/>
 以下に FFmpeg で許容されるサンプリングレートがある。<br/>
@@ -67,6 +71,7 @@ for s in story:
 audio.export('test.mp3', format='mp3', parameters=['-ar', '16000', '-ab', '16k'])
 audio.export('test.m4a', format='ipod', codec='aac', parameters=['-ar', '16000', '-ab', '16k'])
 </pre>
+
 <h3>MP4 を GIF に変換する</h3>
 Windous 10 では Windows + Alt + R で画面録画できるが、生成される MP4 は Qiita に貼れないし、Slack には貼れるが閲覧者が再生ボタンをクリックしてくれなければ動かない。そこで GIF にする。なお、Qiita にアップロードする GIF は 10MB 以内でなければならず、月間で上限もある (<a href="https://help.qiita.com/ja/articles/qiita-image-upload">参考</a>)。ので、なるべく小さくなるように画像サイズ and/or fps を落とすとよい。
 <pre class="python">
@@ -78,6 +83,7 @@ clip = VideoFileClip(input_file)
 clip = resize(clip, (clip.w / 2.5, clip.h / 2.5))
 clip.write_gif(output_file, fps=5)
 </pre>
+
 <h3>音声を録音する</h3>
 <pre class="python">
 import sounddevice as sd
@@ -100,6 +106,7 @@ def record(duration=20, out_wav='output.wav'):
 
 record()
 </pre>
+
 <h3>動画をトリミングする (時間方向も画面方向も)</h3>
 かき出しに時間がかかる。
 <pre class="python">
@@ -125,9 +132,12 @@ video = VideoFileClip(file_path).subclip(t_start, t_end).crop(x1=x1, y1=y1, widt
 video = resize(video, (width/2, height/2))
 video.write_videofile(save_path, fps=25)
 </pre>
+
+
 <div class="categories">
 <a href="../categories/python.html">Python</a>
 </div>
+
 </div>
 </main>
 </div>

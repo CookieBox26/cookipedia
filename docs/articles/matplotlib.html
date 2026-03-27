@@ -5,8 +5,8 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>matplotlib - Cookipedia α-version</title>
-<link href="../css/style.css?v=2026-01-30" rel="stylesheet" type="text/css"/>
-<link href="../css/cookipedia.css?v=2025-12-09" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css?v=2026-03-27" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-03-27" rel="stylesheet" type="text/css"/>
 <script data-prism-python="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2025-12-14"></script>
 </head>
 <body>
@@ -16,11 +16,16 @@
 <div id="smartphone-header"></div>
 <div class="item">
 <h1>matplotlib</h1>
+
+
 <h2>Gists</h2>
 <ul>
 <li><a href="https://gist.github.com/CookieBox26/2f4016254b05efae4134a25925b98881">2軸グラフサンプル</a></li>
 </ul>
+
+
 <h2>Snippets</h2>
+
 <h3>フォントが未追加のときに TTF から追加する</h3>
 <pre class="language-python"><code>
 %matplotlib inline  
@@ -32,6 +37,7 @@ if 'VL Gothic' not in font_manager.fontManager.ttflist:
 plt.rcParams['font.family'] = 'VL Gothic'
 plt.rcParams['font.size'] = 14
 </code></pre>
+
 <h3>可搬性のために複数フォントを指定する</h3>
 <pre class="language-python"><code>
 %matplotlib inline  
@@ -40,6 +46,7 @@ plt.rcParams['font.family'] = 'sans-serif'
 plt.rcParams['font.sans-serif'] = [
     'Rounded Mplus 1c', 'Hiragino Maru Gothic Pro', 'IPAPGothic', 'Meiryo']
 </code></pre>
+
 <h3>グラフを画像ファイルまたは Base64 文字列に保存する</h3>
 <pre class="language-python"><code>
 %matplotlib inline  
@@ -64,9 +71,12 @@ def to_figure(filename, format='png', bbox_inches='tight'):
 
 # &lt;img width="80%" src="data:image/png;base64, ここにペースト /&gt;
 </code></pre>
+
+
 <div class="categories">
 <a href="../categories/python.html">Python</a>
 </div>
+
 </div>
 </main>
 </div>

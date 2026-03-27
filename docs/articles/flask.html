@@ -5,8 +5,8 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>Flask - Cookipedia α-version</title>
-<link href="../css/style.css?v=2026-01-30" rel="stylesheet" type="text/css"/>
-<link href="../css/cookipedia.css?v=2025-12-09" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css?v=2026-03-27" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-03-27" rel="stylesheet" type="text/css"/>
 <script data-prism-python="true" data-prism-toml="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2025-12-14">
 </script>
 </head>
@@ -17,12 +17,17 @@
 <div id="smartphone-header"></div>
 <div class="item">
 <h1>Flask</h1>
+
+
 <h2>参考文献</h2>
 <ol class="ref small">
 <li><a class="asis" href="https://flask.palletsprojects.com/en/2.3.x/"></a></li>
 <li><a class="asis" href="https://msiz07-flask-docs-ja.readthedocs.io/ja/latest/"></a></li>
 </ol>
+
+
 <h2>適当なアプリケーション</h2>
+
 <h3>Pipfile</h3>
 <pre class="language-toml"><code>
 [[source]]
@@ -36,6 +41,7 @@ flask = "*"
 [requires]
 python_version = "3.9"
 </code></pre>
+
 <h3>app.py</h3>
 <pre class="language-python"><code>
 from urllib.parse import quote
@@ -92,6 +98,7 @@ def index():
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=False)
 </code></pre>
+
 <h3>templates/layout.html</h3>
 <pre>
 &lt;!DOCTYPE html&gt;
@@ -113,6 +120,7 @@ if __name__ == '__main__':
   &lt;body&gt;{% block content %}{% endblock %}&lt;/body&gt;
 &lt;/html&gt;
 </pre>
+
 <h3>templates/index.html</h3>
 <pre>
 {% extends "layout.html" %}
@@ -131,6 +139,7 @@ if __name__ == '__main__':
 
 {% endblock %}
 </pre>
+
 </div>
 </main>
 </div>

@@ -5,8 +5,8 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>QR 分解 - Cookipedia α-version</title>
-<link href="../css/style.css?v=2026-01-30" rel="stylesheet" type="text/css"/>
-<link href="../css/cookipedia.css?v=2025-12-09" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css?v=2026-03-27" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-03-27" rel="stylesheet" type="text/css"/>
 <script data-mathjax="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2025-12-14"></script>
 </head>
 <body>
@@ -88,6 +88,8 @@ $$
 </div>
 </p>
 <br/>
+
+
 <h2>参考文献</h2>
 <ol class="ref small">
 <li>QR分解 - Wikipedia. <a href="https://ja.wikipedia.org/wiki/QR%E5%88%86%E8%A7%A3">https://ja.wikipedia.org/wiki/QR%E5%88%86%E8%A7%A3</a>（2022年3月21日参照）.</li>
@@ -102,6 +104,8 @@ $$
     <li><a href="nyström_method.html">Nyström 近似</a></li>
 </ul>
 -->
+
+
 <h2>QR 分解を得る方法</h2>
 参考文献 [1] と同じ行列に numpy.linalg.qr を適用すると以下である。素直にグラムシュミット直交化を適用するときと比べ $Q$ の符号が反転しているが理由は調べていないのでわからない。
 <pre class="python">
@@ -125,6 +129,7 @@ print(R)
  [   0.    0.  -35.]]
 </pre>
 <br/>
+
 <h3>グラムシュミットの直交化法による方法</h3>
 グラムシュミットの直交化法をする関数がないのだろうかと思ったがそれこそが numpy.linalg.qr とのことである。
 <pre class="python">
@@ -158,6 +163,7 @@ qr(A)
  [-1.77635684e-15 -1.59872116e-14  3.50000000e+01]]
 </pre>
 <br/>
+
 <h3>ハウスホルダー変換による方法</h3>
 元の行列の1列目を $(r_{1, 1}, 0, \cdots)$ に鏡映し、1行目と1列目を除いた右下ブロックを取り、その行列の1列目を $(r_{2, 2}, 0, \cdots)$ に鏡映し、……と繰り返すことでも QR 分解できる。
 <div>
@@ -244,9 +250,12 @@ qr(A)
 </ol>
 <br/>
 -->
+
+
 <div class="categories">
 <a href="../categories/matrix.html">行列</a>
 </div>
+
 </div>
 </main>
 </div>
