@@ -243,7 +243,7 @@ def updates_this_week(today, items):
             '[https://cookiebox26.github.io/cookipedia/'
             'utils/qiita_items.html:title=こちら]です。'
         ),
-        '<div class="con-box">', '[:contents]', '</div>',
+        '[:contents]',
         '<div class="h5-margin-bottom-02">',
     ]
     for _, item in weekly_items:

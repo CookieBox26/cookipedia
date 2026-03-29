@@ -53,6 +53,7 @@ c90ed6d281b169c29b3f 2026-02-09 Claude Code で事前定義プロンプトを扱
 90b69fb91dbe416a2999 2026-01-28 Claude Code への依頼時にチェックポイント (方針まで/差分まで/直接変更) を明示するカスタムスラッシュコマンド
 """
 "作業効率化" = """
+0bba15cc81b92e928602 2026-03-23 Google スライドの「配置先」を常にグリッドにする Tampermonkey ユーザスクリプト
 03ccebf7779bbd628612 2026-03-12 TeX 文書を名前で選んで編集・ビルドするシェルスクリプト (複数文書の並行作業に便利)
 0e2550d61f410be0bf02 2026-03-10 Qiita API から自分の Qiita 記事を取得する Python スクリプト
 30d2c10362962e8b917d 2026-03-08 PuTTY 付属 CLI ツール plink / pscp でリモート処理をバッチ実行する
@@ -66,6 +67,7 @@ c90ed6d281b169c29b3f 2026-02-09 Claude Code で事前定義プロンプトを扱
 b444ad45768be766df56 2026-01-07 Windows で音を鳴らすコマンド集 (Claude Code 完了通知音向け)
 """
 "すべての記事" = """
+0bba15cc81b92e928602 2026-03-23 Google スライドの「配置先」を常にグリッドにする Tampermonkey ユーザスクリプト
 8d3bb4a767aa0ca572ce 2026-03-21 torch.nn.TransformerEncoder の図
 ef8bccbaea73def377e8 2026-03-20 Python で差分を色付きで表示する方法
 a3291c4dc48a59ec11e0 2026-03-19 LaTeX でメモなし版・あり版をビルドする方法
