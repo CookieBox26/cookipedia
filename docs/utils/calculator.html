@@ -4,8 +4,10 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title></title>
-<link href="../style.css" rel="stylesheet" type="text/css"/>
+<title>電卓 - Cookipedia α-version</title>
+<link href="../css/style.css?v=2026-03-27" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-03-31" rel="stylesheet" type="text/css"/>
+<script data-repo="cookipedia" defer="" id="app" src="../funcs.js?v=2025-12-14"></script>
 <style type="text/css">
 <!--
 table.tbl_01 {
@@ -20,9 +22,8 @@ table.tbl_01 td {
 }
 -->
 </style>
-<script src="../funcs.js?v=2025-12-14"></script>
 </head>
-<body onload="init_()">
+<body>
 <div class="container">
 <div id="sidebar"></div>
 <main class="main">
@@ -51,10 +52,9 @@ table.tbl_01 td {
 </ul>
 コスト＄/h  <input id="dollarsHourly" type="text"/><br/>
 換算レート  <input id="rate" type="text"/><br/>
-オプション  <input id="options-h" type="text"><br>
-オプション  <input id="options-d" type="text"><br>
+オプション  <input id="options-h" type="text"/><br/>
+オプション  <input id="options-d" type="text"/><br/>
 <div id="tableContainer"></div>
-</br></input></br></input>
 
 </div>
 </main>
@@ -65,7 +65,7 @@ const rateElm = document.querySelector("#rate");
 const optionsHElm = document.querySelector("#options-h");
 const optionsDElm = document.querySelector("#options-d");
 let dollarsHourly = '6.6737,9.681';
-let rate = 145.0;
+let rate = 160.0;
 let optionsH = '1,2,6,24';
 let optionsD = '1,2,7,31';
 
@@ -181,11 +181,7 @@ function calcTime() {
   document.getElementById('result').innerHTML +=
     `予定に対する差分は ${sign}${resultHours} 時間 ${resultMinutes} 分です。`;
 }
-
-function init_() {
-  init();
-  setupCalcCost();
-}
+setupCalcCost();
 // --></script>
 </body>
 </html>

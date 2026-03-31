@@ -14,13 +14,13 @@ h2.logo {
   color: var(--text-link);
 }
 a.index-link:before {
-  content: 'Cookiepedia ';
+  content: 'Cookipedia ';
 }
 a.index-link:after {
   color: var(--text-link);
   content: 'α-version';
 }
-div#sidebar > a.index-link:before, div#sidebar > a.index-link:after {
+div#sidebar a.index-link:before, div#sidebar a.index-link:after {
   display: block;
 }
 span.version {

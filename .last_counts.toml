@@ -1,7 +1,7 @@
 [[pages]]
 rel_path = "articles/ailing_zeng_et_al_2021.html"
 timestamp = "2026-03-31"
-count = 2901
+count = 2900
 
 [[pages]]
 rel_path = "articles/albert_gu_et_al_2020.html"
@@ -306,7 +306,7 @@ count = 1040
 [[pages]]
 rel_path = "articles/shibani_santurkar_et_al_2018.html"
 timestamp = "2026-03-31"
-count = 1248
+count = 1481
 
 [[pages]]
 rel_path = "articles/statsmodels_tsa.html"
@@ -404,6 +404,11 @@ timestamp = "2026-03-31"
 count = 1092
 
 [[pages]]
+rel_path = "categories/optimization.html"
+timestamp = "2026-03-31"
+count = 861
+
+[[pages]]
 rel_path = "categories/python.html"
 timestamp = "2025-10-19"
 count = 1984
@@ -411,7 +416,7 @@ count = 1984
 [[pages]]
 rel_path = "categories/time_series_forecasting.html"
 timestamp = "2026-03-31"
-count = 3041
+count = 2859
 
 [[pages]]
 rel_path = "categories/transformer.html"
@@ -421,5 +426,5 @@ count = 1996
 [[pages]]
 rel_path = "index.html"
 timestamp = "2026-03-31"
-count = 13456
+count = 13523
 

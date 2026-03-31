@@ -5,7 +5,7 @@
 # ]
 # [tool.uv.sources.cookies_site_utils]
 # git = "https://github.com/CookieBox26/cookies-site-utils"
-# rev = "4454b8f4264113b4bbb0a3b38de665dde03538d7"
+# rev = "4cc6ebaad319dd10be158f5ab6b68f42ee6f90e9"
 # ///
 from cookies_site_utils.resources import sync_resource
 from cookies_site_utils.builder import build_index, IndexPage, find_disallowed, Page
