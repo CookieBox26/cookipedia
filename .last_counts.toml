@@ -1,7 +1,12 @@
 [[pages]]
 rel_path = "articles/ailing_zeng_et_al_2021.html"
-timestamp = "2026-03-31"
-count = 2900
+timestamp = "2026-04-01"
+count = 2840
+
+[[pages]]
+rel_path = "articles/ailing_zeng_et_al_2023.html"
+timestamp = "2026-04-02"
+count = 1283
 
 [[pages]]
 rel_path = "articles/albert_gu_et_al_2020.html"
@@ -50,8 +55,8 @@ count = 4402
 
 [[pages]]
 rel_path = "articles/boris_n_oreshkin_et_al_2020.html"
-timestamp = "2026-03-31"
-count = 1415
+timestamp = "2026-04-02"
+count = 1809
 
 [[pages]]
 rel_path = "articles/bryan_lim_et_al_2019.html"
@@ -110,8 +115,8 @@ count = 1032
 
 [[pages]]
 rel_path = "articles/haixu_wu_et_al_2021.html"
-timestamp = "2026-03-31"
-count = 1369
+timestamp = "2026-04-02"
+count = 1444
 
 [[pages]]
 rel_path = "articles/haoyi_zhou_et_al_2021.html"
@@ -145,8 +150,8 @@ count = 931
 
 [[pages]]
 rel_path = "articles/jiahui_wang_et_al_2025.html"
-timestamp = "2026-03-31"
-count = 1432
+timestamp = "2026-04-02"
+count = 1434
 
 [[pages]]
 rel_path = "articles/krzysztof_marcin_choromanski_et_al_2020.html"
@@ -305,8 +310,8 @@ count = 1040
 
 [[pages]]
 rel_path = "articles/shibani_santurkar_et_al_2018.html"
-timestamp = "2026-03-31"
-count = 1481
+timestamp = "2026-04-01"
+count = 1552
 
 [[pages]]
 rel_path = "articles/statsmodels_tsa.html"
@@ -360,18 +365,23 @@ count = 2716
 
 [[pages]]
 rel_path = "articles/yong_liu_et_al_2022.html"
-timestamp = "2022-09-30"
-count = 4574
+timestamp = "2026-04-02"
+count = 5813
 
 [[pages]]
 rel_path = "articles/yong_liu_et_al_2024.html"
-timestamp = "2026-03-31"
-count = 1446
+timestamp = "2026-04-02"
+count = 1519
 
 [[pages]]
 rel_path = "articles/yuqi_nie_et_al_2023.html"
-timestamp = "2026-03-31"
-count = 1382
+timestamp = "2026-04-02"
+count = 1456
+
+[[pages]]
+rel_path = "articles/yuxuan_wang_et_al_2024.html"
+timestamp = "2026-04-02"
+count = 1272
 
 [[pages]]
 rel_path = "categories/applsci.html"
@@ -400,8 +410,8 @@ count = 894
 
 [[pages]]
 rel_path = "categories/neurips.html"
-timestamp = "2026-03-31"
-count = 1092
+timestamp = "2026-04-02"
+count = 1301
 
 [[pages]]
 rel_path = "categories/optimization.html"
@@ -415,16 +425,16 @@ count = 1984
 
 [[pages]]
 rel_path = "categories/time_series_forecasting.html"
-timestamp = "2026-03-31"
-count = 2859
+timestamp = "2026-04-02"
+count = 3373
 
 [[pages]]
 rel_path = "categories/transformer.html"
-timestamp = "2025-10-19"
-count = 1996
+timestamp = "2026-04-02"
+count = 1810
 
 [[pages]]
 rel_path = "index.html"
-timestamp = "2026-03-31"
-count = 13523
+timestamp = "2026-04-02"
+count = 13811
 

@@ -26,7 +26,7 @@ c6998b81a06f60570baa 2025-12-24 uv でパッケージのソースをオプショ
 ce3580653ebb9a59831d 2025-10-14 【Python, uv】単一ファイルスクリプトだけで GitHub 上モジュールへの依存性を管理する
 """
 "PyTorch" = """
-8d3bb4a767aa0ca572ce 2026-03-21 torch.nn.TransformerEncoder の図
+8d3bb4a767aa0ca572ce 2026-03-21 torch.nn.TransformerEncoder のイラスト
 1ccf519cd8d40d9577a0 2026-02-27 torch.nn.utils.parameters_to_vector / vector_to_parameters の挙動確認メモ
 b0cd7e587d74549804f8 2026-01-24 だんご入りの箱としてみる torch.Tensor (メモ)
 4b9fe6644f741a33aef2 2026-01-22 Windows 環境の PyTorch で OSError: [WinError 1114] (Error loading c10.dll) が出たときの対処法
@@ -67,6 +67,7 @@ c90ed6d281b169c29b3f 2026-02-09 Claude Code で事前定義プロンプトを扱
 b444ad45768be766df56 2026-01-07 Windows で音を鳴らすコマンド集 (Claude Code 完了通知音向け)
 """
 "すべての記事" = """
+cffa28d134b8585ccebd 2026-04-01 HTML の定義リスト (<dl>, <dt>, <dd>) で参考文献リスト
 0bba15cc81b92e928602 2026-03-23 Google スライドの「配置先」を常にグリッドにする Tampermonkey ユーザスクリプト
 8d3bb4a767aa0ca572ce 2026-03-21 torch.nn.TransformerEncoder の図
 ef8bccbaea73def377e8 2026-03-20 Python で差分を色付きで表示する方法
