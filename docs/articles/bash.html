@@ -71,6 +71,22 @@ Taro engineer 35
 Jiro dentist 30
 </code></pre>
 
+<h3>正規表現マッチ</h3>
+<code class="language-">[[ ... =~ ... ]]</code> で正規表現マッチを判定できる。
+<pre class="language-bash"><code>
+#!/bin/bash
+command="bash -c 'source ~/.claude/scripts/ask.sh' 1"
+pattern="^bash -c 'source ~/\.claude/scripts/ask\.sh'"
+if [[ "$command" =~ $pattern ]]; then
+  echo "OK"
+else
+  echo "NG"
+fi
+</code></pre>
+<pre class="language-text"><code>
+OK
+</code></pre>
+
 </div>
 </main>
 </div>

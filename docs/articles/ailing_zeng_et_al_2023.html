@@ -16,6 +16,8 @@
 <div id="smartphone-header"></div>
 <div class="item long-title">
 <h1>Are Transformers Effective for Time Series Forecasting?</h1>
+<p>Are Transformers Effective for Time Series Forecasting? [paper] は線形層のみからなるニューラル時系列予測モデルを提案する論文である。香港中文大学の Ailing Zeng らによって著された。2022 年に arXiv にプレプリントが発表され、2023 年の AAAI に採択された。</p>
+<p>論文の要旨には、Transformer は遠く離れた単語間の関係を学ぶことに成功しているが、時系列予測では連続値の列の時刻間の関係を抽出しなければならないといった旨のことが書かれている。その続きを意訳すると、「Transformer は位置エンコーディングによって位置情報は付加するものの、self-attention 自体は時刻の関係を考慮するものではないため、『何ステップ前にこうなったらこうなる』を学習するには不利である」ということと思われる。</p>
 
 
 <h2>参考文献</h2>
@@ -28,7 +30,35 @@ Ailing Zeng, Muxi Chen, Lei Zhang, Qiang Xu. Are transformers effective for time
 <li><a class="asis" href="https://github.com/cure-lab/LTSF-Linear"></a></li>
 </ul>
 </dd>
+<dt>TSLib</dt>
+<dd>
+<a class="asis" href="https://github.com/thuml/Time-Series-Library/blob/7c2820986dcdc7a73b003f26fea49a77d22aaba6/models/DLinear.py#L38-L41"></a>
+</dd>
+<dt>PyTorchF</dt>
+<dd>
+<a class="asis" href="https://github.com/sktime/pytorch-forecasting/blob/5600398190f6a4cdac8a72e0578373a4664d5fd3/pytorch_forecasting/models/dlinear/_dlinear_v2.py#L112"></a>
+</dd>
 </dl>
+
+
+<h2>DLinear のモデル構造</h2>
+入力テンソル $X$ (形状 $[B, L_{\rm in}, C]$) を、各時点を中心としたカーネルサイズ $k=25$ の移動平均フィルタ (両端に $\lfloor (k-1)/2 \rfloor$ ずつ Edge padding して移動平均後も長さ $L_{\rm in}$ を保つ) で移動平均し、トレンド成分 $X_{\rm trend}$ とする (各時点を中心とするため、$k$ を偶数にするとエラーになる)。 
+<div>
+$$
+X_{\rm trend} = {\rm MovingAvg}(X) \\
+X_{\rm seasonal} = X - X_{\rm trend}
+$$
+</div>
+その後、各成分に対し、入力長 $L_{\rm in}$ から予測長 $L_{\rm out}$ に変換する線形層を適用する (活性化関数は適用しない)。最後に、2つの線形層の出力を足し合わせた形状 $[B, L_{\rm out}, C]$ のテンソルを返す。
+<ul>
+<li>線形層の重みを $1/L_{\rm in}$ で初期化する実装もあり [TSLib][PyTorchF]、これは「予測期間ずっと入力期間の単純平均値が続く」という初期化になっている。</li>
+</ul>
+
+
+<h2>NLinear のモデル構造</h2>
+入力テンソル $X$ (形状 $[B, L_{\rm in}, C]$) に対し、末尾の値 $X_{L_{\rm in}}$ を差し引いた $X - X_{L_{\rm in}}$ に線形層を適用して予測長 $L_{\rm out}$ に変換し (活性化関数は適用しない)、最後に $X_{L_{\rm in}}$ を足し戻す。
+<br/>
+<br/>
 
 
 <div class="categories">

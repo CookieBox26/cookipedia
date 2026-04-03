@@ -1,12 +1,7 @@
 [[pages]]
-rel_path = "articles/ailing_zeng_et_al_2021.html"
-timestamp = "2026-04-01"
-count = 2840
-
-[[pages]]
 rel_path = "articles/ailing_zeng_et_al_2023.html"
-timestamp = "2026-04-02"
-count = 1283
+timestamp = "2026-04-03"
+count = 2840
 
 [[pages]]
 rel_path = "articles/albert_gu_et_al_2020.html"
@@ -45,8 +40,8 @@ count = 8245
 
 [[pages]]
 rel_path = "articles/bash.html"
-timestamp = "2026-03-26"
-count = 1682
+timestamp = "2026-04-03"
+count = 2050
 
 [[pages]]
 rel_path = "articles/beautiful_soup_4.html"
@@ -425,8 +420,8 @@ count = 1984
 
 [[pages]]
 rel_path = "categories/time_series_forecasting.html"
-timestamp = "2026-04-02"
-count = 3373
+timestamp = "2026-04-03"
+count = 3212
 
 [[pages]]
 rel_path = "categories/transformer.html"
@@ -435,6 +430,6 @@ count = 1810
 
 [[pages]]
 rel_path = "index.html"
-timestamp = "2026-04-02"
-count = 13811
+timestamp = "2026-04-03"
+count = 13584
 
