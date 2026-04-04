@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>Are Transformers Effective for Time Series Forecasting? - Cookipedia α-version</title>
 <link href="../css/style.css?v=2026-04-01" rel="stylesheet" type="text/css"/>
-<link href="../css/cookipedia.css?v=2026-03-31" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-04-04" rel="stylesheet" type="text/css"/>
 <script data-mathjax="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2026-04-01"></script>
 </head>
 <body>
@@ -57,8 +57,6 @@ $$
 
 <h2>NLinear のモデル構造</h2>
 入力テンソル $X$ (形状 $[B, L_{\rm in}, C]$) に対し、末尾の値 $X_{L_{\rm in}}$ を差し引いた $X - X_{L_{\rm in}}$ に線形層を適用して予測長 $L_{\rm out}$ に変換し (活性化関数は適用しない)、最後に $X_{L_{\rm in}}$ を足し戻す。
-<br/>
-<br/>
 
 
 <div class="categories">
