@@ -1,7 +1,7 @@
 [[pages]]
 rel_path = "articles/ailing_zeng_et_al_2023.html"
-timestamp = "2026-04-03"
-count = 2840
+timestamp = "2026-04-04"
+count = 2832
 
 [[pages]]
 rel_path = "articles/albert_gu_et_al_2020.html"
@@ -130,8 +130,8 @@ count = 3552
 
 [[pages]]
 rel_path = "articles/iclr.html"
-timestamp = "2023-05-07"
-count = 929
+timestamp = "2026-04-04"
+count = 1437
 
 [[pages]]
 rel_path = "articles/integration_by_substitution.html"
@@ -340,8 +340,8 @@ count = 838
 
 [[pages]]
 rel_path = "articles/wei_fan_et_al_2022.html"
-timestamp = "2026-03-31"
-count = 1566
+timestamp = "2026-04-04"
+count = 1543
 
 [[pages]]
 rel_path = "articles/xelatex.html"
@@ -390,8 +390,8 @@ count = 1123
 
 [[pages]]
 rel_path = "categories/iclr.html"
-timestamp = "2026-03-31"
-count = 1491
+timestamp = "2026-04-04"
+count = 1583
 
 [[pages]]
 rel_path = "categories/international_journal_of_forecasting.html"
@@ -430,6 +430,6 @@ count = 1810
 
 [[pages]]
 rel_path = "index.html"
-timestamp = "2026-04-03"
-count = 13584
+timestamp = "2026-04-04"
+count = 13500
 
