@@ -3,12 +3,10 @@ Qiita API から自分の Qiita 記事を取得・管理します。
 
 ### 使い方
 ```
-python qiita_items.py -f  # 強制的に新規取得する
 python qiita_items.py -i  # 設定ファイルを新規作成する
 python qiita_items.py -t TAG  # 指定タグの記事を検索する
-python qiita_items.py -d  # 設定ファイルと HTML の差分を表示する
-python qiita_items.py -w
-python qiita_items.py -w --today 20260101
+python qiita_items.py -d  # キャッシュ -> 設定 TOML -> HTML の差分を表示する
+python qiita_items.py -w  # 今週書いた記事を表示する
 ```
 
 ### 備考
@@ -73,7 +71,7 @@ def fetch_all_pages(url, headers=None, params=None):
     return items
 
 
-def get_items(force, cache_file, user_id='CookieBox26'):
+def get_items(cache_file, force=False, user_id='CookieBox26'):
     """
     Qiita API から自分のすべての Qiita 記事を取得します。
 
@@ -147,34 +145,63 @@ def extract_ids_from_tag(target_tags, items):
             print(item_to_line(item))
 
 
-def show_cache_conf_diff(cats, items):
+def show_cache_conf_diff(cache_file, toml_file, force=False, update=False):
     logging.info('キャッシュと設定ファイルの差分を確認します')
+    items = get_items(cache_file, force)
+    toml_text = Path(toml_file).read_text(encoding='utf8')
+    cats = toml.loads(toml_text)['cats']
     id_to_item = {item['id']: item for item in items}
+    updates = {}
     for key, s in cats.items():
         lines = s.strip().split('\n')
         if key == 'すべての記事':
             toml_ids = {line.split(' ', 1)[0] for line in lines}
+            new_items = []
             for item in items:
                 if item['id'] not in toml_ids:
                     print(f'[{key}] TOML にない:' + Fore.GREEN)
                     print(f'+ {item_to_line(item)}' + Fore.RESET)
-            continue
-        for line in lines:
-            parts = line.split(' ', 2)
-            item_id = parts[0]
-            if item_id not in id_to_item:
-                continue
-            item = id_to_item[item_id]
-            date = item['created_at'][:10]
-            new_line = f'{item_id} {date} {item["title"]}'.strip()
-            if new_line != line:
-                print(f'[{key}]')
-                print(Fore.RED + f'  - {line}' + Fore.RESET)
-                print(Fore.GREEN + f'  + {new_line}' + Fore.RESET)
+                    new_items.append(item)
+            if update and new_items:
+                new_lines = [item_to_line(item) for item in new_items]
+                updates[key] = '\n'.join(new_lines + lines) + '\n'
+        else:
+            cat_changed = False
+            lines_ = []
+            for line in lines:
+                parts = line.split(' ', 2)
+                item_id = parts[0]
+                if item_id not in id_to_item:
+                    raise ValueError(f'キャッシュにない記事: {item_id}')
+                item = id_to_item[item_id]
+                new_line = item_to_line(item)
+                if new_line != line:
+                    print(f'[{key}]')
+                    print(Fore.RED + f'  - {line}' + Fore.RESET)
+                    print(Fore.GREEN + f'  + {new_line}' + Fore.RESET)
+                    lines_.append(new_line)
+                    cat_changed = True
+                else:
+                    lines_.append(line)
+            if update and cat_changed:
+                updates[key] = '\n'.join(lines_) + '\n'
+    if updates:
+        for key, lines_ in updates.items():
+            toml_text = re.sub(
+                r'("' + re.escape(key) + r'")(\s*=\s*"""\n).*?(""")',
+                lambda m, l=lines_: m.group(1) + m.group(2) + l + m.group(3),
+                toml_text, flags=re.DOTALL,
+            )
+        Path(toml_file).write_text(toml_text, encoding='utf8', newline='\n')
+        logging.info('設定ファイルを更新しました')
 
 
-def show_conf_html_diff(cats, items, html_lines):
+def show_conf_html_diff(cache_file, toml_file, html_file, update=False):
     logging.info('設定ファイルと HTML の差分を確認します')
+    items = get_items(cache_file)
+    cats = toml.loads(Path(toml_file).read_text(encoding='utf8'))['cats']
+    html_text = Path(html_file).read_text(encoding='utf8')
+    html_lines = html_text.splitlines()
 
     # HTML からカテゴリごとのセクションを抽出
     html_cats = {}
@@ -207,6 +234,7 @@ def show_conf_html_diff(cats, items, html_lines):
     # カテゴリ別の差分
     no_suffix = {'すべての記事', '作業効率化'}
     id_to_item = {item['id']: item for item in items}
+    updates = []
     for key, s in cats.items():
         html_key = key if key in no_suffix else key + ' 関連'
         tag = 'h2' if key == 'すべての記事' else 'h3'
@@ -218,6 +246,13 @@ def show_conf_html_diff(cats, items, html_lines):
         expected = [f'<{tag}>{html_key}</{tag}>', '<ul>'] + li_lines + ['</ul>']
         actual = html_cats.get(html_key, [])
         print_diff(actual, expected, f'HTML ({html_key})', f'TOML ({key})')
+        if update and actual and actual != expected:
+            updates.append((actual, expected))
+    if updates:
+        for actual, expected in updates:
+            html_text = html_text.replace('\n'.join(actual), '\n'.join(expected))
+        Path(html_file).write_text(html_text, encoding='utf8', newline='\n')
+        logging.info('HTML ファイルを更新しました')
 
 
 def updates_this_week(today, items):
@@ -275,6 +310,7 @@ def main():
     )
     parser.add_argument('--today', default=None)
     parser.add_argument('-o', '--open', action='store_true')
+    parser.add_argument('-u', '--update', action='store_true')
 
     group = parser.add_mutually_exclusive_group()
     group.add_argument('-i', '--init', action='store_true')
@@ -288,26 +324,23 @@ def main():
         if os.path.exists(args.toml):
             logging.error(f'{args.toml} はすでに存在します')
             raise SystemExit(1)
-        items = get_items(args.force, cache_file=args.cache)
+        items = get_items(args.cache, args.force)
         lines = [item_to_line(item) for item in items]
         with open(args.toml, 'w', encoding='utf-8') as f:
             f.write('[cats]\n"すべての記事" = """\n')
             f.write('\n'.join(lines) + '\n"""\n')
     elif args.tags:
-        items = get_items(args.force, cache_file=args.cache)
+        items = get_items(args.cache, args.force)
         extract_ids_from_tag(set(args.tags), items)
     elif args.diff:
-        items = get_items(args.force, cache_file=args.cache)
-        cats = toml.loads(Path(args.toml).read_text(encoding='utf8'))['cats']
-        html_lines = Path(args.html).read_text(encoding='utf8').splitlines()
-        show_cache_conf_diff(cats, items)
-        show_conf_html_diff(cats, items, html_lines)
+        show_cache_conf_diff(args.cache, args.toml, args.force, args.update)
+        show_conf_html_diff(args.cache, args.toml, args.html, args.update)
     elif args.week:
-        items = get_items(args.force, cache_file=args.cache)
+        items = get_items(args.cache, args.force)
         today = args.today or datetime.datetime.now().date()
         updates_this_week(today, items)
     else:
-        logging.warning('操作が指定されていません (-i/-t/-d)')
+        logging.warning('操作が指定されていません (-i/-t/-d/-w)')
 
     if args.open:
         subprocess.Popen([args.editor, args.toml])

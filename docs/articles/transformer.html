@@ -7,7 +7,7 @@
 <title>Transformer - Cookipedia α-version</title>
 <link href="../css/style.css?v=2026-04-01" rel="stylesheet" type="text/css"/>
 <link href="../css/cookipedia.css?v=2026-04-04" rel="stylesheet" type="text/css"/>
-<script data-mathjax="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2026-04-01"></script>
+<script data-prism-python="true" data-mathjax="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2026-04-01"></script>
 </head>
 <body>
 <div class="container">
@@ -16,38 +16,72 @@
 <div id="smartphone-header"></div>
 <div class="item">
 <h1>Transformer</h1>
-<p><b>Transformer</b> とは、入力である単語ベクトルの列（文章）から文脈を反映した特徴ベクトルの列を出力するためのニューラルモデルである。無論、入力は単語列でなくとも構わない。</p>
-<br/>
-<!--
-<p>${\rm SM}(q, k) \equiv \exp(q \cdot k / \sqrt{p})$ は正定値カーネルである [3]。
-</p>
-<div style="overflow: auto">
-$$
-$$
-</div>
+<pre class="language-python"><code>
+import torch
+import torch.nn as nn
+import math
 
-<h2>参考文献</h2>
-<ol class="ref">
-    <li>Beidi Chen, Tri Dao, Eric Winsor, Zhao Song, Atri Rudra, Christopher Ré. Scatterbrain: Unifying Sparse and Low-rank Attention. In NeurIPS 2021. <a class="note" href="https://proceedings.neurips.cc/paper/2021/hash/9185f3ec501c674c7c788464a36e7fb3-Abstract.html">[Proceedings]</a></li>
-    <li>Beidi Chen, Tri Dao, Eric Winsor, Zhao Song, Atri Rudra, Christopher Ré. Scatterbrain: Unifying Sparse and Low-rank Attention. In NeurIPS 2021. <a class="note" href="https://proceedings.neurips.cc/paper/2021/hash/9185f3ec501c674c7c788464a36e7fb3-Abstract.html">[Proceedings]</a></li>
-</ol>
-<br/>
+class PositionalEncoding(nn.Module):
+    def __init__(self, d_model, max_len=100):
+        super().__init__()
+        pe = torch.zeros(max_len, d_model)
+        pos = torch.arange(0, max_len).unsqueeze(1)  # (max_len, 1)
+        div = torch.exp(
+            torch.arange(0, d_model, 2) * (-math.log(10000.0) / d_model)
+        )
+        pe[:, 0::2] = torch.sin(pos * div)
+        pe[:, 1::2] = torch.cos(pos * div)
+        self.register_buffer("pe", pe.unsqueeze(0))  # (1, max_len, d_model)
 
+    def forward(self, x):
+        # x: (batch, seq_len, d_model)
+        return x + self.pe[:, :x.size(1)]
 
-<h2>セルフアテンション行列の計算量削減</h2>
-<br/>
+class ToyTransformer(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.pos_enc = PositionalEncoding(d_model=6)
 
-<h2></h2>
+        encoder_layer = nn.TransformerEncoderLayer(
+            d_model=6, nhead=2, dim_feedforward=12, batch_first=True,
+        )
+        self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=2)
 
+        decoder_layer = nn.TransformerDecoderLayer(
+            d_model=6, nhead=2, dim_feedforward=12, batch_first=True,
+        )
+        self.decoder = nn.TransformerDecoder(decoder_layer, num_layers=2)
 
-<h2>注釈</h2>
-<ol class="note">
-<li id="note1">
-</li>
-</ol>
-<br/>
--->
+        self.output_proj = nn.Linear(6, 6)
 
+    def forward(self, src, tgt):
+        # src: (batch, src_len, d_model)
+        # tgt: (batch, tgt_len, d_model)
+        tgt_len = tgt.size(1)
+
+        # 因果マスク: 位置 i が i より未来を見ないようにする
+        causal_mask = nn.Transformer.generate_square_subsequent_mask(tgt_len)
+
+        memory = self.encoder(self.pos_enc(src))
+        h = self.decoder(self.pos_enc(tgt), memory, tgt_mask=causal_mask)
+        return self.output_proj(h)  # (batch, tgt_len, d_model)
+
+model = ToyTransformer()
+print(model)
+print(f"\nパラメータ総数: {sum(p.numel() for p in model.parameters())}")
+
+src = torch.randn(1, 8, 6)
+tgt = torch.randn(1, 8, 6)
+
+print(f"\nsrc shape: {src.shape}")
+print(f"tgt shape: {tgt.shape}")
+
+with torch.no_grad():
+    y = model(src, tgt)
+
+print(f"\n出力 shape: {y.shape}")
+print(y)
+</code></pre>
 
 <div class="categories">
 <a href="../categories/transformer.html">Transformer</a>
