@@ -1,0 +1,268 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Attention Is All You Need - Cookipedia α-version</title>
+<link href="../css/style.css?v=2026-04-01" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-04-04" rel="stylesheet" type="text/css"/>
+<script data-prism-python="true" data-mathjax="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2026-04-01"></script>
+</head>
+<body>
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item long-title">
+<h1>Attention Is All You Need</h1>
+Attention Is All You Need は、エンコーダで入力系列を変換 (「文脈の反映」) し、デコーダで出力系列を生成する "Transformer" を提案する論文である。エンコーダ・デコーダには再帰も畳込みも用いず、内部で "Scaled Dot-Product Attention" を用いる "Multi-Head Attention" 層と、ステップごとの全結合層のみで構成する。Google Brain の Ashish Vaswani らによって著され (他に Google Research、University of Toronto 所属の著者も)、2017 年の NeurIPS に採択された。
+
+<h2>参考文献</h2>
+<dl class="ref small">
+<dt>paper</dt>
+<dd>
+Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Łukasz Kaiser, Illia Polosukhin. Attention is all you need. <i>Advances in Neural Information Processing Systems (NeurIPS 2017),</i> vol. 30, pp. 5998−6008, 2017.
+<ul>
+<li><a class="asis" href="https://proceedings.neurips.cc/paper_files/paper/2017/hash/3f5ee243547dee91fbd053c1c4a845aa-Abstract.html"></a></li>
+<li><a class="asis" href="https://arxiv.org/abs/1706.03762"></a></li>
+<li><a class="asis" href="https://github.com/tensorflow/tensor2tensor"></a></li>
+</ul>
+</dd>
+</dl>
+
+
+<h2>関連リンク</h2>
+<ul>
+<li><a href="https://qiita.com/CookieBox26/items/8d3bb4a767aa0ca572ce">torch.nn.TransformerEncoder のイラスト</a></li>
+</ul>
+
+
+<h2>Transformer の構造</h2>
+<p>"Scaled Dot-Product Attention" は、全て「長さ L_in の d_k 次元のベクトル列」である Q, K, V に対し、Attention(Q, K, V) := softmax(QK^T/√d_k)V と定義される (原論文では d_k=64)。よって、出力も「長さ L_in の d_k 次元のベクトル列」である。</p>
+
+<p>"Multi-Head Attention" 層は、「長さ L_in の n_head×d_k 次元のベクトル列」である入力系列をステップごとに 3×n_head×d_k 次元に線形変換して Q, K, V 用に 3 分割・さらにそれぞれ n_head ヘッドに分割して (原論文では n_head=8)、全ヘッド並列に Attention(Q, K, V) を適用し、n_head ヘッドの出力を連結して (8×64=512 次元)、2048 次元に線形変換し、再び 512 次元に線形変換する。よって、出力も「長さ L_in の n_head×d_k 次元のベクトル列」である。</p>
+
+<p>なお、系列の位置情報は三角関数による固定の "Positional Encoding" を各ステップに加算する。</p>
+
+<h3>原論文での位置エンコーディング</h3>
+<ul>
+<li>位置 pos (0-indexed)、次元インデックス i (0-indexed) に対して、512 次元のベクトルの各成分を以下で定義する [脚注PE]。</li>
+<ul>
+<li>偶数インデックス 2i： sin(pos / 10000^(2i/512))</li>
+<li>奇数インデックス 2i+1： cos(pos / 10000^(2i/512))</li>
+</ul>
+</ul>
+
+<h3>原論文でのエンコーダ</h3>
+<ul>
+<li>エンコーダ層 (以下) を 6 層積み重ねる [脚注EN]。</li>
+<ul>
+<li>各ステップが 512 次元の入力系列を受け取る (ア)。</li>
+<li>マルチヘッドアテンション層 (以下) を適用する。</li>
+<ul>
+<li>入力系列をステップごとにQ, K, V 用に 3×8×64 次元に線形変換して、8 ヘッドに分割する。</li>
+<li>8 ヘッド並列に Attention(Q, K, V) := softmax(QK^T/√d)V を適用する。</li>
+<li>各ヘッドからの出力を 8×64=512 次元に連結する。</li>
+</ul>
+<li>ドロップアウトする。</li>
+<li>(ア) から残差接続する。</li>
+<li>層正規化する。(イ)</li>
+<li>2048 次元に線形変換、活性化、ドロップアウトする。</li>
+<li>再び 512 次元に線形変換、ドロップアウトする。</li>
+<li>(イ) から残差接続する。</li>
+<li>層正規化する。</li>
+</ul>
+</ul>
+
+<h3>原論文でのデコーダ</h3>
+<ul>
+<li>デコーダ層 (以下) を 6 層積み重ねる。</li>
+<ul>
+<li>各ステップが 512 次元の入力系列を受け取る (ア)。</li>
+<ul>
+<li>訓練時は、例えば正解系列が「A B C D」のとき、第 1 デコーダ層への入力は「&lt;BOS&gt; A B C」(を埋め込んで位置エンコーディングを加算した系列) とし、デコーダが「A B C D」を出力することを目指す (ために各ステップの出力の交差エントロピーの平均の最小化を目指す)。</li>
+<li>推論時は、まず「&lt;BOS&gt;」のみを入力して最初のトークン「A」を生成し、次に「&lt;BOS&gt; A」を入力して次のトークン「A B」を生成する、という操作を繰り返す。</li>
+</ul>
+<li>マスク付きマルチヘッドアテンション層 (以下) を適用する。</li>
+<ul>
+<li>入力系列をステップごとに 3×8×64 次元に線形変換する。</li>
+<li>Q, K, V 用に 3 分割して、さらにそれぞれ 8 ヘッドに分割する。</li>
+<li>8 ヘッド並列に MaskedAttention(Q, K, V) := softmax(mask(QK^T)/√d)V を適用する。ただし、mask(QK^T) は QK^T の対角線を含めない右上三角を $-\infty$ にする操作である。</li>
+<ul>
+<li>このマスクは、訓練時に「『&lt;BOS&gt;』から『A』を予測」「『&lt;BOS&gt; A』から『- B』を予測」「『&lt;BOS&gt; A B』から『- - C』を予測」… を一挙に行えるようにするための措置である。このマスクによって、出力の 1 ステップ目は「&lt;BOS&gt;」までから、出力の 2 ステップ目は「&lt;BOS&gt; A」までから、出力の 3 ステップ目は「&lt;BOS&gt; A B」までから生成されるようにできる。このマスクを導入しない場合に比べモデルの表現力は制限されるが、このマスクを導入することにより各ステップの予測用のサンプルデータを別々に用意して別々に予測する必要がなくなり、訓練時間を短縮できる。なお、Transformer ではこの一挙訓練のために同じ文章の各ステップの予測は強制的に同じバッチになる。</li>
+</ul>
+<li>各ヘッドからの出力を 8×64=512 次元に連結する。</li>
+</ul>
+<li>ドロップアウトする。</li>
+<li>(ア) から残差接続する。</li>
+<li>層正規化する。(イ)</li>
+<li>マルチヘッドアテンション層 (以下) を適用する。</li>
+<ul>
+<li>(イ) から Q 用に 8×64 次元に線形変換して 8 ヘッドに分割する。</li>
+<li>エンコーダ最終出力を K, V 用に 2×8×64 次元に線形変換して 8 ヘッドに分割する。</li>
+<li>8 ヘッド並列に Attention(Q, K, V) を適用する。</li>
+<li>各ヘッドからの出力を 8×64=512 次元に連結する。</li>
+</ul>
+<li>ドロップアウトする。</li>
+<li>(イ) から残差接続する。</li>
+<li>層正規化する。(ウ)</li>
+<li>2048 次元に線形変換、活性化、ドロップアウトする。</li>
+<li>再び 512 次元に線形変換、ドロップアウトする。</li>
+<li>(ウ) から残差接続する。</li>
+<li>層正規化する。</li>
+</ul>
+</ul>
+
+
+<h2>備考</h2>
+<ul>
+<li>英独翻訳タスクなら、Transformer のエンコーダは元の英文 (単語特徴列) を前後の文脈を反映した特徴列とし (エンコーダ表現)、デコーダは現時点でデコードされている独文を、まず過去からの文脈のみ反映した特徴列として、各ステップがエンコーダ表現の何ステップ目にどれだけ関連するかを反映して更新することを繰り返す (最終的には、出力列の最終ステップを独単語に読み出してデコードを 1 ステップ進める)。エンコーダ層・デコーダ層を積み重ねることで、より複雑な対応関係を段階的に捉えられるのではないかと考えられている。</li>
+<li>後年、Transformer エンコーダの各層が担う言語情報の種類を probing [脚注probing] により分析した研究があり、浅い層ほど品詞・構文情報を、深い層ほど意味・共参照 [脚注coref] などの情報を捉える傾向が報告されている (BERT を対象とした分析だが Transformer 一般にも広く引用される) (<a class="asis" href="https://arxiv.org/abs/1905.05950"></a>)。</li>
+<li>後年、Transformer のアテンションヘッドの役割を分析した研究があり、一部のヘッドは隣接トークンへの注意・構文依存関係への注意などの特定のパターンに特化しており、残りの大多数は冗長で除去しても性能がほとんど低下しないことが報告されている (<a class="asis" href="https://arxiv.org/abs/1905.09418"></a>, <a class="asis" href="https://arxiv.org/abs/1905.10650"></a>)。</li>
+<li>後年、モデルサイズ・データ量・計算量と損失の関係がべき乗則に従うという「スケーリング則」が報告されており、層数や幅といった個別のアーキテクチャ詳細よりもパラメータ総数が性能を規定するという経験的知見が示されている (<a class="asis" href="https://arxiv.org/abs/2001.08361"></a>)。</li>
+</ul>
+
+
+<h2>トイモデル</h2>
+埋め込み次元数 6、中間層次元数 12、ヘッド数 2、エンコーダ層数 2、デコーダ総数 2 とし、長さ 8 の入力から長さ 4 の出力を得る。
+<pre class="language-python"><code>
+import torch
+import torch.nn as nn
+import math
+
+
+class PositionalEncoding(nn.Module):
+    def __init__(self, d_model, max_len=100):
+        super().__init__()
+        pe = torch.zeros(max_len, d_model)
+        pos = torch.arange(0, max_len).unsqueeze(1)  # (max_len, 1)
+        div = torch.exp(
+            torch.arange(0, d_model, 2) * (-math.log(10000.0) / d_model)
+        )
+        pe[:, 0::2] = torch.sin(pos * div)
+        pe[:, 1::2] = torch.cos(pos * div)
+        self.register_buffer('pe', pe.unsqueeze(0))  # (1, max_len, d_model)
+
+    def forward(self, x):
+        return x + self.pe[:, :x.size(1)]  # (batch, seq_len, d_model)
+
+
+class ToyTransformer(nn.Module):
+    def __init__(self, d_model=6, nhead=2, d_ff=12):
+        super().__init__()
+        self.pos_enc = PositionalEncoding(d_model=d_model)
+        encoder_layer = nn.TransformerEncoderLayer(
+            d_model=d_model, nhead=nhead, dim_feedforward=d_ff, batch_first=True,
+        )
+        self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=2)
+        decoder_layer = nn.TransformerDecoderLayer(
+            d_model=d_model, nhead=nhead, dim_feedforward=d_ff, batch_first=True,
+        )
+        self.decoder = nn.TransformerDecoder(decoder_layer, num_layers=2)
+        self.output_proj = nn.Linear(d_model, d_model)
+
+    def forward(self, src, tgt):
+        # src: (batch, src_len, d_model)
+        # tgt: (batch, tgt_len, d_model)
+        tgt_len = tgt.size(1)
+        # マスク: 位置 i が i より未来を見ないようにする
+        mask = nn.Transformer.generate_square_subsequent_mask(tgt_len)
+        encoded = self.encoder(self.pos_enc(src))
+        decoded = self.decoder(self.pos_enc(tgt), encoded, tgt_mask=mask)
+        return self.output_proj(decoded)  # (batch, tgt_len, d_model)
+
+
+if __name__ == '__main__':
+    model = ToyTransformer()
+    print(model)
+    print(f'\nパラメータ総数: {sum(p.numel() for p in model.parameters())}')
+    print(f'{(6 + 1) * 18 + (6 + 1) * 6 + 2 * 6 + (6 + 1) * 12 + (12 + 1) * 6 + 2 * 6 =}')
+    print(f'{2 * ((6 + 1) * 18 + (6 + 1) * 6 + 2 * 6) + (6 + 1) * 12 + (12 + 1) * 6 + 2 * 6 =}')
+    print(f'{2 * (354 + 534) + (6 + 1) * 6 =}')
+
+    src = torch.randn(1, 8, 6)
+    tgt = torch.randn(1, 4, 6)
+    print(f'\nsrc shape: {src.shape}')
+    print(f'tgt shape: {tgt.shape}')
+    with torch.no_grad():
+        out = model(src, tgt)
+    print(f'out shape: {out.shape}')
+</code></pre>
+<pre class="language-text"><code>
+ToyTransformer(
+  (pos_enc): PositionalEncoding()
+  (encoder): TransformerEncoder(
+    (layers): ModuleList(
+      (0-1): 2 x TransformerEncoderLayer(
+        (self_attn): MultiheadAttention(
+          (out_proj): NonDynamicallyQuantizableLinear(in_features=6, out_features=6, bias=True)
+        )
+        (linear1): Linear(in_features=6, out_features=12, bias=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (linear2): Linear(in_features=12, out_features=6, bias=True)
+        (norm1): LayerNorm((6,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((6,), eps=1e-05, elementwise_affine=True)
+        (dropout1): Dropout(p=0.1, inplace=False)
+        (dropout2): Dropout(p=0.1, inplace=False)
+      )
+    )
+  )
+  (decoder): TransformerDecoder(
+    (layers): ModuleList(
+      (0-1): 2 x TransformerDecoderLayer(
+        (self_attn): MultiheadAttention(
+          (out_proj): NonDynamicallyQuantizableLinear(in_features=6, out_features=6, bias=True)
+        )
+        (multihead_attn): MultiheadAttention(
+          (out_proj): NonDynamicallyQuantizableLinear(in_features=6, out_features=6, bias=True)
+        )
+        (linear1): Linear(in_features=6, out_features=12, bias=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (linear2): Linear(in_features=12, out_features=6, bias=True)
+        (norm1): LayerNorm((6,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((6,), eps=1e-05, elementwise_affine=True)
+        (norm3): LayerNorm((6,), eps=1e-05, elementwise_affine=True)
+        (dropout1): Dropout(p=0.1, inplace=False)
+        (dropout2): Dropout(p=0.1, inplace=False)
+        (dropout3): Dropout(p=0.1, inplace=False)
+      )
+    )
+  )
+  (output_proj): Linear(in_features=6, out_features=6, bias=True)
+)
+
+パラメータ総数: 1818
+(6 + 1) * 18 + (6 + 1) * 6 + 2 * 6 + (6 + 1) * 12 + (12 + 1) * 6 + 2 * 6 =354
+2 * ((6 + 1) * 18 + (6 + 1) * 6 + 2 * 6) + (6 + 1) * 12 + (12 + 1) * 6 + 2 * 6 =534
+2 * (354 + 534) + (6 + 1) * 6 =1818
+
+src shape: torch.Size([1, 8, 6])
+tgt shape: torch.Size([1, 4, 6])
+out shape: torch.Size([1, 4, 6])
+</code></pre>
+
+
+<h2>脚注</h2>
+<dl class="footnote">
+<dt>PE</dt>
+<dd>10000 は経験的な値である。</dd>
+<dt>EN</dt>
+<dd>原論文のように残差接続後に層正規化する (Post-LN) のではなく、入力直後に層正規化する (Pre-LN) 方が学習が安定するという研究もあり (<a class="asis" href="https://arxiv.org/abs/2002.04745"></a>)、PyTorch の torch.nn.TransformerEncoderLayer には Pre-LN に切り替えるフラグが実装されている。もっとも、Pre-LN に切り替えたとしても、その他の種々の最新の発展を取り込んでいるわけではないので、torch.nn.TransformerEncoderLayer の実利用は既に推奨されていない (<a class="asis" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.TransformerEncoderLayer.html"></a>)。</dd>
+<dt>probing</dt>
+<dd>probing とは、学習済みモデルの各層の出力ベクトルを入力として、品詞タグなど特定の言語情報を予測する小さな分類器を訓練する分析手法である。その分類器の精度が高ければ、その層がその情報を内部に持っていると解釈する。</dd>
+<dt>coref</dt>
+<dd>共参照 (coreference) とは、文中の複数の表現が同じ実体を指すことである。例えば「太郎が来た。彼は疲れていた」において「太郎」と「彼」は同じ実体を指している。</dd>
+</dl>
+
+
+<div class="categories">
+<a data-subcat="2017" href="../categories/nn.html">ニューラルネットワーク</a> |
+<a data-subcat="2017" href="../categories/neurips.html">NeurIPS</a>
+</div>
+
+</div>
+</main>
+</div>
+</body>
+</html>
