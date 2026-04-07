@@ -17,9 +17,7 @@
 <div class="item long-title">
 <h1>Autoformer: Decomposition Transformers with Auto-Correlation for Long-Term Series Forecasting</h1>
 <p>Autoformer: Decomposition Transformers with Auto-Correlation for Long-Term Series Forecasting [paper] は、入力系列の各ステップを Q, K, V に線形変換して FFT で Q-K 相互相関を計算して再度線形変換する "Auto-Correlation" 層を適用し、続けて "Series Decomposition" 層によってトレンド成分を分離して蓄積する構造をもつ時系列予測モデル Autoformer を提案する論文である。Tsinghua University (清華大学) の Haixu Wu らによって著され (著者全員が同所属)、2021 年の NeurIPS に採択された。</p>
-
 <p>具体的に、"Auto-Correlation" 層は入力系列の各ステップを Q, K, V に線形変換し、FFT を用いて Q-K の全ラグの相互相関を O(L log L) で一括計算し、トップ k = floor(c log L) 個のラグに絞って、各ラグ分だけ V をロールシフトして softmax 重み付き和を取る。続く "Series Decomposition" 層は入力系列の移動平均 (ウィンドウサイズ 25) をとってトレンド成分 X_t とし、これを分離する (分離したトレンド成分は、エンコーダ層では破棄するが、デコーダ層では全て蓄積しておく)。さらに残った成分 (季節成分) を線形変換し、再度 "Series Decomposition" 層でトレンド成分を分離する。</p>
-
 <p>Autoformer 全体は Transformer に似た (マルチヘッドアテンション層を Auto-Correlation 層に、層正規化層を "Series Decomposition" 層に置き換えた) エンコーダ・デコーダ構造となっており、最終予測はデコーダ出力と蓄積しておいたトレンド成分の和として得られる。</p>
 
 
@@ -38,9 +36,7 @@ Haixu Wu, Jiehui Xu, Jianmin Wang, Mingsheng Long. Autoformer: Decomposition Tra
 
 <h2>Autoformer の構造</h2>
 <p>Autoformer ではデコーダ初期化に用いる過去系列の長さをラベル長 L_label = L_in/2 と定めている。直近の過去情報をデコーダに与えつつ、ゼロパディング部分を予測させる設計になっている (つまり、エンコーダに入力する系列の後半は常にデコーダの初期入力にもなる)。ラベル長は実装上はハイパーパラメータとなっているが、論文では L_in/2 をデフォルトとしている。</p>
-
 <p>モデル次元数 512、線形変換の中間層次元数 2048、ヘッド数 8 は<a href="ashish_vaswani_et_al_2017.html">オリジナル Transformer</a> の値がそのまま採用されている。ただし、エンコーダ層数 2、デコーダ層数 1 はオリジナル Transformer での層数 (エンコーダ層数、デコーダ層数共に 6) とは異なる。また、活性化に GELU を採用している点もオリジナル Transformer とは異なる [脚注GELU]。</p>
-
 <p>また、エンコーダ・デコーダそれぞれの全層の出力 (デコーダでは蓄積しておいたトレンド成分を足し戻す前) に対して、独自の正規化 (<a class="asis break-all" href="https://github.com/thuml/Autoformer/blob/490bb749365efd8f1178bc652a06361701545a6f/layers/Autoformer_EncDec.py#L6-L17"></a>) を適用する。具体的に、通常の層正規化に加え、平均がゼロになるようシフトする。季節成分がゼロ周りの振動になるよう保証する措置と考えられる。この記事では以降、「ゼロ周り層正規化」とよぶ。</p>
 
 <h3>原論文でのエンコーダ</h3>
@@ -75,7 +71,6 @@ Haixu Wu, Jiehui Xu, Jianmin Wang, Mingsheng Long. Autoformer: Decomposition Tra
 <li>このエンコーダ層が最終エンコーダ層の場合のみ、「ゼロ周り層正規化」を適用する。</li>
 </ul>
 </ul>
-
 
 <h3>原論文でのデコーダ</h3>
 <ul>
@@ -125,7 +120,7 @@ Haixu Wu, Jiehui Xu, Jianmin Wang, Mingsheng Long. Autoformer: Decomposition Tra
 <h2>脚注</h2>
 <dl class="footnote">
 <dt>GELU</dt>
-<dd>GELU とは Gaussian Error Linear Unit の略で、f(x) = x · Φ(x) と定義される (Φ は標準正規分布の累積分布関数)。ReLU が x < 0 で出力を 0 にカットするのに対し、GELU は x < 0 でも確率的に小さい値を通すなめらかな形になる。Dan Hendrycks と Kevin Gimpel が 2016 年に提案し (<a class="asis" href="https://arxiv.org/abs/1606.08415"></a>)、BERT (2018) で採用されてから Transformer 系モデルでの標準的な活性化関数として普及した。Autoformer が GELU を選んだ理由は論文中に明記はなく、当時の標準に倣ったものと考えられる。</dd>
+<dd>GELU とは Gaussian Error Linear Unit の略で、f(x) = x · Φ(x) と定義される (Φ は標準正規分布の累積分布関数)。ReLU が x &lt; 0 で出力を 0 にカットするのに対し、GELU は x &lt; 0 でも確率的に小さい値を通すなめらかな形になる。Dan Hendrycks と Kevin Gimpel が 2016 年に提案し (<a class="asis" href="https://arxiv.org/abs/1606.08415"></a>)、BERT (2018) で採用されてから Transformer 系モデルでの標準的な活性化関数として普及した。Autoformer が GELU を選んだ理由は論文中に明記はなく、当時の標準に倣ったものと考えられる。</dd>
 <dt>top</dt>
 <dd>絶対値を取るのではなく、符号付きで値の大きいラグを選択する (後段で softmax 重み付き和を取る都合上、相関が負のラグを取ると予測が劣化すると考えられ、ここで相関が負のラグを取るべきではないのはさもありなんと思われる)。</dd>
 </dl>

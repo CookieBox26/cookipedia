@@ -7,7 +7,7 @@
 <title>Attention Is All You Need - Cookipedia α-version</title>
 <link href="../css/style.css?v=2026-04-01" rel="stylesheet" type="text/css"/>
 <link href="../css/cookipedia.css?v=2026-04-04" rel="stylesheet" type="text/css"/>
-<script data-prism-python="true" data-mathjax="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2026-04-01"></script>
+<script data-mathjax="true" data-prism-python="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2026-04-01"></script>
 </head>
 <body>
 <div class="container">
@@ -17,6 +17,7 @@
 <div class="item long-title">
 <h1>Attention Is All You Need</h1>
 Attention Is All You Need は、エンコーダで入力系列を変換 (「文脈の反映」) し、デコーダで出力系列を生成する "Transformer" を提案する論文である。エンコーダ・デコーダには再帰も畳込みも用いず、内部で "Scaled Dot-Product Attention" を用いる "Multi-Head Attention" 層と、ステップごとの全結合層のみで構成する。Google Brain の Ashish Vaswani らによって著され (他に Google Research、University of Toronto 所属の著者も)、2017 年の NeurIPS に採択された。
+
 
 <h2>参考文献</h2>
 <dl class="ref small">
@@ -40,9 +41,7 @@ Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N
 
 <h2>Transformer の構造</h2>
 <p>"Scaled Dot-Product Attention" は、全て「長さ L_in の d_k 次元のベクトル列」である Q, K, V に対し、Attention(Q, K, V) := softmax(QK^T/√d_k)V と定義される (原論文では d_k=64)。よって、出力も「長さ L_in の d_k 次元のベクトル列」である。</p>
-
 <p>"Multi-Head Attention" 層は、「長さ L_in の n_head×d_k 次元のベクトル列」である入力系列をステップごとに 3×n_head×d_k 次元に線形変換して Q, K, V 用に 3 分割・さらにそれぞれ n_head ヘッドに分割して (原論文では n_head=8)、全ヘッド並列に Attention(Q, K, V) を適用し、n_head ヘッドの出力を連結して (8×64=512 次元)、2048 次元に線形変換して ReLU 活性化し [脚注ReLU]、再び 512 次元に線形変換する。よって、出力も「長さ L_in の n_head×d_k 次元のベクトル列」である。</p>
-
 <p>なお、入力系列をエンコーダに入力する前に、三角関数による固定の "Positional Encoding" を各ステップに加算する (系列の位置情報をもたせるため)。</p>
 
 <h3>原論文での位置エンコーディング</h3>

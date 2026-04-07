@@ -36,7 +36,7 @@ count = 900
 [[pages]]
 rel_path = "articles/ashish_vaswani_et_al_2017.html"
 timestamp = "2026-04-07"
-count = 11466
+count = 11467
 
 [[pages]]
 rel_path = "articles/aws.html"
@@ -45,13 +45,13 @@ count = 8245
 
 [[pages]]
 rel_path = "articles/bash.html"
-timestamp = "2026-04-03"
-count = 2050
+timestamp = "2026-04-08"
+count = 2159
 
 [[pages]]
 rel_path = "articles/beautiful_soup_4.html"
 timestamp = "2025-12-12"
-count = 4402
+count = 4397
 
 [[pages]]
 rel_path = "articles/boris_n_oreshkin_et_al_2020.html"
@@ -116,7 +116,7 @@ count = 1032
 [[pages]]
 rel_path = "articles/haixu_wu_et_al_2021.html"
 timestamp = "2026-04-07"
-count = 6323
+count = 6329
 
 [[pages]]
 rel_path = "articles/haoyi_zhou_et_al_2021.html"
@@ -206,7 +206,7 @@ count = 1103
 [[pages]]
 rel_path = "articles/notepad-plus-plus.html"
 timestamp = "2026-01-30"
-count = 1223
+count = 1218
 
 [[pages]]
 rel_path = "articles/nyström_method.html"
@@ -246,7 +246,7 @@ count = 6197
 [[pages]]
 rel_path = "articles/pathlib.html"
 timestamp = "2025-12-13"
-count = 3217
+count = 3212
 
 [[pages]]
 rel_path = "articles/pdf.html"
