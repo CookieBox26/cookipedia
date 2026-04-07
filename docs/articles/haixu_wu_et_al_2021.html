@@ -16,11 +16,12 @@
 <div id="smartphone-header"></div>
 <div class="item long-title">
 <h1>Autoformer: Decomposition Transformers with Auto-Correlation for Long-Term Series Forecasting</h1>
-<p>Autoformer: Decomposition Transformers with Auto-Correlation for Long-Term Series Forecasting は、入力系列の線形変換 Q, K, V に対して FFT を用いた Q-K 相互相関を計算する "Auto-Correlation" 層を適用し、続けて "Series Decomposition" 層によってトレンド成分を分離して蓄積する構造をもつ時系列予測モデル Autoformer を提案する論文である。Tsinghua University (清華大学) の Haixu Wu らによって著され (著者全員が同所属)、2021 年の NeurIPS に採択された。</p>
+<p>Autoformer: Decomposition Transformers with Auto-Correlation for Long-Term Series Forecasting [paper] は、入力系列の各ステップを Q, K, V に線形変換して FFT で Q-K 相互相関を計算して再度線形変換する "Auto-Correlation" 層を適用し、続けて "Series Decomposition" 層によってトレンド成分を分離して蓄積する構造をもつ時系列予測モデル Autoformer を提案する論文である。Tsinghua University (清華大学) の Haixu Wu らによって著され (著者全員が同所属)、2021 年の NeurIPS に採択された。</p>
 
-<p>具体的に、"Auto-Correlation" 層は入力系列をステップごとに Q, K, V に線形変換し、FFT を用いて Q, K の全ラグの相互相関を O(L log L) で一括計算し、上位 k = floor(c log L) 個のラグに絞って、各ラグ分だけ V をロールシフトして softmax 重み付き和を取る。続く "Series Decomposition" 層は入力系列の移動平均 (ウィンドウサイズ 25) をとってトレンド成分 X_t とし、これを分離する (分離したトレンド成分は、エンコーダブロックでは破棄するが、デコーダブロックでは全て蓄積する)。さらに残った成分 (季節成分) を線形変換し、再度 "Series Decomposition" 層でトレンド成分を分離する。</p>
+<p>具体的に、"Auto-Correlation" 層は入力系列の各ステップを Q, K, V に線形変換し、FFT を用いて Q-K の全ラグの相互相関を O(L log L) で一括計算し、トップ k = floor(c log L) 個のラグに絞って、各ラグ分だけ V をロールシフトして softmax 重み付き和を取る。続く "Series Decomposition" 層は入力系列の移動平均 (ウィンドウサイズ 25) をとってトレンド成分 X_t とし、これを分離する (分離したトレンド成分は、エンコーダ層では破棄するが、デコーダ層では全て蓄積しておく)。さらに残った成分 (季節成分) を線形変換し、再度 "Series Decomposition" 層でトレンド成分を分離する。</p>
 
-<p>Autoformer 全体は Transformer に似た (マルチヘッドアテンション層を Auto-Correlation 層に、層正規化層を "Series Decomposition" 層に置き換えた) エンコーダ・デコーダ構造となっており、最終予測はデコーダ出力と蓄積されたトレンド成分の和として得られる。</p>
+<p>Autoformer 全体は Transformer に似た (マルチヘッドアテンション層を Auto-Correlation 層に、層正規化層を "Series Decomposition" 層に置き換えた) エンコーダ・デコーダ構造となっており、最終予測はデコーダ出力と蓄積しておいたトレンド成分の和として得られる。</p>
+
 
 <h2>参考文献</h2>
 <dl class="ref small">
@@ -32,6 +33,91 @@ Haixu Wu, Jiehui Xu, Jianmin Wang, Mingsheng Long. Autoformer: Decomposition Tra
 <li><a class="asis" href="https://github.com/thuml/Autoformer"></a></li>
 </ul>
 </dd>
+</dl>
+
+
+<h2>Autoformer の構造</h2>
+<p>Autoformer ではデコーダ初期化に用いる過去系列の長さをラベル長 L_label = L_in/2 と定めている。直近の過去情報をデコーダに与えつつ、ゼロパディング部分を予測させる設計になっている (つまり、エンコーダに入力する系列の後半は常にデコーダの初期入力にもなる)。ラベル長は実装上はハイパーパラメータとなっているが、論文では L_in/2 をデフォルトとしている。</p>
+
+<p>モデル次元数 512、線形変換の中間層次元数 2048、ヘッド数 8 は<a href="ashish_vaswani_et_al_2017.html">オリジナル Transformer</a> の値がそのまま採用されている。ただし、エンコーダ層数 2、デコーダ層数 1 はオリジナル Transformer での層数 (エンコーダ層数、デコーダ層数共に 6) とは異なる。また、活性化に GELU を採用している点もオリジナル Transformer とは異なる [脚注GELU]。</p>
+
+<p>また、エンコーダ・デコーダそれぞれの全層の出力 (デコーダでは蓄積しておいたトレンド成分を足し戻す前) に対して、独自の正規化 (<a class="asis break-all" href="https://github.com/thuml/Autoformer/blob/490bb749365efd8f1178bc652a06361701545a6f/layers/Autoformer_EncDec.py#L6-L17"></a>) を適用する。具体的に、通常の層正規化に加え、平均がゼロになるようシフトする。季節成分がゼロ周りの振動になるよう保証する措置と考えられる。この記事では以降、「ゼロ周り層正規化」とよぶ。</p>
+
+<h3>原論文でのエンコーダ</h3>
+<ul>
+<li>エンコーダ層 (以下) を 2 層積み重ねる。</li>
+<ul>
+<li>各ステップが 512 次元の入力系列を受け取る (ア)。</li>
+<li>"Auto-Correlation" 層 (以下) を適用する。</li>
+<ul>
+<li>入力系列をステップごとに Q, K, V 用に 3×8×64 次元に線形変換して、8 ヘッドに分割する。</li>
+<li>各ヘッドで FFT を用いて Q-K の全ラグの相互相関を計算し、値の大きいトップ k = floor(c log L) 個のラグに絞り [脚注top]、絞った各ラグ分だけ V をロールシフトし、softmax 重み付き和を取る。</li>
+<li>各ヘッドからの出力を 8×64=512 次元に連結する。</li>
+<li>512 次元に線形変換する。</li>
+</ul>
+<li>ドロップアウトする。</li>
+<li>(ア) から残差接続する。</li>
+<li>"Series Decomposition" 層を適用する：移動平均 (ウィンドウサイズ 25) でトレンド成分を抽出し、元の系列から減算して季節成分のみを出力する (トレンド成分は破棄する)。(イ)</li>
+<li>2048 次元に線形変換、GELU 活性化、ドロップアウトする。</li>
+<li>再び 512 次元に線形変換、ドロップアウトする。</li>
+<li>(イ) から残差接続する。</li>
+<li>"Series Decomposition" 層を適用する (トレンド成分は破棄する)。</li>
+<li>このエンコーダ層が最終エンコーダ層の場合のみ、「ゼロ周り層正規化」を適用する。</li>
+</ul>
+</ul>
+
+
+<h3>原論文でのデコーダ</h3>
+<ul>
+<li>デコーダへの入力を以下の通り初期化する。</li>
+<ul>
+<li>季節成分入力：エンコーダ入力の後半 L_in/2 ステップを "Series Decomposition" で分離した季節成分と、予測ホライゾン L_out ステップ分のゼロベクトルを連結する。((L_in/2 + L_out)×512 次元)</li>
+<li>トレンド累積変数：エンコーダ入力の後半 L_in/2 ステップの "Series Decomposition" トレンド成分と、エンコーダ入力全体の平均値を L_out 回繰り返したものを連結する。((L_in/2 + L_out)×512 次元)</li>
+</ul>
+<li>デコーダ層 (以下) を 1 層適用する。</li>
+<ul>
+<li>季節成分入力を受け取る (ア)。</li>
+<li>マスク付き "Auto-Correlation" 層を適用する。</li>
+<ul>
+<li>入力をステップごとに Q, K, V 用に 3×8×64 次元に線形変換して、8 ヘッドに分割する。</li>
+<li>未来ステップに対応する相互相関値をマスクする。</li>
+<li>8 ヘッド並列に FFT 相互相関・トップ k ラグ選択・ロールシフト和を適用する。</li>
+<li>各ヘッドからの出力を 8×64=512 次元に連結する。</li>
+<li>512 次元に線形変換する。</li>
+</ul>
+<li>ドロップアウトする。</li>
+<li>(ア) から残差接続する。</li>
+<li>"Series Decomposition" 層を適用し、季節成分を (イ) として出力する。抽出したトレンド成分は保持する (trend1)。</li>
+<li>クロス "Auto-Correlation" 層を適用する。</li>
+<ul>
+<li>(イ) から Q 用に 8×64 次元に線形変換して 8 ヘッドに分割する。</li>
+<li>エンコーダ出力から K, V 用にそれぞれ 8×64 次元に線形変換して 8 ヘッドに分割する。</li>
+<li>8 ヘッド並列に FFT 相互相関・トップ k ラグ選択・ロールシフト和を適用する。</li>
+<li>各ヘッドからの出力を 8×64=512 次元に連結する。</li>
+<li>512 次元に線形変換する。</li>
+</ul>
+<li>ドロップアウトする。</li>
+<li>(イ) から残差接続する。</li>
+<li>"Series Decomposition" 層を適用し、季節成分を (ウ) として出力する。抽出したトレンド成分は保持する (trend2)。</li>
+<li>2048 次元に線形変換、GELU 活性化、ドロップアウトする。</li>
+<li>再び 512 次元に線形変換、ドロップアウトする。</li>
+<li>(ウ) から残差接続する。</li>
+<li>"Series Decomposition" 層を適用し、季節成分を (エ) として出力する。抽出したトレンド成分は保持する (trend3)。</li>
+<li>最後に、以下の後半 L_out ステップ同士を加算して最終予測とする。</li>
+<ul>
+<li>(エ) に「ゼロ周り層正規化」を適用し、線形変換 (512 次元 → 出力変数次元) を適用する。</li>
+<li>trend1 + trend2 + trend3 にカーネルサイズ 3 の Conv1d (3×512 次元 → 出力変数次元) を適用する。</li>
+</ul>
+</ul>
+</ul>
+
+
+<h2>脚注</h2>
+<dl class="footnote">
+<dt>GELU</dt>
+<dd>GELU とは Gaussian Error Linear Unit の略で、f(x) = x · Φ(x) と定義される (Φ は標準正規分布の累積分布関数)。ReLU が x < 0 で出力を 0 にカットするのに対し、GELU は x < 0 でも確率的に小さい値を通すなめらかな形になる。Dan Hendrycks と Kevin Gimpel が 2016 年に提案し (<a class="asis" href="https://arxiv.org/abs/1606.08415"></a>)、BERT (2018) で採用されてから Transformer 系モデルでの標準的な活性化関数として普及した。Autoformer が GELU を選んだ理由は論文中に明記はなく、当時の標準に倣ったものと考えられる。</dd>
+<dt>top</dt>
+<dd>絶対値を取るのではなく、符号付きで値の大きいラグを選択する (後段で softmax 重み付き和を取る都合上、相関が負のラグを取ると予測が劣化すると考えられ、ここで相関が負のラグを取るべきではないのはさもありなんと思われる)。</dd>
 </dl>
 
 

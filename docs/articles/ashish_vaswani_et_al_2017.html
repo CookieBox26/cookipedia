@@ -34,16 +34,16 @@ Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N
 
 <h2>関連リンク</h2>
 <ul>
-<li><a href="https://qiita.com/CookieBox26/items/8d3bb4a767aa0ca572ce">torch.nn.TransformerEncoder のイラスト</a></li>
+<li><a href="https://qiita.com/CookieBox26/items/8d3bb4a767aa0ca572ce">torch.nn.TransformerEncoder のイラスト - Qiita</a></li>
 </ul>
 
 
 <h2>Transformer の構造</h2>
 <p>"Scaled Dot-Product Attention" は、全て「長さ L_in の d_k 次元のベクトル列」である Q, K, V に対し、Attention(Q, K, V) := softmax(QK^T/√d_k)V と定義される (原論文では d_k=64)。よって、出力も「長さ L_in の d_k 次元のベクトル列」である。</p>
 
-<p>"Multi-Head Attention" 層は、「長さ L_in の n_head×d_k 次元のベクトル列」である入力系列をステップごとに 3×n_head×d_k 次元に線形変換して Q, K, V 用に 3 分割・さらにそれぞれ n_head ヘッドに分割して (原論文では n_head=8)、全ヘッド並列に Attention(Q, K, V) を適用し、n_head ヘッドの出力を連結して (8×64=512 次元)、2048 次元に線形変換し、再び 512 次元に線形変換する。よって、出力も「長さ L_in の n_head×d_k 次元のベクトル列」である。</p>
+<p>"Multi-Head Attention" 層は、「長さ L_in の n_head×d_k 次元のベクトル列」である入力系列をステップごとに 3×n_head×d_k 次元に線形変換して Q, K, V 用に 3 分割・さらにそれぞれ n_head ヘッドに分割して (原論文では n_head=8)、全ヘッド並列に Attention(Q, K, V) を適用し、n_head ヘッドの出力を連結して (8×64=512 次元)、2048 次元に線形変換して ReLU 活性化し [脚注ReLU]、再び 512 次元に線形変換する。よって、出力も「長さ L_in の n_head×d_k 次元のベクトル列」である。</p>
 
-<p>なお、系列の位置情報は三角関数による固定の "Positional Encoding" を各ステップに加算する。</p>
+<p>なお、入力系列をエンコーダに入力する前に、三角関数による固定の "Positional Encoding" を各ステップに加算する (系列の位置情報をもたせるため)。</p>
 
 <h3>原論文での位置エンコーディング</h3>
 <ul>
@@ -64,11 +64,12 @@ Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N
 <li>入力系列をステップごとにQ, K, V 用に 3×8×64 次元に線形変換して、8 ヘッドに分割する。</li>
 <li>8 ヘッド並列に Attention(Q, K, V) := softmax(QK^T/√d)V を適用する。</li>
 <li>各ヘッドからの出力を 8×64=512 次元に連結する。</li>
+<li>512 次元に線形変換する。</li>
 </ul>
 <li>ドロップアウトする。</li>
 <li>(ア) から残差接続する。</li>
 <li>層正規化する。(イ)</li>
-<li>2048 次元に線形変換、活性化、ドロップアウトする。</li>
+<li>2048 次元に線形変換、ReLU 活性化、ドロップアウトする。</li>
 <li>再び 512 次元に線形変換、ドロップアウトする。</li>
 <li>(イ) から残差接続する。</li>
 <li>層正規化する。</li>
@@ -93,21 +94,23 @@ Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N
 <li>このマスクは、訓練時に「『&lt;BOS&gt;』から『A』を予測」「『&lt;BOS&gt; A』から『- B』を予測」「『&lt;BOS&gt; A B』から『- - C』を予測」… を一挙に行えるようにするための措置である。このマスクによって、出力の 1 ステップ目は「&lt;BOS&gt;」までから、出力の 2 ステップ目は「&lt;BOS&gt; A」までから、出力の 3 ステップ目は「&lt;BOS&gt; A B」までから生成されるようにできる。このマスクを導入しない場合に比べモデルの表現力は制限されるが、このマスクを導入することにより各ステップの予測用のサンプルデータを別々に用意して別々に予測する必要がなくなり、訓練時間を短縮できる。なお、Transformer ではこの一挙訓練のために同じ文章の各ステップの予測は強制的に同じバッチになる。</li>
 </ul>
 <li>各ヘッドからの出力を 8×64=512 次元に連結する。</li>
+<li>512 次元に線形変換する。</li>
 </ul>
 <li>ドロップアウトする。</li>
 <li>(ア) から残差接続する。</li>
 <li>層正規化する。(イ)</li>
-<li>マルチヘッドアテンション層 (以下) を適用する。</li>
+<li>クロスマルチヘッドアテンション層 (以下) を適用する。</li>
 <ul>
 <li>(イ) から Q 用に 8×64 次元に線形変換して 8 ヘッドに分割する。</li>
 <li>エンコーダ最終出力を K, V 用に 2×8×64 次元に線形変換して 8 ヘッドに分割する。</li>
 <li>8 ヘッド並列に Attention(Q, K, V) を適用する。</li>
 <li>各ヘッドからの出力を 8×64=512 次元に連結する。</li>
+<li>512 次元に線形変換する。</li>
 </ul>
 <li>ドロップアウトする。</li>
 <li>(イ) から残差接続する。</li>
 <li>層正規化する。(ウ)</li>
-<li>2048 次元に線形変換、活性化、ドロップアウトする。</li>
+<li>2048 次元に線形変換、ReLU 活性化、ドロップアウトする。</li>
 <li>再び 512 次元に線形変換、ドロップアウトする。</li>
 <li>(ウ) から残差接続する。</li>
 <li>層正規化する。</li>
@@ -245,6 +248,8 @@ out shape: torch.Size([1, 4, 6])
 
 <h2>脚注</h2>
 <dl class="footnote">
+<dt>ReLU</dt>
+<dd>当時既に GELU (<a class="asis" href="https://arxiv.org/abs/1606.08415"></a>) が提案されていたが広まっておらず、Attention Is All You Need では ReLU が採用されている。GELU は BERT (2018) で採用されてから Transformer 系モデルでの標準的な活性化関数として普及した。</dd>
 <dt>PE</dt>
 <dd>10000 は経験的な値である。</dd>
 <dt>EN</dt>
