@@ -16,7 +16,9 @@
 <div id="smartphone-header"></div>
 <div class="item long-title">
 <h1>A Time Series is Worth 64 Words: Long-term Forecasting with Transformers</h1>
+<p>A Time Series is Worth 64 Words: Long-term Forecasting with Transformers は、時系列の各チャネルを固定長の重複パッチに分割してトークンとし、チャネル間で重みを共有しつつ各チャネルを独立に処理する Transformer エンコーダモデル PatchTST を提案する論文である。Princeton University の Yuqi Nie らによって著され (他に IBM Research 所属の著者も)、2022 年に arXiv にプレプリントが発表され、2023 年の ICLR に採択された。</p>
 
+<p>具体的には、長さ L_in の時系列の各チャネルに対して、サンプル内正規化 (ゼロ平均・単位分散) を施した後、パッチ長 P=16、ストライド S=8 でパッチ数 N = floor((L_in - P) / S) + 2 個のパッチに分割して各パッチを線形変換で d_model=128 次元に埋め込み、学習可能な位置エンコーディング (N×d_model 次元のパラメータを学習) を加算し、チャネルごとに独立に同一の Transformer エンコーダ (3 層、d_model=128、16 ヘッド、d_ff=256) を適用する。すると、チャネルごとに N パッチ分の d_model 次元のベクトルが得られるので、これを N×d_model 次元に flatten し、L_out 次元に線形変換し、サンプル内正規化の逆変換を適用してそのチャネルの予測系列とする。また、パッチの 40% をゼロマスクして元のパッチを再構成する自己教師あり事前学習スキームも提案している。</p>
 
 <h2>参考文献</h2>
 <dl class="ref small">
@@ -30,6 +32,37 @@ Yuqi Nie, Nam H. Nguyen, Phanwadee Sinthong, Jayant Kalagnanam. A time series is
 </ul>
 </dd>
 </dl>
+
+
+<h2>PatchTST の構造</h2>
+<ul>
+<li>各チャネルの長さ L_in の時系列に対して、サンプル内正規化 (ゼロ平均・単位分散) を施す。</li>
+<li>各チャネルの時系列をパッチ長 P=16、ストライド S=8 で分割する。末尾に最終値を S 回繰り返してパディングし、N = floor((L_in - P) / S) + 2 個のパッチを得る。</li>
+<li>各パッチ (P=16 次元) を線形変換で d_model=128 次元に埋め込む。</li>
+<li>学習可能な位置エンコーディング (N×d_model 次元のパラメータ) を加算する。(ア)</li>
+<li>各チャネルを独立に同一の Transformer エンコーダ (以下) で処理する。</li>
+<ul>
+<li>エンコーダ層 (以下) を 3 層積み重ねる。</li>
+<ul>
+<li>N トークンの 128 次元入力を受け取る (イ)。</li>
+<li>マルチヘッドアテンション層を適用する。</li>
+<ul>
+<li>入力をトークンごとに Q, K, V 用に 3×16×8 次元に線形変換して、16 ヘッドに分割する。</li>
+<li>16 ヘッド並列に Attention(Q, K, V) := softmax(QK^T/√d)V を適用する。</li>
+<li>各ヘッドからの出力を 16×8=128 次元に連結し、128 次元に線形変換する。</li>
+</ul>
+<li>ドロップアウトする。</li>
+<li>(イ) から残差接続する。</li>
+<li>層正規化する。(ウ)</li>
+<li>256 次元に線形変換、GELU 活性化、ドロップアウトする。</li>
+<li>再び 128 次元に線形変換、ドロップアウトする。</li>
+<li>(ウ) から残差接続する。</li>
+<li>層正規化する。</li>
+</ul>
+</ul>
+<li>各チャネルの N×d_model 次元の出力を N×d_model 次元に flatten し、線形変換 (N×d_model 次元 → L_out 次元) を適用する (全チャネルで重みを共有する)。</li>
+<li>サンプル内正規化の逆変換を適用してそのチャネルの予測系列とする。</li>
+</ul>
 
 
 <div class="categories">
