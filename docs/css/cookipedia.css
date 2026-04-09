@@ -45,6 +45,14 @@ div.long-title > h1 {
 }
 figure {
   text-align: center;
+  margin: 1em auto;
+  counter-increment: fig;
+}
+figure figcaption {
+  font-size: 90%;
+}
+figure figcaption::before {
+  content: '図' counter(fig) '. ';
 }
 figure img {
   max-width: 100%;
