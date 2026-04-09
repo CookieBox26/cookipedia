@@ -484,7 +484,23 @@ span.pl-k {
 span.pl-s1, span.pl-smi {
   color: var(--text) !important;
 }
-
+/* Figure */
+figure {
+  text-align: center;
+  margin: 1em auto;
+  counter-increment: fig;
+}
+figure figcaption {
+  font-size: 90%;
+}
+figure figcaption::before {
+  content: '図' counter(fig) '. ';
+}
+figure img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
 @media screen and (min-width: 540px) {
   .gist .blob-code-inner {
     font-size: 13.25px !important;

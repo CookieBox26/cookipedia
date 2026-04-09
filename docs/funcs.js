@@ -250,11 +250,23 @@ function linkFootnotes() {
   });
 }
 
+function linkImages() {
+  document.querySelectorAll('figure > img').forEach(img => {
+    const a = document.createElement('a');
+    a.href = img.src;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    img.parentNode.insertBefore(a, img);
+    a.appendChild(img);
+  });
+}
+
 function init(repo, isIndex = false, isTop = false, lang = 'ja') {
   createSidebar(repo, isIndex, isTop, lang);
   secureExternalLinks();
   linkRefs();
   linkFootnotes();
+  linkImages();
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
