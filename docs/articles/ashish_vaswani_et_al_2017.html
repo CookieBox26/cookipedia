@@ -19,7 +19,7 @@
 <p>Attention Is All You Need は、エンコーダで入力系列を変換 (「文脈の反映」) し、デコーダで出力系列を生成する "Transformer" を提案する論文である。エンコーダ・デコーダには再帰も畳込みも用いず、内部で "Scaled Dot-Product Attention" を用いる "Multi-Head Attention" 層と、ステップごとの全結合層のみで構成する。Google Brain の Ashish Vaswani らによって著され (他に Google Research、University of Toronto 所属の著者も)、2017 年の NeurIPS に採択された。</p>
 <figure>
 <figcaption>Transformer のイラスト (原論文等を元に私が描画)</figcaption>
-<img src="../images/transformer.svg?v=2026-04-10"/>
+<img src="../images/transformer.svg?v=2026-04-11"/>
 </figure>
 
 
@@ -50,7 +50,7 @@ Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N
 
 <h3>原論文での位置エンコーディング</h3>
 <ul>
-<li>位置 pos (0-indexed)、次元インデックス i (0-indexed) に対して、512 次元のベクトルの各成分を以下で定義する [脚注PE]。</li>
+<li>位置 pos (0-indexed)、次元インデックス i (0-indexed) に対して、512 次元のベクトルの各成分を以下で定義する [脚注PE]。また、位置エンコーディングの加算後にはドロップアウトする。</li>
 <ul>
 <li>偶数インデックス 2i： sin(pos / 10000^(2i/512))</li>
 <li>奇数インデックス 2i+1： cos(pos / 10000^(2i/512))</li>
@@ -134,118 +134,77 @@ Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N
 埋め込み次元数 6、中間層次元数 12、ヘッド数 2、エンコーダ層数 2、デコーダ総数 2 とし、長さ 8 の入力から長さ 4 の出力を得る。
 <pre class="language-python"><code>
 import torch
-import torch.nn as nn
+from torch.nn import TransformerEncoder as Encoder
+from torch.nn import TransformerEncoderLayer as EncoderLayer
+from torch.nn import TransformerDecoder as Decoder
+from torch.nn import TransformerDecoderLayer as DecoderLayer
 import math
 
 
-class PositionalEncoding(nn.Module):
-    def __init__(self, d_model, max_len=100):
+class PositionalEncoding(torch.nn.Module):
+    def __init__(self, d_m, len_max=100):
         super().__init__()
-        pe = torch.zeros(max_len, d_model)
-        pos = torch.arange(0, max_len).unsqueeze(1)  # (max_len, 1)
-        div = torch.exp(
-            torch.arange(0, d_model, 2) * (-math.log(10000.0) / d_model)
-        )
+        pe = torch.zeros(len_max, d_m)
+        pos = torch.arange(0, len_max).unsqueeze(1)  # (max_len, 1)
+        div = torch.exp(torch.arange(0, d_m, 2) * (-math.log(10000.0) / d_m))
         pe[:, 0::2] = torch.sin(pos * div)
         pe[:, 1::2] = torch.cos(pos * div)
-        self.register_buffer('pe', pe.unsqueeze(0))  # (1, max_len, d_model)
+        self.register_buffer('pe', pe.unsqueeze(0))  # (1, len_max, d_m)
 
     def forward(self, x):
-        return x + self.pe[:, :x.size(1)]  # (batch, seq_len, d_model)
+        return x + self.pe[:, :x.size(1)]  # (batch, seq_len, d_m)
 
 
-class ToyTransformer(nn.Module):
-    def __init__(self, d_model=6, nhead=2, d_ff=12):
+class ToyTransformer(torch.nn.Module):
+    def __init__(self, d_m, n_head, d_ff, p_drop=0.1):
         super().__init__()
-        self.pos_enc = PositionalEncoding(d_model=d_model)
-        encoder_layer = nn.TransformerEncoderLayer(
-            d_model=d_model, nhead=nhead, dim_feedforward=d_ff, batch_first=True,
-        )
-        self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=2)
-        decoder_layer = nn.TransformerDecoderLayer(
-            d_model=d_model, nhead=nhead, dim_feedforward=d_ff, batch_first=True,
-        )
-        self.decoder = nn.TransformerDecoder(decoder_layer, num_layers=2)
-        self.output_proj = nn.Linear(d_model, d_model)
+        self.pos_enc = PositionalEncoding(d_m)
+        self.dropout = torch.nn.Dropout(p_drop)
+        common_params = {
+            'd_model': d_m,
+            'nhead': n_head,
+            'dim_feedforward': d_ff,
+            'batch_first': True,
+        }
+        self.encoder = Encoder(EncoderLayer(**common_params), num_layers=2)
+        self.decoder = Decoder(DecoderLayer(**common_params), num_layers=2)
 
     def forward(self, src, tgt):
-        # src: (batch, src_len, d_model)
-        # tgt: (batch, tgt_len, d_model)
-        tgt_len = tgt.size(1)
-        # マスク: 位置 i が i より未来を見ないようにする
-        mask = nn.Transformer.generate_square_subsequent_mask(tgt_len)
-        encoded = self.encoder(self.pos_enc(src))
-        decoded = self.decoder(self.pos_enc(tgt), encoded, tgt_mask=mask)
-        return self.output_proj(decoded)  # (batch, tgt_len, d_model)
+        # src: (b, len_in, d_m)
+        # tgt: (b, len_out, d_m)
+        len_out = tgt.size(1)
+        mask = torch.nn.Transformer.generate_square_subsequent_mask(len_out)
+        encoded = self.encoder(self.dropout(self.pos_enc(src)))
+        decoded = self.decoder(self.dropout(self.pos_enc(tgt)), encoded, tgt_mask=mask)
+        return decoded
 
 
 if __name__ == '__main__':
-    model = ToyTransformer()
-    print(model)
-    print(f'\nパラメータ総数: {sum(p.numel() for p in model.parameters())}')
-    print(f'{(6 + 1) * 18 + (6 + 1) * 6 + 2 * 6 + (6 + 1) * 12 + (12 + 1) * 6 + 2 * 6 =}')
-    print(f'{2 * ((6 + 1) * 18 + (6 + 1) * 6 + 2 * 6) + (6 + 1) * 12 + (12 + 1) * 6 + 2 * 6 =}')
-    print(f'{2 * (354 + 534) + (6 + 1) * 6 =}')
+    d_m = 6
+    n_head = 2
+    d_ff = 12
+    model = ToyTransformer(d_m, n_head, d_ff)
 
+    # パラメータ数の確認
+    n_param = sum(p.numel() for p in model.parameters())
+    n_param_enc = sum(p.numel() for p in model.encoder.layers[0].parameters())
+    n_param_dec = sum(p.numel() for p in model.decoder.layers[0].parameters())
+    print(f'パラメータ総数: {n_param}')
+    print(f'encoder層のパラメータ数: {n_param_enc}')
+    print(f'decoder層のパラメータ数: {n_param_dec}')
+    assert n_param == 2 * n_param_enc + 2 * n_param_dec
+
+    # 入出力テンソルサイズの確認
     src = torch.randn(1, 8, 6)
     tgt = torch.randn(1, 4, 6)
-    print(f'\nsrc shape: {src.shape}')
-    print(f'tgt shape: {tgt.shape}')
     with torch.no_grad():
         out = model(src, tgt)
-    print(f'out shape: {out.shape}')
+    assert out.shape == (1, 4, 6)
 </code></pre>
 <pre class="language-text"><code>
-ToyTransformer(
-  (pos_enc): PositionalEncoding()
-  (encoder): TransformerEncoder(
-    (layers): ModuleList(
-      (0-1): 2 x TransformerEncoderLayer(
-        (self_attn): MultiheadAttention(
-          (out_proj): NonDynamicallyQuantizableLinear(in_features=6, out_features=6, bias=True)
-        )
-        (linear1): Linear(in_features=6, out_features=12, bias=True)
-        (dropout): Dropout(p=0.1, inplace=False)
-        (linear2): Linear(in_features=12, out_features=6, bias=True)
-        (norm1): LayerNorm((6,), eps=1e-05, elementwise_affine=True)
-        (norm2): LayerNorm((6,), eps=1e-05, elementwise_affine=True)
-        (dropout1): Dropout(p=0.1, inplace=False)
-        (dropout2): Dropout(p=0.1, inplace=False)
-      )
-    )
-  )
-  (decoder): TransformerDecoder(
-    (layers): ModuleList(
-      (0-1): 2 x TransformerDecoderLayer(
-        (self_attn): MultiheadAttention(
-          (out_proj): NonDynamicallyQuantizableLinear(in_features=6, out_features=6, bias=True)
-        )
-        (multihead_attn): MultiheadAttention(
-          (out_proj): NonDynamicallyQuantizableLinear(in_features=6, out_features=6, bias=True)
-        )
-        (linear1): Linear(in_features=6, out_features=12, bias=True)
-        (dropout): Dropout(p=0.1, inplace=False)
-        (linear2): Linear(in_features=12, out_features=6, bias=True)
-        (norm1): LayerNorm((6,), eps=1e-05, elementwise_affine=True)
-        (norm2): LayerNorm((6,), eps=1e-05, elementwise_affine=True)
-        (norm3): LayerNorm((6,), eps=1e-05, elementwise_affine=True)
-        (dropout1): Dropout(p=0.1, inplace=False)
-        (dropout2): Dropout(p=0.1, inplace=False)
-        (dropout3): Dropout(p=0.1, inplace=False)
-      )
-    )
-  )
-  (output_proj): Linear(in_features=6, out_features=6, bias=True)
-)
-
-パラメータ総数: 1818
-(6 + 1) * 18 + (6 + 1) * 6 + 2 * 6 + (6 + 1) * 12 + (12 + 1) * 6 + 2 * 6 =354
-2 * ((6 + 1) * 18 + (6 + 1) * 6 + 2 * 6) + (6 + 1) * 12 + (12 + 1) * 6 + 2 * 6 =534
-2 * (354 + 534) + (6 + 1) * 6 =1818
-
-src shape: torch.Size([1, 8, 6])
-tgt shape: torch.Size([1, 4, 6])
-out shape: torch.Size([1, 4, 6])
+パラメータ総数: 1776
+encoder層のパラメータ数: 354
+decoder層のパラメータ数: 534
 </code></pre>
 
 
