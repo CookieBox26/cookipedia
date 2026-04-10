@@ -148,7 +148,7 @@ class PositionalEncoding(torch.nn.Module):
         pos = torch.arange(0, len_max).unsqueeze(1)  # (max_len, 1)
         div = torch.exp(torch.arange(0, d_m, 2) * (-math.log(10000.0) / d_m))
         pe[:, 0::2] = torch.sin(pos * div)
-        pe[:, 1::2] = torch.cos(pos * div)
+        pe[:, 1::2] = torch.cos(pos * div[:pe[:, 1::2].shape[1]])
         self.register_buffer('pe', pe.unsqueeze(0))  # (1, len_max, d_m)
 
     def forward(self, x):

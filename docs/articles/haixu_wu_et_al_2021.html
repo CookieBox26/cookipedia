@@ -19,7 +19,10 @@
 <p>Autoformer: Decomposition Transformers with Auto-Correlation for Long-Term Series Forecasting [paper] は、入力系列の各ステップを Q, K, V に線形変換して FFT で Q-K 相互相関を計算して再度線形変換する "Auto-Correlation" 層を適用し、続けて "Series Decomposition" 層によってトレンド成分を分離して蓄積する構造をもつ時系列予測モデル Autoformer を提案する論文である。Tsinghua University (清華大学) の Haixu Wu らによって著され (著者全員が同所属)、2021 年の NeurIPS に採択された。</p>
 <p>具体的に、"Auto-Correlation" 層は入力系列の各ステップを Q, K, V に線形変換し、FFT を用いて Q-K の全ラグの相互相関を O(L log L) で一括計算し、トップ k = floor(c log L) 個のラグに絞って、各ラグ分だけ V をロールシフトして softmax 重み付き和を取る。続く "Series Decomposition" 層は入力系列の移動平均 (ウィンドウサイズ 25) をとってトレンド成分 X_t とし、これを分離する (分離したトレンド成分は、エンコーダ層では破棄するが、デコーダ層では全て蓄積しておく)。さらに残った成分 (季節成分) を線形変換し、再度 "Series Decomposition" 層でトレンド成分を分離する。</p>
 <p>Autoformer 全体は Transformer に似た (マルチヘッドアテンション層を Auto-Correlation 層に、層正規化層を "Series Decomposition" 層に置き換えた) エンコーダ・デコーダ構造となっており、最終予測はデコーダ出力と蓄積しておいたトレンド成分の和として得られる。</p>
-
+<figure>
+<figcaption>Autoformer のイラスト (原論文等を元に私が描画)</figcaption>
+<img src="../images/autoformer.svg?v=2026-04-10"/>
+</figure>
 
 <h2>参考文献</h2>
 <dl class="ref small">
