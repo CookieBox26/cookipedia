@@ -16,9 +16,8 @@
 <div id="smartphone-header"></div>
 <div class="item long-title">
 <h1>Autoformer: Decomposition Transformers with Auto-Correlation for Long-Term Series Forecasting</h1>
-<p>Autoformer: Decomposition Transformers with Auto-Correlation for Long-Term Series Forecasting [paper] は、入力系列の各ステップを Q, K, V に線形変換して FFT で Q-K 相互相関を計算して再度線形変換する "Auto-Correlation" 層を適用し、続けて "Series Decomposition" 層によってトレンド成分を分離して蓄積する構造をもつ時系列予測モデル Autoformer を提案する論文である。Tsinghua University (清華大学) の Haixu Wu らによって著され (著者全員が同所属)、2021 年の NeurIPS に採択された。</p>
-<p>具体的に、"Auto-Correlation" 層は入力系列の各ステップを Q, K, V に線形変換し、FFT を用いて Q-K の全ラグの相互相関を O(L log L) で一括計算し、トップ k = floor(c log L) 個のラグに絞って、各ラグ分だけ V をロールシフトして softmax 重み付き和を取る。続く "Series Decomposition" 層は入力系列の移動平均 (ウィンドウサイズ 25) をとってトレンド成分 X_t とし、これを分離する (分離したトレンド成分は、エンコーダ層では破棄するが、デコーダ層では全て蓄積しておく)。さらに残った成分 (季節成分) を線形変換し、再度 "Series Decomposition" 層でトレンド成分を分離する。</p>
-<p>Autoformer 全体は Transformer に似た (マルチヘッドアテンション層を Auto-Correlation 層に、層正規化層を "Series Decomposition" 層に置き換えた) エンコーダ・デコーダ構造となっており、最終予測はデコーダ出力と蓄積しておいたトレンド成分の和として得られる。</p>
+<p>Autoformer: Decomposition Transformers with Auto-Correlation for Long-Term Series Forecasting [paper] は、Transformer に似た (マルチヘッドアテンション層を "Auto-Correlation" 層に、層正規化層を "Series Decomposition" 層に置き換えた) エンコーダ + デコーダ構造をもつ時系列予測モデル Autoformer を提案する論文である。Tsinghua University (清華大学) の Haixu Wu らによって著され (著者全員が同所属)、2021 年の NeurIPS に採択された。</p>
+<p>具体的に、"Auto-Correlation" 層は入力系列の各ステップを Q, K, V に線形変換し、FFT を用いて Q-K の全ラグの相互相関を O(L log L) で一括計算し、モデル次元方向の平均値がトップ k = floor(c log L) 個のステップに絞った上で softmax し、各ラグ分だけ V をロールシフトして重み付き和を取る。続く "Series Decomposition" 層は入力系列の移動平均 (ウィンドウサイズ 25) をとってトレンド成分とし、これを分離する (分離したトレンド成分は、エンコーダでは破棄し、デコーダでは蓄積する)。</p>
 <figure>
 <figcaption>Autoformer のイラスト (原論文等を元に私が描画)</figcaption>
 <img src="../images/autoformer.svg?v=2026-04-10"/>
@@ -50,7 +49,7 @@ Haixu Wu, Jiehui Xu, Jianmin Wang, Mingsheng Long. Autoformer: Decomposition Tra
 <li>(L_in + L_out) 次元のタイムスタンプを時間特徴エンコーディングする：以下の 5 (4) 値を [-0.5, 0.5] に正規化し、5 (4) 次元ベクトルとして 512 次元に線形変換する。</li>
 <ul>
 <li>その時刻が何時か (0〜23 時)</li>
-<li>その日が週の何日目か (月〜日)</li>
+<li>その日が週の何日目か (1〜7 日)</li>
 <li>その日が月の何日目か (1〜31 日)</li>
 <li>その日が年の何日目か (1〜365 日)</li>
 <li>その分が時間の何分目か (0〜59 分)  ※ 時間ステップが 1 時間未満の場合のみ。</li>
@@ -76,7 +75,7 @@ Haixu Wu, Jiehui Xu, Jianmin Wang, Mingsheng Long. Autoformer: Decomposition Tra
 <li>"Auto-Correlation" 層 (以下) を適用する。</li>
 <ul>
 <li>入力系列をステップごとに Q, K, V 用に 3×8×64 次元に線形変換して、8 ヘッドに分割する。</li>
-<li>各ヘッドで FFT を用いて Q-K の全ラグの相互相関を計算し、値の大きいトップ k = floor(c log L) 個のラグに絞り [脚注top]、絞った各ラグ分だけ V をロールシフトし、softmax 重み付き和を取る。</li>
+<li>各ヘッドで FFT を用いて Q-K の全ラグの相互相関を計算し、モデル次元方向の平均値の大きいトップ k = floor(c log L) 個のラグに絞った上で softmax し (c の規定値は 1) [脚注top]、絞った各ラグ分だけ V をロールシフトして重み付き和を取る。</li>
 <li>各ヘッドからの出力を 8×64=512 次元に連結する。</li>
 <li>512 次元に線形変換する。</li>
 </ul>

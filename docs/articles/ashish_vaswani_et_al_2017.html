@@ -17,7 +17,7 @@
 <div class="item long-title">
 <h1>Attention Is All You Need</h1>
 <p>Attention Is All You Need [paper] は、エンコーダが「ソース系列」を「前後の文脈を反映した」系列に変換し、それを受けた下でデコーダが別の「ターゲット系列」を「1 単語先にシフトした系列」に変換するように訓練する Seq2Seq モデル "Transformer" を提案する論文である。Google Brain の Ashish Vaswani らによって著され (他に Google Research、University of Toronto 所属の著者も)、2017 年の NeurIPS に採択された。</p>
-<p>Transformer は推論時には対象の「ソース系列」をエンコードした下で、最初は文頭トークンのみの「ターゲット系列」から順に次の単語をデコードしていく。Transformer のエンコーダ・デコーダは系列の処理に再帰も畳込みも用いず、"Scaled Dot-Product Attention" を内包する "Multi-Head Attention" 層と、ステップごとの全結合層のみを用いる。</p>
+<p>Transformer は推論時には対象の「ソース系列」をエンコードした下で、最初は文頭トークンのみの「ターゲット系列」から順に次の単語をデコードしていく。Transformer のエンコーダ・デコーダは系列の処理に再帰も畳込みも用いず、"Scaled Dot-Product Attention" を内包する "Multi-Head Attention" 層と、ステップごとの線形変換のみを用いる。</p>
 <figure>
 <figcaption>Transformer のイラスト (原論文等を元に私が描画)</figcaption>
 <img src="../images/transformer.svg?v=2026-04-11"/>
@@ -40,8 +40,22 @@ Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N
 
 <h2>Transformer の構造</h2>
 <p>"Scaled Dot-Product Attention" は、全て「長さ L_in の d_k 次元のベクトル列」である Q, K, V に対し、Attention(Q, K, V) := softmax(QK^T/√d_k)V と定義される (原論文では d_k=64)。よって、出力も「長さ L_in の d_k 次元のベクトル列」である。</p>
-<p>"Multi-Head Attention" 層は、「長さ L_in の n_head×d_k 次元のベクトル列」である入力系列をステップごとに 3×n_head×d_k 次元に線形変換して Q, K, V 用に 3 分割・さらにそれぞれ n_head ヘッドに分割して (原論文では n_head=8)、全ヘッド並列に Attention(Q, K, V) を適用し、n_head ヘッドの出力を連結して (8×64=512 次元)、2048 次元に線形変換して ReLU 活性化し [脚注ReLU]、再び 512 次元に線形変換する。よって、出力も「長さ L_in の n_head×d_k 次元のベクトル列」である。</p>
-<p>なお、入力系列をエンコーダに入力する前に、三角関数による固定の "Positional Encoding" を各ステップに加算する (系列の位置情報をもたせるため)。</p>
+<p>"Multi-Head Attention" 層は、「長さ L_in の n_head×d_k 次元のベクトル列」(原論文では n_head=8) である入力系列をステップごとに 3×n_head×d_k 次元に線形変換して Q, K, V 用に 3 分割し、さらにそれぞれ n_head ヘッドに分割して、全ヘッド並列に Attention(Q, K, V) を適用し、n_head ヘッドの出力を連結して (n_head×d_k 次元)、改めて各ステップを n_head×d_k 次元に線形変換する。よって、出力も「長さ L_in の n_head×d_k 次元のベクトル列」である。</p>
+<p>なお、「ソース系列」/「ターゲット系列」を埋め込んでエンコーダ / デコーダに入力する前に、固定の "Positional Encoding" を各ステップに加算する (系列の位置情報をもたせるため)。</p>
+
+<h3>Transformer 全体</h3>
+<p>以下の 3 箇所の (※) における語彙数×512次元の重み行列は共有する (Weight tying)。ただし、読み出し側では転置する。また、エンベディング側では重みに √512 を乗じる。</p>
+<ul>
+<li>「ソース系列」(トークン ID 列) をステップごとに語彙数次元 → 512 次元にエンベディングし (※)、位置エンコーディングを加算し、エンコーダ入力とする。</li>
+<li>エンコーダ入力にエンコーダを適用してエンコーダ出力を得る。</li>
+<li>「ターゲット系列」(トークン ID 列) をステップごとに語彙数次元 → 512 次元にエンベディングし (※)、位置エンコーディングを加算し、デコーダ入力とする。</li>
+<ul>
+<li>訓練時は、例えば正解系列が「A B C D」のとき、「ターゲット系列」は「&lt;BOS&gt; A B C」とし、デコーダが「A B C D」を出力することを目指す (ために各ステップの出力の交差エントロピーの平均の最小化を目指す)。</li>
+<li>推論時は、「ターゲット系列」はまず「&lt;BOS&gt;」のみとして最初のトークン「A」を生成し、次に「&lt;BOS&gt; A」を入力して次のトークン「A B」を生成する、という操作を繰り返す。</li>
+</ul>
+<li>エンコーダ出力の下に、デコーダ入力にデコーダを適用してデコーダ出力を得る。</li>
+<li>デコーダ出力を 512 次元 → 語彙数次元に線形変換して読み出し (※)、ステップごとに softmax して各ステップのトークンの確率分布を得る。推論時はビームサーチによって確率の大きいトップ 4 本の系列のデコードを継続する。</li>
+</ul>
 
 <h3>原論文での位置エンコーディング</h3>
 <ul>
@@ -67,7 +81,7 @@ Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N
 <li>ドロップアウトする。</li>
 <li>(ア) から残差接続する。</li>
 <li>層正規化する。(イ)</li>
-<li>2048 次元に線形変換、ReLU 活性化、ドロップアウトする。</li>
+<li>2048 次元に線形変換、ReLU 活性化 [脚注ReLU]、ドロップアウトする。</li>
 <li>再び 512 次元に線形変換、ドロップアウトする。</li>
 <li>(イ) から残差接続する。</li>
 <li>層正規化する。</li>
@@ -79,10 +93,6 @@ Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N
 <li>デコーダ層 (以下) を 6 層積み重ねる。</li>
 <ul>
 <li>各ステップが 512 次元の入力系列を受け取る (ア)。</li>
-<ul>
-<li>訓練時は、例えば正解系列が「A B C D」のとき、第 1 デコーダ層への入力は「&lt;BOS&gt; A B C」(を埋め込んで位置エンコーディングを加算した系列) とし、デコーダが「A B C D」を出力することを目指す (ために各ステップの出力の交差エントロピーの平均の最小化を目指す)。</li>
-<li>推論時は、まず「&lt;BOS&gt;」のみを入力して最初のトークン「A」を生成し、次に「&lt;BOS&gt; A」を入力して次のトークン「A B」を生成する、という操作を繰り返す。</li>
-</ul>
 <li>マスク付きマルチヘッドアテンション層 (以下) を適用する。</li>
 <ul>
 <li>入力系列をステップごとに 3×8×64 次元に線形変換する。</li>
