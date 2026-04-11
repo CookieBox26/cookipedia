@@ -24,12 +24,14 @@
 <img src="../images/autoformer.svg?v=2026-04-10"/>
 </figure>
 
+
 <h2>参考文献</h2>
 <dl class="ref small">
 <dt>paper</dt>
 <dd>
 Haixu Wu, Jiehui Xu, Jianmin Wang, Mingsheng Long. Autoformer: Decomposition Transformers with Auto-Correlation for Long-Term Series Forecasting. <i>Advances in Neural Information Processing Systems (NeurIPS 2021),</i> vol. 34, 2021.
 <ul>
+<li><a class="asis" href="https://proceedings.neurips.cc/paper/2021/hash/bcc0d400288793e8bdcd7c19a8ac0c2b-Abstract.html"></a></li>
 <li><a class="asis" href="https://arxiv.org/abs/2106.13008"></a></li>
 <li><a class="asis" href="https://github.com/thuml/Autoformer"></a></li>
 </ul>
@@ -39,16 +41,13 @@ Haixu Wu, Jiehui Xu, Jianmin Wang, Mingsheng Long. Autoformer: Decomposition Tra
 
 <h2>Autoformer の構造</h2>
 <p>Autoformer ではデコーダ初期化に用いる過去系列の長さをラベル長 L_label = L_in/2 と定めている。直近の過去情報をデコーダに与えつつ、ゼロパディング部分を予測させる設計になっている (つまり、エンコーダに入力する系列の後半は常にデコーダの初期入力にもなる)。ラベル長は実装上はハイパーパラメータとなっているが、論文では L_in/2 をデフォルトとしている。</p>
-<p>モデル次元数 512、線形変換の中間層次元数 2048、ヘッド数 8 は<a href="ashish_vaswani_et_al_2017.html">オリジナル Transformer</a> の値がそのまま採用されている。ただし、エンコーダ層数 2、デコーダ層数 1 はオリジナル Transformer での層数 (エンコーダ層数、デコーダ層数共に 6) とは異なる。また、活性化に GELU を採用している点もオリジナル Transformer とは異なる [脚注GELU]。</p>
-<p>また、エンコーダ・デコーダそれぞれの全層の出力 (デコーダでは蓄積しておいたトレンド成分を足し戻す前) に対して、独自の正規化 (<a class="asis break-all" href="https://github.com/thuml/Autoformer/blob/490bb749365efd8f1178bc652a06361701545a6f/layers/Autoformer_EncDec.py#L6-L17"></a>) を適用する。具体的に、通常の層正規化に加え、平均がゼロになるようシフトする。季節成分がゼロ周りの振動になるよう保証する措置と考えられる。この記事では以降、「ゼロ周り層正規化」とよぶ。</p>
+<p>また、エンコーダ出力・デコーダ出力の季節成分に対しては、独自の正規化 (<a class="asis break-all" href="https://github.com/thuml/Autoformer/blob/490bb749365efd8f1178bc652a06361701545a6f/layers/Autoformer_EncDec.py#L6-L17"></a>) を適用する。具体的に、通常の層正規化に加えて、平均がゼロになるようシフトする。季節成分がゼロ周りの振動になるよう保証する措置と考えられる。この記事では以降、「ゼロ周り層正規化」とよぶ。</p>
+<p>Autoformer のモデル次元数 512、中間層次元数 2048、ヘッド数 8 は<a href="ashish_vaswani_et_al_2017.html">オリジナル Transformer</a> の値がそのまま採用されている。ただし、エンコーダ層数 2、デコーダ層数 1 はオリジナル Transformer での層数 (エンコーダ層数、デコーダ層数共に 6) とは異なる。また、活性化に GELU を採用している点もオリジナル Transformer とは異なる [脚注GELU]。</p>
 
-<h3>原論文でのエンコーダ</h3>
+<h3>Autoformer 全体</h3>
 <ul>
-<li>エンコーダ層 (以下) を 2 層積み重ねる。</li>
-<ul>
-<li>各ステップが 512 次元の入力系列を受け取る (ア)。</li>
-<ul>
-<li>第 1 エンコーダ層への入力は、元の入力系列の各ステップのチャネル次元を線形変換で 512 次元に埋め込み、それに時間特徴エンコーディング (原コードでは TimeFeatureEmbedding) を加算したものである。時間特徴エンコーディングは、以下の 5 (4) 値を [-0.5, 0.5] に正規化し、5 (4) 次元ベクトルとして 512 次元に線形変換する。</li>
+<li>(L_in + L_out) 次元のタイムスタンプと、(L_in×C) 次元の入力系列を受け取る。</li>
+<li>(L_in + L_out) 次元のタイムスタンプを時間特徴エンコーディングする：以下の 5 (4) 値を [-0.5, 0.5] に正規化し、5 (4) 次元ベクトルとして 512 次元に線形変換する。</li>
 <ul>
 <li>その時刻が何時か (0〜23 時)</li>
 <li>その日が週の何日目か (月〜日)</li>
@@ -56,7 +55,24 @@ Haixu Wu, Jiehui Xu, Jianmin Wang, Mingsheng Long. Autoformer: Decomposition Tra
 <li>その日が年の何日目か (1〜365 日)</li>
 <li>その分が時間の何分目か (0〜59 分)  ※ 時間ステップが 1 時間未満の場合のみ。</li>
 </ul>
+<li>(L_in×C) 次元の入力系列の各ステップのチャネル次元を線形変換で 512 次元に埋め込み、時間特徴エンコーディングの最初の L_in ステップを加算し、エンコーダ入力とする。</li>
+<li>エンコーダ入力に "Series Decomposition" 層を適用する：移動平均 (ウィンドウサイズ 25) でトレンド成分を抽出し、残りを季節成分とする (ア)。
+<li>(ア) の季節成分の後半 L_in/2 ステップに、時間特徴エンコーディングの最後の L_out ステップを concat し、デコーダ入力の季節成分とする。</li>
+<li>(ア) のトレンド成分の後半 L_in/2 ステップに、エンコーダ入力全体の平均を L_out ステップ分繰り返して concat し、デコーダ入力のトレンド成分とする。</li>
+<li>エンコーダ入力にエンコーダを適用してエンコーダ出力を得る。</li>
+<li>エンコーダ出力の下に、デコーダ入力にデコーダを適用してデコーダ出力を得る。</li>
+<li>最後に、以下の後半 L_out ステップ同士を加算して予測結果とする。</li>
+<ul>
+<li>デコーダ出力の季節成分に、線形変換 (512 → C 次元) を適用する。</li>
+<li>デコーダ出力のトレンド成分に、カーネルサイズ 3 の Conv1d (3×512 → C 次元) を適用する。</li>
 </ul>
+</ul>
+
+<h3>エンコーダ</h3>
+<ul>
+<li>エンコーダ層 (以下) を 2 層積み重ねる。</li>
+<ul>
+<li>各ステップが 512 次元の入力系列を受け取る (ア)。</li>
 <li>"Auto-Correlation" 層 (以下) を適用する。</li>
 <ul>
 <li>入力系列をステップごとに Q, K, V 用に 3×8×64 次元に線形変換して、8 ヘッドに分割する。</li>
@@ -66,57 +82,41 @@ Haixu Wu, Jiehui Xu, Jianmin Wang, Mingsheng Long. Autoformer: Decomposition Tra
 </ul>
 <li>ドロップアウトする。</li>
 <li>(ア) から残差接続する。</li>
-<li>"Series Decomposition" 層を適用する：移動平均 (ウィンドウサイズ 25) でトレンド成分を抽出し、元の系列から減算して季節成分のみを出力する (トレンド成分は破棄する)。(イ)</li>
+<li>"Series Decomposition" 層を適用して季節成分を得る (イ)。トレンド成分は破棄する。</li>
 <li>2048 次元に線形変換、GELU 活性化、ドロップアウトする。</li>
 <li>再び 512 次元に線形変換、ドロップアウトする。</li>
 <li>(イ) から残差接続する。</li>
-<li>"Series Decomposition" 層を適用する (トレンド成分は破棄する)。</li>
+<li>"Series Decomposition" 層を適用して季節成分を得る。トレンド成分は破棄する。</li>
 <li>このエンコーダ層が最終エンコーダ層の場合のみ、「ゼロ周り層正規化」を適用する。</li>
 </ul>
 </ul>
 
-<h3>原論文でのデコーダ</h3>
+<h3>デコーダ</h3>
 <ul>
-<li>デコーダへの入力を以下の通り初期化する。</li>
-<ul>
-<li>季節成分入力：エンコーダ入力の後半 L_in/2 ステップを "Series Decomposition" で分離した季節成分と、予測ホライゾン L_out ステップ分のゼロベクトルを連結する。((L_in/2 + L_out)×512 次元)</li>
-<li>トレンド累積変数：エンコーダ入力の後半 L_in/2 ステップの "Series Decomposition" トレンド成分と、エンコーダ入力全体の平均値を L_out 回繰り返したものを連結する。((L_in/2 + L_out)×512 次元)</li>
-</ul>
 <li>デコーダ層 (以下) を 1 層適用する。</li>
 <ul>
-<li>季節成分入力を受け取る (ア)。</li>
-<li>マスク付き "Auto-Correlation" 層を適用する。</li>
-<ul>
-<li>入力をステップごとに Q, K, V 用に 3×8×64 次元に線形変換して、8 ヘッドに分割する。</li>
-<li>未来ステップに対応する相互相関値をマスクする。</li>
-<li>8 ヘッド並列に FFT 相互相関・トップ k ラグ選択・ロールシフト和を適用する。</li>
-<li>各ヘッドからの出力を 8×64=512 次元に連結する。</li>
-<li>512 次元に線形変換する。</li>
-</ul>
+<li>各ステップが 512 次元の季節成分 (ア) とトレンド成分 (イ) を入力として受け取る。</li>
+<li>"Auto-Correlation" 層を適用する。</li>
 <li>ドロップアウトする。</li>
 <li>(ア) から残差接続する。</li>
-<li>"Series Decomposition" 層を適用し、季節成分を (イ) として出力する。抽出したトレンド成分は保持する (trend1)。</li>
-<li>クロス "Auto-Correlation" 層を適用する。</li>
+<li>"Series Decomposition" 層を適用して季節成分を得る (ウ)。トレンド成分は (イ) に累積。</li>
+<li>クロス "Auto-Correlation" 層 (以下) を適用する。</li>
 <ul>
-<li>(イ) から Q 用に 8×64 次元に線形変換して 8 ヘッドに分割する。</li>
+<li>(ウ) から Q 用に 8×64 次元に線形変換して 8 ヘッドに分割する。</li>
 <li>エンコーダ出力から K, V 用にそれぞれ 8×64 次元に線形変換して 8 ヘッドに分割する。</li>
 <li>8 ヘッド並列に FFT 相互相関・トップ k ラグ選択・ロールシフト和を適用する。</li>
 <li>各ヘッドからの出力を 8×64=512 次元に連結する。</li>
 <li>512 次元に線形変換する。</li>
 </ul>
 <li>ドロップアウトする。</li>
-<li>(イ) から残差接続する。</li>
-<li>"Series Decomposition" 層を適用し、季節成分を (ウ) として出力する。抽出したトレンド成分は保持する (trend2)。</li>
+<li>(ウ) から残差接続する。</li>
+<li>"Series Decomposition" 層を適用して季節成分を得る (エ)。トレンド成分は (イ) に累積。</li>
 <li>2048 次元に線形変換、GELU 活性化、ドロップアウトする。</li>
 <li>再び 512 次元に線形変換、ドロップアウトする。</li>
-<li>(ウ) から残差接続する。</li>
-<li>"Series Decomposition" 層を適用し、季節成分を (エ) として出力する。抽出したトレンド成分は保持する (trend3)。</li>
-<li>最後に、以下の後半 L_out ステップ同士を加算して最終予測とする。</li>
-<ul>
-<li>(エ) に「ゼロ周り層正規化」を適用し、線形変換 (512 次元 → 出力変数次元) を適用する。</li>
-<li>trend1 + trend2 + trend3 にカーネルサイズ 3 の Conv1d (3×512 次元 → 出力変数次元) を適用する。</li>
-</ul>
-</ul>
+<li>(エ) から残差接続する。</li>
+<li>"Series Decomposition" 層を適用して季節成分を得る (オ)。トレンド成分は (イ) に累積。</li>
+<li>(オ) に「ゼロ周り層正規化」を適用し、デコーダ出力の季節成分とする。</li>
+<li>累積されたトレンド成分を、そのままデコーダ出力のトレンド成分とする。</li>
 </ul>
 
 

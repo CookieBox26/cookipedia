@@ -16,7 +16,7 @@
 <div id="smartphone-header"></div>
 <div class="item long-title">
 <h1>Attention Is All You Need</h1>
-<p>Attention Is All You Need [paper] は、エンコーダが「ソース系列」を「前後の文脈を反映した」系列に変換し、それを受けた下でデコーダが別の「ターゲット系列」を「1 単語ずつ先にずらした系列」に変換するように訓練する Seq2Seq モデル "Transformer" を提案する論文である。Google Brain の Ashish Vaswani らによって著され (他に Google Research、University of Toronto 所属の著者も)、2017 年の NeurIPS に採択された。</p>
+<p>Attention Is All You Need [paper] は、エンコーダが「ソース系列」を「前後の文脈を反映した」系列に変換し、それを受けた下でデコーダが別の「ターゲット系列」を「1 単語先にシフトした系列」に変換するように訓練する Seq2Seq モデル "Transformer" を提案する論文である。Google Brain の Ashish Vaswani らによって著され (他に Google Research、University of Toronto 所属の著者も)、2017 年の NeurIPS に採択された。</p>
 <p>Transformer は推論時には対象の「ソース系列」をエンコードした下で、最初は文頭トークンのみの「ターゲット系列」から順に次の単語をデコードしていく。Transformer のエンコーダ・デコーダは系列の処理に再帰も畳込みも用いず、"Scaled Dot-Product Attention" を内包する "Multi-Head Attention" 層と、ステップごとの全結合層のみを用いる。</p>
 <figure>
 <figcaption>Transformer のイラスト (原論文等を元に私が描画)</figcaption>
@@ -36,12 +36,6 @@ Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N
 </ul>
 </dd>
 </dl>
-
-
-<h2>関連リンク</h2>
-<ul>
-<li><a href="https://qiita.com/CookieBox26/items/8d3bb4a767aa0ca572ce">torch.nn.TransformerEncoder のイラスト - Qiita</a></li>
-</ul>
 
 
 <h2>Transformer の構造</h2>
@@ -132,7 +126,7 @@ Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N
 
 
 <h2>トイモデル</h2>
-埋め込み次元数 6、中間層次元数 12、ヘッド数 2、エンコーダ層数 2、デコーダ総数 2 とし、長さ 8 の入力から長さ 4 の出力を得る。
+以下のトイ Transformer は Positional Encoding を加算するところから Output Projection の手前までである (Weight tying は含まない)。動作確認では埋め込み次元数 6、中間層次元数 12、ヘッド数 2、エンコーダ層数 2、デコーダ層数 2 でインスタンス化し、長さ 8 の「ソース系列」に基づき長さ 4 の「ターゲット系列」をシフトしている。
 <pre class="language-python"><code>
 import torch
 from torch.nn import TransformerEncoder as Encoder
