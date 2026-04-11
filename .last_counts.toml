@@ -35,8 +35,8 @@ count = 900
 
 [[pages]]
 rel_path = "articles/ashish_vaswani_et_al_2017.html"
-timestamp = "2026-04-10"
-count = 9820
+timestamp = "2026-04-11"
+count = 10334
 
 [[pages]]
 rel_path = "articles/aws.html"
@@ -116,7 +116,7 @@ count = 1032
 [[pages]]
 rel_path = "articles/haixu_wu_et_al_2021.html"
 timestamp = "2026-04-11"
-count = 6485
+count = 6265
 
 [[pages]]
 rel_path = "articles/haoyi_zhou_et_al_2021.html"
