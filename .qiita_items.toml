@@ -68,6 +68,11 @@ c90ed6d281b169c29b3f 2026-02-09 Claude Code で事前定義プロンプトを扱
 b444ad45768be766df56 2026-01-07 Windows で音を鳴らすコマンド集 (Claude Code 完了通知音向け)
 """
 "すべての記事" = """
+fad831f0ab1fef482000 2026-04-11 iTransformer のイラスト (+ トイモデル実装)
+ca11f73c5ff469a37b3e 2026-04-09 Autoformer のイラスト (+ トイモデル実装)
+30c89647675717a26fdc 2026-04-09 Transformer のイラスト (+トイモデル実装)
+3d9f24089a333629fc33 2026-04-08 HTMLタグコピーボタンを追加するTampermonkeyスクリプト
+8b5c80d453404d82eb99 2026-04-07 ローカルHTMLから対応するWebページを開くTampermonkeyスクリプト
 479eb39653a4af2b15ab 2026-04-03 ブラウザで表示中のローカルHTMLをシームレスにテキストエディタで開く (カスタムURLスキーム + Tampermonkey)
 cffa28d134b8585ccebd 2026-04-01 HTML の定義リスト (<dl>, <dt>, <dd>) で参考文献リスト
 0bba15cc81b92e928602 2026-03-23 Google スライドの「配置先」を常にグリッドにする Tampermonkey ユーザスクリプト
