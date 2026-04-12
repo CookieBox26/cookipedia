@@ -16,7 +16,14 @@
 <div id="smartphone-header"></div>
 <div class="item long-title">
 <h1>iTransformer: Inverted Transformers Are Effective for Time Series Forecasting</h1>
-<p>iTransformer: Inverted Transformers Are Effective for Time Series Forecasting は、時系列予測モデル "iTransformer" を提案する論文である。Tsinghua University (清華大学) School of Software, BNRist [脚注BNRist] の Yong Liu らによって著された (他に Ant Group [脚注Ant] 所属の著者も)。2023 年に arXiv にプレプリントが発表され、2024 年の ICLR に採択された。</p>
+<p>iTransformer: Inverted Transformers Are Effective for Time Series Forecasting は、多変量時系列予測モデル "iTransformer" を提案する論文である。Tsinghua University (清華大学) School of Software, BNRist [脚注BNRist] の Yong Liu らによって著された (他に Ant Group [脚注Ant] 所属の著者も)。2023 年に arXiv にプレプリントが発表され、2024 年の ICLR に採択された。</p>
+<p>"iTransformer" は <a href="ashish_vaswani_et_al_2017.html">Transformer</a> の基本構成要素 (マルチヘッドアテンション層、FFN、層正規化) はそのまま用いつつ、適用対象を「各時刻の観測ベクトルの列」から「各チャネルの時系列の列」に転置したモデルである。つまり、L_in×C 次元の入力に対し、各チャネルごとの長さ L_in の系列全体を "variate token" に埋め込み、これにマルチヘッドアテンション層を適用し、チャネル間の相関を学習する。層正規化は各 variate token (Ex. 名古屋の過去 1 週間の毎時気温系列を正規化、静岡の…) に適用される。予測系列はエンコード後の各 variate token から線形変換によって生成する (エンコーダのみの構成でデコーダは持たない)。</p>
+<p>参照期間 T=96、予測機関 S∈{96, 192, 336, 720} を平均した多変量予測タスクで検証した結果、iTransformer の Traffic データセットでの平均 MSE は 0.428 であり、PatchTST の 0.555、RLinear [脚注RLinear]の 0.626 を下回った。ECL データセットでの平均 MSE も 0.178 と、PatchTST 0.216、RLinear 0.219 を下回った。</p>
+<p>著者らは、近年単純な線形予測モデルが既存の Transformer 型予測モデルの性能を上回る例が報告されており、Transformer の時系列予測への適性が疑問視されているが、これは同一時刻のチャネル系列を 1 つの "temporal token" に埋め込んで時間方向にセルフアテンションする使い方が多変量時系列予測に適していないためであると主張している。</p>
+<figure>
+<figcaption>iTransformer のイラスト (原論文等を元に私が描画)</figcaption>
+<img src="../images/itransformer.svg?v=2026-04-11"/>
+</figure>
 
 
 <h2>参考文献</h2>
@@ -33,12 +40,56 @@ Yong Liu, Tengge Hu, Haoran Zhang, Haixu Wu, Shiyu Wang, Lintao Ma, Mingsheng Lo
 </dl>
 
 
+<h2>iTransformer の構造</h2>
+<p>iTransformer は、多変量時系列予測向けの Transformer 型モデルで、Transformer の基本構成要素 (マルチヘッドアテンション層、FFN、層正規化) はそのまま用いつつ、適用対象を「各時刻の観測ベクトルの列」ではなく「各チャネルの時系列の列」としたものである。したがってマルチヘッドアテンションはチャネル間の相関を、順伝播は各チャネルの時系列表現を学習することになる。エンコーダのみの構成でデコーダは持たない。</p>
+<p>共変量があれば追加トークンとして取り込める。<code class="language-">use_norm=True</code> のときは、入力をチャネルごとに標準化し、出力時に逆の操作を行う。</p>
+<p>規定値としてはモデル次元数 512、中間層次元数 2048、ヘッド数 8 とされておりこれはオリジナル Transformer の値そのままであるが、リポジトリにあるスクリプト上はヘッド数以外はデータセットによって調整されている。また、エンコーダ層数の規定値は 2 であるが、これもデータセットによって調整されている。また、活性化関数は GELU である。</p>
+
+<h3>iTransformer 全体</h3>
+<ul>
+<li>L_in×C 次元の入力系列を受け取る。</li>
+<li>(<code class="language-">use_norm=True</code> の場合) チャネルごとに平均を引いて分散 + ε の平方根で割って標準化する。この平均と標準偏差は後の逆変換用に保持する。</li>
+<li>C×L_in 次元に転置する。</li>
+<li>共変量が与えられた場合、これも C_mark×L_in 次元に転置して標準化した入力系列に concat し、(C + C_mark)×L_in 次元とする。</li>
+<li>チャネルごとに d_m に線形変換する ("variate token" 列)。</li>
+<li>ドロップアウトする。</li>
+<li>エンコーダ層を 2 層適用する。</li>
+<li>層正規化を適用する (エンコーダ最終正規化)。</li>
+<li>全トークンに共有重みの Linear(512 → S) を適用し、[B, N(+C_mark), S] とする。</li>
+<li>[B, S, N(+C_mark)] に転置し、先頭の N トークンのみを取り出してカバリエート由来トークンを捨てる。</li>
+<li>use_norm=True の場合、保持しておいた標準偏差を全 S ステップに掛け戻し、平均を全 S ステップに足し戻す。</li>
+<li>これを最終予測 [B, S, N] とする。</li>
+</ul>
+
+<h3>エンコーダ層 (1 層)</h3>
+<ul>
+<li>形 [B, N', 512] (N' = N もしくは N+C_mark) の variate token 列を受け取る (ア)。</li>
+<li>"Inverted" Multi-Head Self-Attention (以下) を適用する。</li>
+<ul>
+<li>Q, K, V それぞれに Linear(512 → 8×64) を適用し、[B, N', 8, 64] に reshape して 8 ヘッドに分割する。</li>
+<li>各ヘッドで Q と K のスコア行列 [B, 8, N', N'] を計算し、sqrt(64)=8 で割って softmax し、softmax 後の重みに Dropout(p=0.1) を掛ける。</li>
+<li>この重みと V の積を取り、形 [B, N', 8, 64] に戻してから [B, N', 512] に連結する。</li>
+<li>Linear(512 → 512) で出力を射影する。</li>
+</ul>
+<li>Dropout(p=0.1) する。</li>
+<li>(ア) から残差接続する。</li>
+<li>nn.LayerNorm(512) を適用する (イ)。</li>
+<li>(イ) に kernel_size=1 の Conv1d (512 → 2048) を適用する (各トークンごとの Linear と等価)。GELU 活性化、Dropout(p=0.1) する。</li>
+<li>kernel_size=1 の Conv1d (2048 → 512) を適用し、Dropout(p=0.1) する。</li>
+<li>(イ) から残差接続する。</li>
+<li>nn.LayerNorm(512) を適用する。</li>
+<li>これがこの層の出力 [B, N', 512] である。</li>
+</ul>
+
+
 <h2>脚注</h2>
 <dl class="footnote">
 <dt>BNRist</dt>
 <dd>清華大学の研究センター (<a class="asis break-all" href="https://www.bnrist.tsinghua.edu.cn/bnristen/"></a>)。</dd>
 <dt>Ant</dt>
 <dd>アリババグループの金融関連会社 (<a class="asis break-all" href="https://ja.wikipedia.org/wiki/%E3%82%A2%E3%83%B3%E3%83%88%E3%82%B0%E3%83%AB%E3%83%BC%E3%83%97"></a>)。</dd>
+<dt>RLinear</dt>
+<dd><a class="asis break-all" href="https://arxiv.org/abs/2305.10721"></a></dd>
 </dl>
 
 

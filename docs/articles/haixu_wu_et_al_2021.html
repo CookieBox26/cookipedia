@@ -7,7 +7,7 @@
 <title>Autoformer: Decomposition Transformers with Auto-Correlation for Long-Term Series Forecasting - Cookipedia α-version</title>
 <link href="../css/style.css?v=2026-04-11" rel="stylesheet" type="text/css"/>
 <link href="../css/cookipedia.css?v=2026-04-11" rel="stylesheet" type="text/css"/>
-<script data-mathjax="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2026-04-11"></script>
+<script data-mathjax="true" data-prism-python="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2026-04-11"></script>
 </head>
 <body>
 <div class="container">
@@ -118,6 +118,45 @@ Haixu Wu, Jiehui Xu, Jianmin Wang, Mingsheng Long. Autoformer: Decomposition Tra
 <li>累積されたトレンド成分を、そのままデコーダ出力のトレンド成分とする。</li>
 </ul>
 
+
+<h2>トイモデル</h2>
+<a href="https://github.com/thuml/Autoformer/tree/490bb749365efd8f1178bc652a06361701545a6f">リポジトリ (リビジョン 490bb74)</a> を取得して以下を実行すれば小さなインスタンスができる。
+<pre class="language-python"><code>
+from models.Autoformer import Model
+import types
+import torch
+
+def main():
+    configs = {
+        'seq_len': 8, 'label_len': 4, 'pred_len': 3,
+        'embed': 'timeF', 'freq': 'h',
+        'moving_avg': 25, 'd_model': 6, 'n_heads': 2,
+        'factor': 1, 'd_ff': 12,
+        'e_layers': 2, 'enc_in': 5,
+        'd_layers': 1, 'dec_in': 5, 'c_out': 5,
+        'activation': 'gelu', 'dropout': 0.05,
+        'output_attention': False,
+    }
+    model = Model(types.SimpleNamespace(configs))
+    print(model)
+
+    x_enc = torch.randn(1, 8, 5)
+    x_dec = torch.zeros(1, 7, 5)
+    x_mark_enc = torch.rand(1, 8, 4) - 0.5
+    x_mark_dec = torch.rand(1, 7, 4) - 0.5
+
+    with torch.no_grad():
+        output = model(
+            x_enc,
+            x_mark_enc,
+            x_dec,
+            x_mark_dec,
+        )
+        assert output.shape == (1, 3, 5)
+
+if __name__ == '__main__':
+    main()
+</code></pre>
 
 <h2>脚注</h2>
 <dl class="footnote">
