@@ -45,8 +45,8 @@ count = 8245
 
 [[pages]]
 rel_path = "articles/bash.html"
-timestamp = "2026-04-08"
-count = 2159
+timestamp = "2026-04-13"
+count = 3154
 
 [[pages]]
 rel_path = "articles/beautiful_soup_4.html"
@@ -115,8 +115,8 @@ count = 1032
 
 [[pages]]
 rel_path = "articles/haixu_wu_et_al_2021.html"
-timestamp = "2026-04-12"
-count = 7388
+timestamp = "2026-04-13"
+count = 7397
 
 [[pages]]
 rel_path = "articles/haoyi_zhou_et_al_2021.html"
@@ -150,13 +150,13 @@ count = 931
 
 [[pages]]
 rel_path = "articles/jiahui_wang_et_al_2025.html"
-timestamp = "2026-04-02"
-count = 1434
+timestamp = "2026-04-13"
+count = 2131
 
 [[pages]]
 rel_path = "articles/jinliang_deng_et_al_2024.html"
-timestamp = "2026-04-11"
-count = 1859
+timestamp = "2026-04-13"
+count = 1858
 
 [[pages]]
 rel_path = "articles/krzysztof_marcin_choromanski_et_al_2020.html"
@@ -465,6 +465,6 @@ count = 895
 
 [[pages]]
 rel_path = "index.html"
-timestamp = "2026-04-12"
-count = 14226
+timestamp = "2026-04-13"
+count = 14348
 
