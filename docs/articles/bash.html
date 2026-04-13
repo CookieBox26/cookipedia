@@ -18,11 +18,33 @@
 <h1>Bash</h1>
 
 
+<h2>Commands</h2>
+
+<h3><code class="language-">test</code></h3>
+<code class="language-">test</code> はその構文糖である <code class="language-">[</code> <code class="language-">]</code> で記述することも多いが、このブラケットもコマンドなので前の句やブラケットの内側に空白を空ける必要があることに留意。
+<ul>
+<li><code class="language-">[ 1 -eq 1 ]</code> - 数値が等しい。</li>
+<li><code class="language-">[ "$target_toml" = "NOT_SPECIFIED" ]</code> - 文字列が等しい。</li>
+<li><code class="language-">[ -n "$var" ]</code> - 文字列の長さが 0 でない。</li>
+<li><code class="language-">[ -z "$var" ]</code> - 文字列の長さが 0 である。</li>
+<li><code class="language-">[ -f "$target_toml" ]</code> - 存在する通常ファイルである。</li>
+<li><code class="language-">[ ! -f "$target_toml" ]</code> - 存在する通常ファイルではない。</li>
+</ul>
+
+
 <h2>Snippets</h2>
 
 <h3>特定の文字列を含むテキストファイルを検索</h3>
 <pre class="language-bash"><code>
 grep ',=""' docs/articles/*.html
+</code></pre>
+
+<h3>コマンドライン引数のデフォルト値を設定</h3>
+<code class="language-">${引数番号:-デフォルト値}</code> で設定する (<code class="language-">-</code> は初期値の一部ではないので注意)。
+<pre class="language-bash"><code>
+#!/bin/bash
+target_toml="${1:-NOT_SPECIFIED}"  # 指定されなければ NOT_SPECIFIED
+action="${2:-NOT_SPECIFIED}"  # 指定されなければ NOT_SPECIFIED
 </code></pre>
 
 <h3>重複排除してソート</h3>

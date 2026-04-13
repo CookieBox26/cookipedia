@@ -55,7 +55,7 @@ Haixu Wu, Jiehui Xu, Jianmin Wang, Mingsheng Long. Autoformer: Decomposition Tra
 <li>その分が時間の何分目か (0〜59 分)  ※ 時間ステップが 1 時間未満の場合のみ。</li>
 </ul>
 <li>(L_in×C) 次元の入力系列の各ステップのチャネル次元を線形変換で 512 次元に埋め込み、時間特徴エンコーディングの最初の L_in ステップを加算し、エンコーダ入力とする。</li>
-<li>エンコーダ入力に "Series Decomposition" 層を適用する：移動平均 (ウィンドウサイズ 25) でトレンド成分を抽出し、残りを季節成分とする (ア)。
+<li>エンコーダ入力に "Series Decomposition" 層を適用する：移動平均 (ウィンドウサイズ 25) でトレンド成分を抽出し、残りを季節成分とする (ア)。</li>
 <li>(ア) の季節成分の後半 L_in/2 ステップに、時間特徴エンコーディングの最後の L_out ステップを concat し、デコーダ入力の季節成分とする。</li>
 <li>(ア) のトレンド成分の後半 L_in/2 ステップに、エンコーダ入力全体の平均を L_out ステップ分繰り返して concat し、デコーダ入力のトレンド成分とする。</li>
 <li>エンコーダ入力にエンコーダを適用してエンコーダ出力を得る。</li>
@@ -117,8 +117,6 @@ Haixu Wu, Jiehui Xu, Jianmin Wang, Mingsheng Long. Autoformer: Decomposition Tra
 <li>(オ) に「ゼロ周り層正規化」を適用し、デコーダ出力の季節成分とする。</li>
 <li>累積されたトレンド成分を、そのままデコーダ出力のトレンド成分とする。</li>
 </ul>
-
-
 <h2>トイモデル</h2>
 <a href="https://github.com/thuml/Autoformer/tree/490bb749365efd8f1178bc652a06361701545a6f">リポジトリ (リビジョン 490bb74)</a> を取得して以下を実行すれば小さなインスタンスができる。
 <pre class="language-python"><code>
@@ -157,7 +155,6 @@ def main():
 if __name__ == '__main__':
     main()
 </code></pre>
-
 <h2>脚注</h2>
 <dl class="footnote">
 <dt>GELU</dt>
@@ -165,12 +162,11 @@ if __name__ == '__main__':
 <dt>top</dt>
 <dd>絶対値を取るのではなく、符号付きで値の大きいラグを選択する (後段で softmax 重み付き和を取る都合上、相関が負のラグを取ると予測が劣化すると考えられ、ここで相関が負のラグを取るべきではないのはさもありなんと思われる)。</dd>
 </dl>
-
-
 <div class="categories">
 <a data-subcat="2021" href="../categories/time_series_forecasting.html">時系列予測</a> |
 <a data-subcat="2021" href="../categories/neurips.html">NeurIPS</a>
 </div>
+</ul>
 
 </div>
 </main>

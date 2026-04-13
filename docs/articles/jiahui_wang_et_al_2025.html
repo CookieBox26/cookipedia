@@ -16,6 +16,10 @@
 <div id="smartphone-header"></div>
 <div class="item long-title">
 <h1>Mitigating Long-Term Forecasting Bias in Time-Series Neural Networks via Ensemble of Short-Term Dependencies</h1>
+<p>Mitigating Long-Term Forecasting Bias in Time-Series Neural Networks via Ensemble of Short-Term Dependencies [paper] は、時系列ニューラルネットワークにおける「長期予測バイアス」を補正するモデル TSNN-ESTD を提案する論文である。上海第二工業大学の Jiahui Wang らによって著された。2025 年の Applied Sciences に採択された。</p>
+<p>TSNN-ESTD（Time-Series Neural Networks with Ensemble of Short-Term Dependencies）は、iTransformer をベース予測器として短期・長期の 2 つの予測モデルを同時に訓練し、短期予測結果を複製して長期予測の出力次元に揃えた上で、短期予測結果を用いて長期モデルの予測バイアスを補正する「短期依存性のアンサンブル」を行う。さらに、iTransformer デコーダの線形変換を LSTM ベースのデコーダに置き換え、安定性向上のためにもう一つの長期モデルも訓練する。</p>
+<p>5 つのベンチマークデータセットにおいて、比較手法に対して MSE を 9.17%、MAE を 2.3% 削減した。</p>
+<p>著者らは、時系列ニューラルネットワークによる長期予測では予測値が偏る「長期予測バイアス」が生じるという問題意識をもっており、短期予測モデルのアンサンブルによってその偏りを補正できると提案している。</p>
 
 
 <h2>参考文献</h2>
