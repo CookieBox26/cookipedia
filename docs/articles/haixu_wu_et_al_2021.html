@@ -117,8 +117,10 @@ Haixu Wu, Jiehui Xu, Jianmin Wang, Mingsheng Long. Autoformer: Decomposition Tra
 <li>(オ) に「ゼロ周り層正規化」を適用し、デコーダ出力の季節成分とする。</li>
 <li>累積されたトレンド成分を、そのままデコーダ出力のトレンド成分とする。</li>
 </ul>
+
+
 <h2>トイモデル</h2>
-<a href="https://github.com/thuml/Autoformer/tree/490bb749365efd8f1178bc652a06361701545a6f">リポジトリ (リビジョン 490bb74)</a> を取得して以下を実行すれば小さなインスタンスができる。
+論文リポジトリの 2026/04/09 現在の最新リビジョン (<a class="break-all" href="https://github.com/thuml/Autoformer/tree/51c7d416ae120b805fd5beef2f4ccf7de496a6ff">51c7d41</a>) を取得して以下を実行すれば、小さなインスタンスができる。
 <pre class="language-python"><code>
 from models.Autoformer import Model
 import types
@@ -155,6 +157,25 @@ def main():
 if __name__ == '__main__':
     main()
 </code></pre>
+
+
+<h2>備考</h2>
+<ul>
+<li>2026/04/09 現在の最新リビジョン (<a class="break-all" href="https://github.com/thuml/Autoformer/tree/51c7d416ae120b805fd5beef2f4ccf7de496a6ff">51c7d41</a>) でのリポジトリ構造は以下である。</li>
+<ul>
+<li>モデルのエントリポイント：<a class="break-all" href="https://github.com/thuml/Autoformer/blob/490bb749365efd8f1178bc652a06361701545a6f/models/Autoformer.py#L77">models/Autoformer.py#L77</a></li>
+<ul>
+<li>埋め込み層のエントリポイント：<a class="break-all" href="https://github.com/thuml/Autoformer/blob/490bb749365efd8f1178bc652a06361701545a6f/layers/Embed.py#L132">layers/Embed.py#L132</a></li>
+</ul>
+</ul>
+<a class="break-all" href=""></a>
+<a class="break-all" href=""></a>
+<a class="break-all" href=""></a>
+<a class="break-all" href=""></a>
+<a class="break-all" href=""></a>
+</ul>
+
+
 <h2>脚注</h2>
 <dl class="footnote">
 <dt>GELU</dt>
