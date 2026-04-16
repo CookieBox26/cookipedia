@@ -35,9 +35,21 @@ Yuqi Nie, Nam H. Nguyen, Phanwadee Sinthong, Jayant Kalagnanam. A time series is
 
 
 <h2>PatchTST の構造</h2>
+<div class="gray">
+以下の記述は2026年4月16日時点での最新リビジョン (<a class="break-all" href="https://github.com/yuqinie98/PatchTST/tree/204c21efe0b39603ad6e2ca640ef5896646ab1a9">204c21e</a>) に基づく。
 <ul>
-<li>各チャネルの長さ L_in の時系列に対して、サンプル内正規化 (ゼロ平均・単位分散) を施す。</li>
+<li><span class="break-all">PatchTST_supervised/models/PatchTST.py::Model</span> には decomposition フラグ (True ならトレンド成分と残差成分を分けて別々の PatchTST を適用する) があるが、規定値・実験設定で使用されている形跡はない。</li>
+<li>実質的なモデル本体は <span class="break-all">PatchTST_supervised/layers/PatchTST_backbone.py::PatchTST_backbone</span> である (このクラス自体は標準化とパディングをして TSTiEncoder に投げ、その結果を予測長に線形変換して逆標準化し出力するだけである)。</li>
+
+
+</ul>
+</div>
+<ul>
+<li>各チャネルの長さ L_in の時系列に対して、サンプル内・チャネル内標準化を適用する (平均と標準偏差は最後に差し戻すので保存しておく)。</li>
 <li>各チャネルの時系列をパッチ長 P=16、ストライド S=8 で分割する。末尾に最終値を S 回繰り返してパディングし、N = floor((L_in - P) / S) + 2 個のパッチを得る。</li>
+<ul>
+<li>ストライド S が 1 ならパディングしなくてもデータは漏れなくパッチ化できるが、2 以上のときデータが漏れる可能性がある。</li>
+</ul>
 <li>各パッチ (P=16 次元) を線形変換で d_model=128 次元に埋め込む。</li>
 <li>学習可能な位置エンコーディング (N×d_model 次元のパラメータ) を加算する。(ア)</li>
 <li>各チャネルを独立に同一の Transformer エンコーダ (以下) で処理する。</li>
@@ -61,7 +73,7 @@ Yuqi Nie, Nam H. Nguyen, Phanwadee Sinthong, Jayant Kalagnanam. A time series is
 </ul>
 </ul>
 <li>各チャネルの N×d_model 次元の出力を N×d_model 次元に flatten し、線形変換 (N×d_model 次元 → L_out 次元) を適用する (全チャネルで重みを共有する)。</li>
-<li>サンプル内正規化の逆変換を適用してそのチャネルの予測系列とする。</li>
+<li>各サンプルの各チャネルに保存しておいた平均と標準偏差を差し戻し、予測系列とする。</li>
 </ul>
 
 

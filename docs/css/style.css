@@ -1,8 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;600&family=Armata&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=M+PLUS+1+Code:wght@100..700&display=swap');
+@charset "UTF-8";
+@import url("https://fonts.googleapis.com/css2?family=Armata&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;1,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=M+PLUS+1+Code:wght@400;600&display=swap");
 :root {
   --surface: #ffffff;
   --main-surface: #ffffff;
-  --summary-surface: #e9edee;
+  --gray-surface: #e9edee;
   --text: #16181c;
   --text-link: #01889f;
   --border: #a9b2bc;
@@ -26,7 +30,7 @@
 :root[data-mode='dark'] {
   --surface: #2f373e;  /* #23292f */
   --main-surface: #2f373e;
-  --summary-surface: #404b55;
+  --gray-surface: #404b55;
   --text: #f5f7f8;
   --text-link: #3fc2d9;
   --border: #667584;
@@ -59,7 +63,6 @@
 [id^="mode-dark-"] {
   background: #2f373e;
 }
-
 body {
   background: var(--surface);
   color: var(--text);
@@ -80,7 +83,6 @@ a:hover {
 a.asis::after {
   content: attr(href);
 }
-
 /*----- Heading styles -----*/
 h1, h2, h3, h4, h5 {
   font-weight: var(--font-weight-header);
@@ -120,7 +122,6 @@ div.top-link {
   padding-top: 0.5em;
   font-size: 0.9em;
 }
-
 div#smartphone-header {
   display: none;
 }
@@ -173,7 +174,6 @@ div#sidebar p.indent {
   margin: 0 auto;
   max-width: 100%;
 }
-
 table {
   border-collapse: collapse;
 }
@@ -276,7 +276,6 @@ dl.ref a {
 dl.ref > dt {
   grid-column: 1;
 }
-
 dl.ref > dt:before {
   left: 0.25em;
   content: '[';
@@ -303,7 +302,6 @@ dl.footnote a {
 dl.footnote > dt {
   grid-column: 1;
 }
-
 dl.footnote > dt:before {
   left: 0.25em;
   content: '[脚注';
@@ -341,7 +339,6 @@ li.doughnut::before {
 li.doughnut + ul {
   color: var(--doughnut);
 }
-
 span.chocolate {
   color: var(--chocolate);
 }
@@ -358,24 +355,22 @@ li.chocolate::before {
 li.chocolate + ul {
   color: var(--chocolate);
 }
-
 .small {
   font-size: 90%;
 }
 div.categories:before {
   content: 'カテゴリ: ';
 }
-div.summary {
-  background: var(--summary-surface);
+div.gray {
+  background: var(--gray-surface);
   border: 1px solid var(--border);
   margin: 0.5em 0 1.0em;
   padding: 0.75em 0.75em 0.75em;
 }
-div.summary > ul, div.summary > ol {
+div.gray > ul, div.gray > ol {
   margin-block-start: 0.5em;
   margin-block-end: 0.25em;
 }
-
 span.index-ts {
   font-size: 0.8em;
   white-space: preserve nowrap;
@@ -383,7 +378,6 @@ span.index-ts {
 span.index-ts:before {
   content: 'Updated: ';
 }
-
 /* コードブロック・インラインコード共通 */
 code[class*="language-"] {
   font-family: var(--font-family-mono);
@@ -413,7 +407,6 @@ code[class*="language-"] {
 .token.number,.token.property,.token.symbol,.token.tag {
   color: var(--number);
 }
-
 /* コードブロック */
 pre[class*="language-"] {
   background: transparent !important;
@@ -431,17 +424,15 @@ pre.language-text>code {
 pre[class*="language-"]::before, pre[class*="language-"]::after {
   box-shadow: none !important;
 }
-
 /* インラインコード */
 :not(pre)>code[class*=language-] {
   padding-top: 0;
   padding-bottom: 0;
 }
 :not(pre)>code[class*=language-], :not(pre)>code[class*=language-] span {
-  background-color: var(--summary-surface) !important;
+  background-color: var(--gray-surface) !important;
   /* color: var(--text) !important; */
 }
-
 /* GitHub Gist */
 div.gist-data {
   border: 1px solid var(--border) !important;
