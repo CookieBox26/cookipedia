@@ -1,5 +1,6 @@
 [cats]
 "Python" = """
+9497db1a2d340125e664 2026-04-15 Python でクラスメソッドをリストなどにまとめたいときの注意点
 40c99462d82a28d60368 2026-03-11 pathlib.Path.is_file() は長いファイルパスで OS ごとに挙動が異なる
 06864660c7ec7b07c850 2026-02-03 自在な制御に便利な Python 組み込み型 (イテレータ、コンテキストマネージャ) のプロトコルと具体例の備忘メモ
 c4a36ec5f7731ed58101 2026-01-31 Python の for-else の話
@@ -26,9 +27,11 @@ c6998b81a06f60570baa 2025-12-24 uv でパッケージのソースをオプショ
 ce3580653ebb9a59831d 2025-10-14 【Python, uv】単一ファイルスクリプトだけで GitHub 上モジュールへの依存性を管理する
 """
 "PyTorch" = """
+681d629feefcf6d96121 2026-04-15 個包装だんごとしてみる torch.Tensor ― #2. torch.cat() と torch.stack() と .repeat() と .unfold()
+30c89647675717a26fdc 2026-04-09 Transformer のイラスト (+トイモデル実装)
 8d3bb4a767aa0ca572ce 2026-03-21 torch.nn.TransformerEncoder のイラスト
 1ccf519cd8d40d9577a0 2026-02-27 torch.nn.utils.parameters_to_vector / vector_to_parameters の挙動確認メモ
-b0cd7e587d74549804f8 2026-01-24 だんご入りの箱としてみる torch.Tensor (メモ)
+b0cd7e587d74549804f8 2026-01-24 個包装だんごとしてみる torch.Tensor ― #1. .mean() と .unsqueeze() とブロードキャスト可能性
 4b9fe6644f741a33aef2 2026-01-22 Windows 環境の PyTorch で OSError: [WinError 1114] (Error loading c10.dll) が出たときの対処法
 918f8c48e88f794795e4 2026-01-21 torch.nn.Module.register_buffer の挙動確認メモ
 9f07cba35b53e72a356a 2026-01-04 GPU マシンに直接 PyTorch 環境を構築するときの手順と注意点
@@ -68,6 +71,8 @@ c90ed6d281b169c29b3f 2026-02-09 Claude Code で事前定義プロンプトを扱
 b444ad45768be766df56 2026-01-07 Windows で音を鳴らすコマンド集 (Claude Code 完了通知音向け)
 """
 "すべての記事" = """
+9497db1a2d340125e664 2026-04-15 Python でクラスメソッドをリストなどにまとめたいときの注意点
+681d629feefcf6d96121 2026-04-15 個包装だんごとしてみる torch.Tensor ― #2. torch.cat() と torch.stack() と .repeat() と .unfold()
 d84a9fecdc5b5dd5ded7 2026-04-12 PatchTST のイラスト (+ トイモデル実装)
 fad831f0ab1fef482000 2026-04-11 iTransformer のイラスト (+ トイモデル実装)
 ca11f73c5ff469a37b3e 2026-04-09 Autoformer のイラスト (+ トイモデル実装)
