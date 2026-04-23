@@ -35,15 +35,15 @@ Yuqi Nie, Nam H. Nguyen, Phanwadee Sinthong, Jayant Kalagnanam. A time series is
 
 
 <h2>PatchTST の構造</h2>
+
 <div class="gray">
 以下の記述は2026年4月16日時点での最新リビジョン (<a class="break-all" href="https://github.com/yuqinie98/PatchTST/tree/204c21efe0b39603ad6e2ca640ef5896646ab1a9">204c21e</a>) に基づく。
 <ul>
 <li><span class="break-all">PatchTST_supervised/models/PatchTST.py::Model</span> には decomposition フラグ (True ならトレンド成分と残差成分を分けて別々の PatchTST を適用する) があるが、規定値・実験設定で使用されている形跡はない。</li>
 <li>実質的なモデル本体は <span class="break-all">PatchTST_supervised/layers/PatchTST_backbone.py::PatchTST_backbone</span> である (このクラス自体は標準化とパディングをして TSTiEncoder に投げ、その結果を予測長に線形変換して逆標準化し出力するだけである)。</li>
-
-
 </ul>
 </div>
+
 <ul>
 <li>各チャネルの長さ L_in の時系列に対して、サンプル内・チャネル内標準化を適用する (平均と標準偏差は最後に差し戻すので保存しておく)。</li>
 <li>各チャネルの時系列をパッチ長 P=16、ストライド S=8 で分割する。末尾に最終値を S 回繰り返してパディングし、N = floor((L_in - P) / S) + 2 個のパッチを得る。</li>
