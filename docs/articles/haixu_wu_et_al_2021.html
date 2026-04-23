@@ -39,7 +39,6 @@ Haixu Wu, Jiehui Xu, Jianmin Wang, Mingsheng Long. Autoformer: Decomposition Tra
 
 
 <h2>Autoformer の構造</h2>
-
 <div class="gray">
 以下の記述は2026年4月9日時点での最新リビジョン (<a class="break-all" href="https://github.com/thuml/Autoformer/tree/51c7d416ae120b805fd5beef2f4ccf7de496a6ff">51c7d41</a>) に基づく。
 <ul>
@@ -47,7 +46,6 @@ Haixu Wu, Jiehui Xu, Jianmin Wang, Mingsheng Long. Autoformer: Decomposition Tra
 <li>実質的なモデル本体は <span class="break-all">PatchTST_supervised/layers/PatchTST_backbone.py::PatchTST_backbone</span> である (このクラス自体は標準化とパディングをして TSTiEncoder に投げ、その結果を予測長に線形変換して逆標準化し出力するだけである)。</li>
 </ul>
 </div>
-
 <p>Autoformer ではデコーダ初期化に用いる過去系列の長さをラベル長 L_label = L_in/2 と定めている。直近の過去情報をデコーダに与えつつ、ゼロパディング部分を予測させる設計になっている (つまり、エンコーダに入力する系列の後半は常にデコーダの初期入力にもなる)。ラベル長は実装上はハイパーパラメータとなっているが、論文では L_in/2 をデフォルトとしている。</p>
 <p>また、エンコーダ出力・デコーダ出力の季節成分に対しては、独自の正規化 (<a class="asis break-all" href="https://github.com/thuml/Autoformer/blob/490bb749365efd8f1178bc652a06361701545a6f/layers/Autoformer_EncDec.py#L6-L17"></a>) を適用する。具体的に、通常の層正規化に加えて、平均がゼロになるようシフトする。季節成分がゼロ周りの振動になるよう保証する措置と考えられる。この記事では以降、「ゼロ周り層正規化」とよぶ。</p>
 <p>Autoformer のモデル次元数 512、中間層次元数 2048、ヘッド数 8 は<a href="ashish_vaswani_et_al_2017.html">オリジナル Transformer</a> の値がそのまま採用されている。ただし、エンコーダ層数 2、デコーダ層数 1 はオリジナル Transformer での層数 (エンコーダ層数、デコーダ層数共に 6) とは異なる。また、活性化に GELU を採用している点もオリジナル Transformer とは異なる [脚注GELU]。</p>
@@ -126,8 +124,6 @@ Haixu Wu, Jiehui Xu, Jianmin Wang, Mingsheng Long. Autoformer: Decomposition Tra
 <li>(オ) に「ゼロ周り層正規化」を適用し、デコーダ出力の季節成分とする。</li>
 <li>累積されたトレンド成分を、そのままデコーダ出力のトレンド成分とする。</li>
 </ul>
-
-
 <h2>トイモデル</h2>
 論文リポジトリの 2026/04/09 現在の最新リビジョン (<a class="break-all" href="https://github.com/thuml/Autoformer/tree/51c7d416ae120b805fd5beef2f4ccf7de496a6ff">51c7d41</a>) を取得して以下を実行すれば、小さなインスタンスができる。
 <pre class="language-python"><code>
@@ -166,8 +162,6 @@ def main():
 if __name__ == '__main__':
     main()
 </code></pre>
-
-
 <h2>脚注</h2>
 <dl class="footnote">
 <dt>GELU</dt>

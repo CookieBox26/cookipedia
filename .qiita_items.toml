@@ -27,11 +27,13 @@ c6998b81a06f60570baa 2025-12-24 uv でパッケージのソースをオプショ
 ce3580653ebb9a59831d 2025-10-14 【Python, uv】単一ファイルスクリプトだけで GitHub 上モジュールへの依存性を管理する
 """
 "PyTorch" = """
-681d629feefcf6d96121 2026-04-15 個包装だんごとしてみる torch.Tensor ― #2. torch.cat() と torch.stack() と .repeat() と .unfold()
+6c0cb7872ed4584ef134 2026-04-20 個包装だんごとしてみる torch.Tensor ― #0. 約束と目次 (兼チートシート)
+a8771d0c02e1de8319d2 2026-04-20 個包装だんごとしてみる torch.Tensor ― #3. 「だんごを選り好みする」torch.take と torch.take_along_dim と torch.index_select と torch.gather
+681d629feefcf6d96121 2026-04-15 個包装だんごとしてみる torch.Tensor ― #2. torch.cat と torch.stack と x.repeat と x.unfold
 30c89647675717a26fdc 2026-04-09 Transformer のイラスト (+トイモデル実装)
 8d3bb4a767aa0ca572ce 2026-03-21 torch.nn.TransformerEncoder のイラスト
 1ccf519cd8d40d9577a0 2026-02-27 torch.nn.utils.parameters_to_vector / vector_to_parameters の挙動確認メモ
-b0cd7e587d74549804f8 2026-01-24 個包装だんごとしてみる torch.Tensor ― #1. .mean() と .unsqueeze() とブロードキャスト可能性
+b0cd7e587d74549804f8 2026-01-24 個包装だんごとしてみる torch.Tensor ― #1. x.mean と x.unsqueeze とブロードキャスト可能
 4b9fe6644f741a33aef2 2026-01-22 Windows 環境の PyTorch で OSError: [WinError 1114] (Error loading c10.dll) が出たときの対処法
 918f8c48e88f794795e4 2026-01-21 torch.nn.Module.register_buffer の挙動確認メモ
 9f07cba35b53e72a356a 2026-01-04 GPU マシンに直接 PyTorch 環境を構築するときの手順と注意点
@@ -71,6 +73,9 @@ c90ed6d281b169c29b3f 2026-02-09 Claude Code で事前定義プロンプトを扱
 b444ad45768be766df56 2026-01-07 Windows で音を鳴らすコマンド集 (Claude Code 完了通知音向け)
 """
 "すべての記事" = """
+fe587c45bff55d798def 2026-04-21 ChatGPT のサイドバー内のチャットタイトルをダミータイトルで覆い隠す CSS
+6c0cb7872ed4584ef134 2026-04-20 個包装だんごとしてみる torch.Tensor ― #0. 約束と目次 (兼チートシート)
+a8771d0c02e1de8319d2 2026-04-20 個包装だんごとしてみる torch.Tensor ― #3. 「だんごを選り好みする」torch.take と torch.take_along_dim と torch.index_select と torch.gather
 9497db1a2d340125e664 2026-04-15 Python でクラスメソッドをリストなどにまとめたいときの注意点
 681d629feefcf6d96121 2026-04-15 個包装だんごとしてみる torch.Tensor ― #2. torch.cat() と torch.stack() と .repeat() と .unfold()
 d84a9fecdc5b5dd5ded7 2026-04-12 PatchTST のイラスト (+ トイモデル実装)

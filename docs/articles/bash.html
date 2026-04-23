@@ -47,6 +47,63 @@ target_toml="${1:-NOT_SPECIFIED}"  # 指定されなければ NOT_SPECIFIED
 action="${2:-NOT_SPECIFIED}"  # 指定されなければ NOT_SPECIFIED
 </code></pre>
 
+<h3>キー入力を待つ</h3>
+続行するかどうかを選択させる例。。
+<pre class="language-bash"><code>
+#!/usr/bin/bash
+read -p '続行しますか？ (y/n): ' ans
+[ "$ans" = 'y' ] || { echo '中止します'; exit 0; }
+echo '続行します'
+</code></pre>
+
+選択肢に手動で記号を割り当てて選択させる例。
+<pre class="language-bash"><code>
+#!/usr/bin/bash
+echo "/c/Users/Cookie/.bashrc への操作を選択してください"
+read -p "l=ローカルを登録, s=ソースを適用 &gt; " key
+case "$key" in
+  l)
+    echo "ローカルを登録します"
+    ;;
+  s)
+    echo "ソースを適用します"
+    ;;
+esac
+</code></pre>
+<pre class="language-text"><code>
+/c/Users/Cookie/.bashrc への操作を選択してください
+l=ローカルを登録, s=ソースを適用 &gt; l
+ローカルを登録します
+</code></pre>
+
+選択肢に自動で番号を割り当てて選択させる例 (<code class="language-">select</code> はリストの各要素に番号を割り当てて表示し、ユーザ入力を待機し、ユーザ入力に対応する要素を変数に代入することを繰り返す)。
+<pre class="language-bash"><code>
+#!/usr/bin/bash
+echo "/c/Users/Cookie/.bashrc への操作を選択してください"
+select key in "ローカルを登録" "ソースを適用"; do
+  case "$key" in
+    "ローカルを登録")
+      echo "ローカルを登録します"
+      break ;;
+    "ソースを適用")
+      echo "ソースを適用します"
+      break ;;
+    *)
+      echo "入力が無効です"
+      ;;
+  esac
+done
+</code></pre>
+<pre class="language-text"><code>
+/c/Users/Cookie/.bashrc への操作を選択してください
+1) ローカルを登録
+2) ソースを適用
+#? 3
+入力が無効です
+#? 2
+ソースを適用します
+</code></pre>
+
 <h3>重複排除してソート</h3>
 <code class="language-">-u</code> で重複排除する。
 <pre class="language-bash"><code>
