@@ -73,6 +73,8 @@ c90ed6d281b169c29b3f 2026-02-09 Claude Code で事前定義プロンプトを扱
 b444ad45768be766df56 2026-01-07 Windows で音を鳴らすコマンド集 (Claude Code 完了通知音向け)
 """
 "すべての記事" = """
+9eb4f04e3b0eab43876f 2026-04-25 最近の自分の GitHub コミット数を可視化する Python スクリプト (標準ライブラリのみ)
+d6c2fc16f111e45303ed 2026-04-25 端末に色付き文字を表示する ANSI エスケープシーケンスのスニペット (bash / zsh と python)
 fe587c45bff55d798def 2026-04-21 ChatGPT のサイドバー内のチャットタイトルをダミータイトルで覆い隠す CSS
 6c0cb7872ed4584ef134 2026-04-20 個包装だんごとしてみる torch.Tensor ― #0. 約束と目次 (兼チートシート)
 a8771d0c02e1de8319d2 2026-04-20 個包装だんごとしてみる torch.Tensor ― #3. 「だんごを選り好みする」torch.take と torch.take_along_dim と torch.index_select と torch.gather
