@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>datetime (Python 標準モジュール) - Cookipedia α-version</title>
+<link href="../css/style.css?v=2026-04-11" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-04-11" rel="stylesheet" type="text/css"/>
+<script data-prism-python="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2026-04-11"></script>
+</head>
+<body>
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>datetime (Python 標準モジュール)</h1>
+
+
+<h2>参考文献</h2>
+<ol class="ref small">
+<li>datetime --- 基本的な日付と時間の型 — Python 3.14.4 ドキュメント, <a class="asis" href="https://docs.python.org/ja/3.14/library/datetime.html"></a>, 2026年4月25日参照.</li>
+</ol>
+
+
+<h2>Snippets</h2>
+
+<h3>日付を日本語表記する</h3>
+<pre class="language-python"><code>
+def dt_to_str(dt):
+    dow = '月火水木金土日'[dt.weekday()]
+    return f'{dt.month:02}月{dt.day:02}日 ({dow})'
+</code></pre>
+<pre class="language-text"><code>
+04月24日 (金)
+</code></pre>
+
+<h3>日付を英語表記する</h3>
+<pre class="language-python"><code>
+def dt_to_str(dt):
+    dow = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][dt.weekday()]
+    return dow + ', ' + dt.strftime('%b') + ' ' + str(dt.day).rjust(2)
+</code></pre>
+<pre class="language-text"><code>
+Fri, Apr 24
+</code></pre>
+
+
+<div class="categories">
+<a href="../categories/python.html">Python</a>
+</div>
+
+</div>
+</main>
+</div>
+</body>
+</html>
