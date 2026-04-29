@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>A Time Series is Worth 64 Words: Long-term Forecasting with Transformers - Cookipedia α-version</title>
 <link href="../css/style.css?v=2026-04-11" rel="stylesheet" type="text/css"/>
-<link href="../css/cookipedia.css?v=2026-04-11" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-04-12" rel="stylesheet" type="text/css"/>
 <script data-mathjax="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2026-04-11"></script>
 </head>
 <body>
@@ -16,6 +16,12 @@
 <div id="smartphone-header"></div>
 <div class="item long-title">
 <h1>A Time Series is Worth 64 Words: Long-term Forecasting with Transformers</h1>
+
+<div class="categories">
+<a data-subcat="2023" href="../categories/time_series_forecasting.html">時系列予測</a> |
+<a data-subcat="2023" href="../categories/iclr.html">ICLR</a>
+</div>
+
 <p>A Time Series is Worth 64 Words: Long-term Forecasting with Transformers は、時系列の各チャネルを固定長の重複パッチに分割してトークンとし、チャネル間で重みを共有しつつ各チャネルを独立に処理する Transformer エンコーダモデル PatchTST を提案する論文である。Princeton University の Yuqi Nie らによって著され (他に IBM Research 所属の著者も)、2022 年に arXiv にプレプリントが発表され、2023 年の ICLR に採択された。</p>
 <p>具体的には、長さ L_in の時系列の各チャネルに対して、サンプル内正規化 (ゼロ平均・単位分散) を施した後、パッチ長 P=16、ストライド S=8 でパッチ数 N = floor((L_in - P) / S) + 2 個のパッチに分割して各パッチを線形変換で d_model=128 次元に埋め込み、学習可能な位置エンコーディング (N×d_model 次元のパラメータを学習) を加算し、チャネルごとに独立に同一の Transformer エンコーダ (3 層、d_model=128、16 ヘッド、d_ff=256) を適用する。すると、チャネルごとに N パッチ分の d_model 次元のベクトルが得られるので、これを N×d_model 次元に flatten し、L_out 次元に線形変換し、サンプル内正規化の逆変換を適用してそのチャネルの予測系列とする。また、パッチの 40% をゼロマスクして元のパッチを再構成する自己教師あり事前学習スキームも提案している。</p>
 
@@ -38,8 +44,13 @@ Yuqi Nie, Nam H. Nguyen, Phanwadee Sinthong, Jayant Kalagnanam. A time series is
 <div class="gray">
 以下の記述は2026年4月16日時点での最新リビジョン (<a class="break-all" href="https://github.com/yuqinie98/PatchTST/tree/204c21efe0b39603ad6e2ca640ef5896646ab1a9">204c21e</a>) に基づく。
 <ul>
-<li><span class="break-all">PatchTST_supervised/models/PatchTST.py::Model</span> には decomposition フラグ (True ならトレンド成分と残差成分を分けて別々の PatchTST を適用する) があるが、規定値・実験設定で使用されている形跡はない。</li>
-<li>実質的なモデル本体は <span class="break-all">PatchTST_supervised/layers/PatchTST_backbone.py::PatchTST_backbone</span> である (このクラス自体は標準化とパディングをして TSTiEncoder に投げ、その結果を予測長に線形変換して逆標準化し出力するだけである)。</li>
+<li><a class="break-all" href="https://github.com/yuqinie98/PatchTST/blob/204c21efe0b39603ad6e2ca640ef5896646ab1a9/PatchTST_supervised/layers/PatchTST_backbone.py#L16">PatchTST_supervised/layers/PatchTST_backbone.py::PatchTST_backbone</a> [脚注backbone]</li>
+<ul>
+<li><a class="break-all" href="https://github.com/yuqinie98/PatchTST/blob/204c21efe0b39603ad6e2ca640ef5896646ab1a9/PatchTST_supervised/layers/PatchTST_backbone.py#L128">PatchTST_supervised/layers/PatchTST_backbone.py::TSTiEncoder</a></li>
+<ul>
+<li><a class="break-all" href="https://github.com/yuqinie98/PatchTST/blob/204c21efe0b39603ad6e2ca640ef5896646ab1a9/PatchTST_supervised/layers/PatchTST_backbone.py#L177">PatchTST_supervised/layers/PatchTST_backbone.py::TSTEncoder</a> (これの下に TSTEncoderLayer も)</li>
+</ul>
+</ul>
 </ul>
 </div>
 <ul>
@@ -75,10 +86,11 @@ Yuqi Nie, Nam H. Nguyen, Phanwadee Sinthong, Jayant Kalagnanam. A time series is
 </ul>
 
 
-<div class="categories">
-<a data-subcat="2023" href="../categories/time_series_forecasting.html">時系列予測</a> |
-<a data-subcat="2023" href="../categories/iclr.html">ICLR</a>
-</div>
+<h2>脚注</h2>
+<dl class="footnote">
+<dt>backbone</dt>
+<dd><span class="break-all">PatchTST_supervised/models/PatchTST.py::Model</span> には decomposition フラグ (True ならトレンド成分と残差成分を分けて別々の PatchTST を適用する) があるが、規定値・実験設定で使用されている形跡はない。実質的なモデル本体は <span class="break-all">PatchTST_supervised/layers/PatchTST_backbone.py::PatchTST_backbone</span> である (このクラス自体は標準化とパディングをして TSTiEncoder に投げ、その結果を予測長に線形変換して逆標準化し出力するだけである)。</dd>
+</dl>
 
 </div>
 </main>

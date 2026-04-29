@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>Are Transformers Effective for Time Series Forecasting? - Cookipedia α-version</title>
 <link href="../css/style.css?v=2026-04-11" rel="stylesheet" type="text/css"/>
-<link href="../css/cookipedia.css?v=2026-04-11" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-04-12" rel="stylesheet" type="text/css"/>
 <script data-mathjax="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2026-04-11"></script>
 </head>
 <body>
@@ -16,6 +16,12 @@
 <div id="smartphone-header"></div>
 <div class="item long-title">
 <h1>Are Transformers Effective for Time Series Forecasting?</h1>
+
+<div class="categories">
+<a data-subcat="2023" href="../categories/time_series_forecasting.html">時系列予測</a> |
+<a data-subcat="2023" href="../categories/aaai.html">AAAI</a>
+</div>
+
 <p>Are Transformers Effective for Time Series Forecasting? [paper] は線形層のみからなるニューラル時系列予測モデルを提案する論文である。香港中文大学の Ailing Zeng らによって著された。2022 年に arXiv にプレプリントが発表され、2023 年の AAAI に採択された。</p>
 <p>論文の要旨には、Transformer は遠く離れた単語間の関係を学ぶことに成功しているが、時系列予測では連続値の列の時刻間の関係を抽出しなければならないといった旨のことが書かれている。その続きを意訳すると、「Transformer は位置エンコーディングによって位置情報は付加するものの、self-attention 自体は時刻の関係を考慮するものではないため、『何ステップ前にこうなったらこうなる』を学習するには不利である」ということと思われる。</p>
 
@@ -57,12 +63,6 @@ $$
 
 <h2>NLinear のモデル構造</h2>
 入力テンソル $X$ (形状 $[B, L_{\rm in}, C]$) に対し、末尾の値 $X_{L_{\rm in}}$ を差し引いた $X - X_{L_{\rm in}}$ に線形層を適用して予測長 $L_{\rm out}$ に変換し (活性化関数は適用しない)、最後に $X_{L_{\rm in}}$ を足し戻す。
-
-
-<div class="categories">
-<a data-subcat="2023" href="../categories/time_series_forecasting.html">時系列予測</a> |
-<a data-subcat="2023" href="../categories/aaai.html">AAAI</a>
-</div>
 
 </div>
 </main>

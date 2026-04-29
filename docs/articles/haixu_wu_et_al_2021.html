@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>Autoformer: Decomposition Transformers with Auto-Correlation for Long-Term Series Forecasting - Cookipedia α-version</title>
 <link href="../css/style.css?v=2026-04-11" rel="stylesheet" type="text/css"/>
-<link href="../css/cookipedia.css?v=2026-04-11" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-04-12" rel="stylesheet" type="text/css"/>
 <script data-mathjax="true" data-prism-python="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2026-04-11"></script>
 </head>
 <body>
@@ -16,6 +16,12 @@
 <div id="smartphone-header"></div>
 <div class="item long-title">
 <h1>Autoformer: Decomposition Transformers with Auto-Correlation for Long-Term Series Forecasting</h1>
+
+<div class="categories">
+<a data-subcat="2021" href="../categories/time_series_forecasting.html">時系列予測</a> |
+<a data-subcat="2021" href="../categories/neurips.html">NeurIPS</a>
+</div>
+
 <p>Autoformer: Decomposition Transformers with Auto-Correlation for Long-Term Series Forecasting [paper] は、Transformer に似た (マルチヘッドアテンション層を "Auto-Correlation" 層に、層正規化層を "Series Decomposition" 層に置き換えた) エンコーダ + デコーダ構造をもつ時系列予測モデル Autoformer を提案する論文である。Tsinghua University (清華大学) の Haixu Wu らによって著され (著者全員が同所属)、2021 年の NeurIPS に採択された。</p>
 <p>具体的に、"Auto-Correlation" 層は入力系列の各ステップを Q, K, V に線形変換し、FFT を用いて Q-K の全ラグの相互相関を O(L log L) で一括計算し、モデル次元方向の平均値がトップ k = floor(c log L) 個のステップに絞った上で softmax し、各ラグ分だけ V をロールシフトして重み付き和を取る。続く "Series Decomposition" 層は入力系列の移動平均 (ウィンドウサイズ 25) をとってトレンド成分とし、これを分離する (分離したトレンド成分は、エンコーダでは破棄し、デコーダでは蓄積する)。</p>
 <figure>
@@ -40,20 +46,27 @@ Haixu Wu, Jiehui Xu, Jianmin Wang, Mingsheng Long. Autoformer: Decomposition Tra
 
 <h2>Autoformer の構造</h2>
 <div class="gray">
-以下の記述は2026年4月9日時点での最新リビジョン (<a class="break-all" href="https://github.com/thuml/Autoformer/tree/51c7d416ae120b805fd5beef2f4ccf7de496a6ff">51c7d41</a>) に基づく。
+以下の記述は2026年4月9日時点での最新リビジョン (<a class="break-all" href="https://github.com/thuml/Autoformer/tree/51c7d416ae120b805fd5beef2f4ccf7de496a6ff">51c7d41</a>) に基づく。主要なモジュールは以下である。
 <ul>
-<li><span class="break-all">models/Autoformer.py::Model</span> には decomposition フラグ (True ならトレンド成分と残差成分を分けて別々の PatchTST を適用する) があるが、規定値・実験設定で使用されている形跡はない。layers/Embed</li>
-<li>実質的なモデル本体は <span class="break-all">PatchTST_supervised/layers/PatchTST_backbone.py::PatchTST_backbone</span> である (このクラス自体は標準化とパディングをして TSTiEncoder に投げ、その結果を予測長に線形変換して逆標準化し出力するだけである)。</li>
+<li><a class="break-all" href="https://github.com/thuml/Autoformer/blob/51c7d416ae120b805fd5beef2f4ccf7de496a6ff/models/Autoformer.py#L8">models/Autoformer.py::Model</a></li>
+<ul>
+<li><a class="break-all" href="https://github.com/thuml/Autoformer/blob/51c7d416ae120b805fd5beef2f4ccf7de496a6ff/layers/Embed.py#L142">layers/Embed.py::DataEmbedding_wo_pos</a></li>
+<li><a class="break-all" href="https://github.com/thuml/Autoformer/blob/51c7d416ae120b805fd5beef2f4ccf7de496a6ff/layers/Autoformer_EncDec.py#L82">layers/Autoformer_EncDec.py::Encoder</a> (これの上に EncoderLayer も)</li>
+<ul>
+<li><a class="break-all" href="https://github.com/thuml/Autoformer/blob/51c7d416ae120b805fd5beef2f4ccf7de496a6ff/layers/AutoCorrelation.py#L6">layers/AutoCorrelation.py::AutoCorrelation</a></li>
+</ul>
+<li><a class="break-all" href="https://github.com/thuml/Autoformer/blob/51c7d416ae120b805fd5beef2f4ccf7de496a6ff/layers/Autoformer_EncDec.py#L153">layers/Autoformer_EncDec.py::Decoder</a> (これの上に DecoderLayer も)</li>
+</ul>
 </ul>
 </div>
+<p>Autoformer は参照期間のタイムスタンプ (L_in,)、参照期間の観測値 (L_in, C)、予測期間のタイムスタンプ (L_out,) を受け取り、予測結果 (L_out, C) を出力する。</p>
 <p>Autoformer ではデコーダ初期化に用いる過去系列の長さをラベル長 L_label = L_in/2 と定めている。直近の過去情報をデコーダに与えつつ、ゼロパディング部分を予測させる設計になっている (つまり、エンコーダに入力する系列の後半は常にデコーダの初期入力にもなる)。ラベル長は実装上はハイパーパラメータとなっているが、論文では L_in/2 をデフォルトとしている。</p>
-<p>また、エンコーダ出力・デコーダ出力の季節成分に対しては、独自の正規化 (<a class="asis break-all" href="https://github.com/thuml/Autoformer/blob/490bb749365efd8f1178bc652a06361701545a6f/layers/Autoformer_EncDec.py#L6-L17"></a>) を適用する。具体的に、通常の層正規化に加えて、平均がゼロになるようシフトする。季節成分がゼロ周りの振動になるよう保証する措置と考えられる。この記事では以降、「ゼロ周り層正規化」とよぶ。</p>
+<p>また、エンコーダ出力と、デコーダ出力の季節成分に対して、独自の正規化を適用する。具体的に、通常の層正規化 (各トークンの標準化) に加えて、各時系列の平均を差し引く。季節成分がゼロ周りの振動になるよう保証する措置と考えられる。この記事では以降、"TokenNormSeriesDemean" とよぶ。</p>
 <p>Autoformer のモデル次元数 512、中間層次元数 2048、ヘッド数 8 は<a href="ashish_vaswani_et_al_2017.html">オリジナル Transformer</a> の値がそのまま採用されている。ただし、エンコーダ層数 2、デコーダ層数 1 はオリジナル Transformer での層数 (エンコーダ層数、デコーダ層数共に 6) とは異なる。また、活性化に GELU を採用している点もオリジナル Transformer とは異なる [脚注GELU]。</p>
 
 <h3>Autoformer 全体</h3>
 <ul>
-<li>(L_in + L_out) 次元のタイムスタンプと、(L_in×C) 次元の入力系列を受け取る。</li>
-<li>(L_in + L_out) 次元のタイムスタンプを時間特徴エンコーディングする：以下の 5 (4) 値を [-0.5, 0.5] に正規化し、5 (4) 次元ベクトルとして 512 次元に線形変換する。</li>
+<li>x_enc (L_in, C)、x_mark_enc (L_in, n_feat)、x_mark_dec (L_label+L_out, n_feat) を受け取る。ただし、x_mark_enc, x_mark_dec はタイムスタンプから以下の 5 (4) 列の特徴を抽出し各列を -0.5～0.5 の値に正規化したものである。</li>
 <ul>
 <li>その時刻が何時か (0〜23 時)</li>
 <li>その日が週の何日目か (1〜7 日)</li>
@@ -61,7 +74,7 @@ Haixu Wu, Jiehui Xu, Jianmin Wang, Mingsheng Long. Autoformer: Decomposition Tra
 <li>その日が年の何日目か (1〜365 日)</li>
 <li>その分が時間の何分目か (0〜59 分)  ※ 時間ステップが 1 時間未満の場合のみ。</li>
 </ul>
-<li>(L_in×C) 次元の入力系列の各ステップのチャネル次元を線形変換で 512 次元に埋め込み、時間特徴エンコーディングの最初の L_in ステップを加算し、エンコーダ入力とする。</li>
+<li>(L_in, C) 次元の入力系列の各ステップのチャネル次元を線形変換で 512 次元に埋め込み、時間特徴エンコーディングの最初の L_in ステップを加算し、エンコーダ入力とする。</li>
 <li>エンコーダ入力に "Series Decomposition" 層を適用する：移動平均 (ウィンドウサイズ 25) でトレンド成分を抽出し、残りを季節成分とする (ア)。</li>
 <li>(ア) の季節成分の後半 L_in/2 ステップに、時間特徴エンコーディングの最後の L_out ステップを concat し、デコーダ入力の季節成分とする。</li>
 <li>(ア) のトレンド成分の後半 L_in/2 ステップに、エンコーダ入力全体の平均を L_out ステップ分繰り返して concat し、デコーダ入力のトレンド成分とする。</li>
@@ -74,12 +87,21 @@ Haixu Wu, Jiehui Xu, Jianmin Wang, Mingsheng Long. Autoformer: Decomposition Tra
 </ul>
 </ul>
 
+<h3>データ埋込層</h3>
+<ul>
+<li>(L, d_inp) 次元の時間特徴と (L, C) 次元の入力データをそれぞれ以下で (L, d_model) 次元に変換して足し合わせ、ドロップアウトする。</li>
+<ul>
+<li>(L, d_inp) 次元の時間特徴を時刻ごとに d_model 次元に線形変換する。</li>
+<li>(L, C) 次元の入力データを各時刻を中心に Conv1d(kernel_size=3, keep_len=True, padding_mode='circular') で畳込んで (L, d_model) 次元に変換する。</li>
+</ul>
+</ul>
+
 <h3>エンコーダ</h3>
 <ul>
 <li>エンコーダ層 (以下) を 2 層積み重ねる。</li>
 <ul>
-<li>各ステップが 512 次元の入力系列を受け取る (ア)。</li>
-<li>"Auto-Correlation" 層 (以下) を適用する。</li>
+<li>(L_in, d_model) 次元の入力系列を受け取る (ア)。</li>
+<li>"AutoCorrelation" 層 (以下) を適用する。</li>
 <ul>
 <li>入力系列をステップごとに Q, K, V 用に 3×8×64 次元に線形変換して、8 ヘッドに分割する。</li>
 <li>各ヘッドで FFT を用いて Q-K の全ラグの相互相関を計算し、モデル次元方向の平均値の大きいトップ k = floor(c log L) 個のラグに絞った上で softmax し (c の規定値は 1) [脚注top]、絞った各ラグ分だけ V をロールシフトして重み付き和を取る。</li>
@@ -93,12 +115,13 @@ Haixu Wu, Jiehui Xu, Jianmin Wang, Mingsheng Long. Autoformer: Decomposition Tra
 <li>再び 512 次元に線形変換、ドロップアウトする。</li>
 <li>(イ) から残差接続する。</li>
 <li>"Series Decomposition" 層を適用して季節成分を得る。トレンド成分は破棄する。</li>
-<li>このエンコーダ層が最終エンコーダ層の場合のみ、「ゼロ周り層正規化」を適用する。</li>
 </ul>
+<li>"TokenNormSeriesDemean" を適用する。</li>
 </ul>
 
 <h3>デコーダ</h3>
 <ul>
+<li>デコーダ層 (以下) を 1 層適用する。</li>
 <li>デコーダ層 (以下) を 1 層適用する。</li>
 <ul>
 <li>各ステップが 512 次元の季節成分 (ア) とトレンド成分 (イ) を入力として受け取る。</li>
@@ -121,9 +144,12 @@ Haixu Wu, Jiehui Xu, Jianmin Wang, Mingsheng Long. Autoformer: Decomposition Tra
 <li>再び 512 次元に線形変換、ドロップアウトする。</li>
 <li>(エ) から残差接続する。</li>
 <li>"Series Decomposition" 層を適用して季節成分を得る (オ)。トレンド成分は (イ) に累積。</li>
-<li>(オ) に「ゼロ周り層正規化」を適用し、デコーダ出力の季節成分とする。</li>
+<li>(オ) に "TokenNormSeriesDemean" を適用し、デコーダ出力の季節成分とする。</li>
 <li>累積されたトレンド成分を、そのままデコーダ出力のトレンド成分とする。</li>
 </ul>
+</ul>
+
+
 <h2>トイモデル</h2>
 論文リポジトリの 2026/04/09 現在の最新リビジョン (<a class="break-all" href="https://github.com/thuml/Autoformer/tree/51c7d416ae120b805fd5beef2f4ccf7de496a6ff">51c7d41</a>) を取得して以下を実行すれば、小さなインスタンスができる。
 <pre class="language-python"><code>
@@ -162,6 +188,8 @@ def main():
 if __name__ == '__main__':
     main()
 </code></pre>
+
+
 <h2>脚注</h2>
 <dl class="footnote">
 <dt>GELU</dt>
@@ -169,11 +197,6 @@ if __name__ == '__main__':
 <dt>top</dt>
 <dd>絶対値を取るのではなく、符号付きで値の大きいラグを選択する (後段で softmax 重み付き和を取る都合上、相関が負のラグを取ると予測が劣化すると考えられ、ここで相関が負のラグを取るべきではないのはさもありなんと思われる)。</dd>
 </dl>
-<div class="categories">
-<a data-subcat="2021" href="../categories/time_series_forecasting.html">時系列予測</a> |
-<a data-subcat="2021" href="../categories/neurips.html">NeurIPS</a>
-</div>
-</ul>
 
 </div>
 </main>

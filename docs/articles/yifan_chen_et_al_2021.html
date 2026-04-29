@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>Skyformer: Remodel Self-Attention with Gaussian Kernel and Nyström Method - Cookipedia α-version</title>
 <link href="../css/style.css?v=2026-04-11" rel="stylesheet" type="text/css"/>
-<link href="../css/cookipedia.css?v=2026-04-11" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-04-12" rel="stylesheet" type="text/css"/>
 <script data-mathjax="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2026-04-11"></script>
 </head>
 <body>
@@ -16,6 +16,11 @@
 <div id="smartphone-header"></div>
 <div class="item long-title">
 <h1>Skyformer: Remodel Self-Attention with Gaussian Kernel and Nyström Method</h1>
+
+<div class="categories">
+<a href="../categories/transformer.html">Transformer</a>
+</div>
+
 <p><b>Skyformer: Remodel Self-Attention with Gaussian Kernel and Nyström Method</b> [1] とは、セルフアテンションの計算コスト削減に<a href="nyström_method.html"> Nyström 近似</a>を応用した研究である。NeurIPS 2021 で発表された。なお、この研究に先立ちセルフアテンションの計算コスト削減に Nyström 近似を応用した研究として <b>Nyströmformer</b> [Xiong et al., 2021] があるが、Nyströmformer ではセルフアテンション行列（半正定値行列ではない）に直接 Nyström 近似を適用していたのに対し、本研究では セルフアテンション行列を半正定値行列に拡張してから Nyström 近似を適用しているのが異なる。 </p>
 <br/>
 
@@ -65,11 +70,6 @@ label = torch.tensor([0])
 y = model(x, None, label)
 print(y)
 </pre>
-
-
-<div class="categories">
-<a href="../categories/transformer.html">Transformer</a>
-</div>
 
 </div>
 </main>

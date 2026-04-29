@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>Attention Is All You Need - Cookipedia α-version</title>
 <link href="../css/style.css?v=2026-04-11" rel="stylesheet" type="text/css"/>
-<link href="../css/cookipedia.css?v=2026-04-11" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-04-12" rel="stylesheet" type="text/css"/>
 <script data-mathjax="true" data-prism-python="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2026-04-11"></script>
 </head>
 <body>
@@ -16,6 +16,12 @@
 <div id="smartphone-header"></div>
 <div class="item long-title">
 <h1>Attention Is All You Need</h1>
+
+<div class="categories">
+<a data-subcat="2017" href="../categories/nn.html">ニューラルネットワーク</a> |
+<a data-subcat="2017" href="../categories/neurips.html">NeurIPS</a>
+</div>
+
 <p>Attention Is All You Need [paper] は、エンコーダが「ソース系列」を「前後の文脈を反映した」系列に変換し、それを受けた下でデコーダが別の「ターゲット系列」を「1 単語先にシフトした系列」に変換するように訓練する Seq2Seq モデル "Transformer" を提案する論文である。Google Brain の Ashish Vaswani らによって著され (他に Google Research、University of Toronto 所属の著者も)、2017 年の NeurIPS に採択された。</p>
 <p>Transformer は推論時には対象の「ソース系列」をエンコードした下で、最初は文頭トークンのみの「ターゲット系列」から順に次の単語をデコードしていく。Transformer のエンコーダ・デコーダは系列の処理に再帰も畳込みも用いず、"Scaled Dot-Product Attention" を内包する "Multi-Head Attention" 層と、ステップごとの線形変換のみを用いる。</p>
 <figure>
@@ -226,12 +232,6 @@ decoder層のパラメータ数: 534
 <dt>coref</dt>
 <dd>共参照 (coreference) とは、文中の複数の表現が同じ実体を指すことである。例えば「太郎が来た。彼は疲れていた」において「太郎」と「彼」は同じ実体を指している。</dd>
 </dl>
-
-
-<div class="categories">
-<a data-subcat="2017" href="../categories/nn.html">ニューラルネットワーク</a> |
-<a data-subcat="2017" href="../categories/neurips.html">NeurIPS</a>
-</div>
 
 </div>
 </main>

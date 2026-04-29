@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>Beautiful Soup 4 - Cookipedia α-version</title>
 <link href="../css/style.css?v=2026-04-11" rel="stylesheet" type="text/css"/>
-<link href="../css/cookipedia.css?v=2026-04-11" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-04-12" rel="stylesheet" type="text/css"/>
 <script data-prism-python="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2026-04-11"></script>
 </head>
 <body>
@@ -24,6 +24,10 @@
 -->
 <h1>Beautiful Soup 4</h1>
 
+<div class="categories">
+<a href="../categories/python.html">Python</a>
+</div>
+
 
 <h2>
 参考文献
@@ -40,19 +44,6 @@ Beautiful Soup Documentation — Beautiful Soup 4.13.0 documentation.
 </li>
 </ul>
 </ol>
-<!-- python start --><!--
-<h2>Python スクリプト</h2>
-<pre class="language-python"><code>
-import pandas as pd
-df = pd.DataFrame()
-</code></pre>
-<!-- python end -->
-<!-- rel start --><!--
-<h2>関連記事</h2>
-<ul>
-<li><a href="le_cams_first_lemma.html">Le Cam の第一補題</a></li>
-</ul>
-<!-- rel end -->
 
 
 <h2>Snippets</h2>
@@ -113,6 +104,15 @@ div = soup.find('div')
 assert div.get_text() == 'CoffeeBanana'
 </code></pre>
 
+<h3>HTML 要素を移動する</h3>
+<pre class="language-python"><code>
+item = soup.find('div', class_='item')
+categories = item.find('div', class_='categories')
+if categories is not None:
+    h1 = item.find('h1')
+    h1.insert_after(categories.extract())
+</code></pre>
+
 <h3>HTML ファイルが参照するスタイルシートのパスを修正する</h3>
 <code class="language-">soup.find()</code> で <code class="language-">href</code> 属性が <code class="language-">css/style.css</code> を含む要素をみつけるには引数 <code class="language-python">href=lambda v: v and 'css/style.css' in v</code> を指定すればよい。
 <pre class="language-python"><code>
@@ -151,11 +151,6 @@ if __name__ == '__main__':
         article_path.write_text(str(soup), newline='\n', encoding='utf8')
 </code></pre>
 <!-- category start -->
-
-
-<div class="categories">
-<a href="../categories/python.html">Python</a>
-</div>
 <!-- category end -->
 
 </div>

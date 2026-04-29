@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>Non-stationary Transformers: Rethinking the Stationarity in Time Series Forecasting - Cookipedia α-version</title>
 <link href="../css/style.css?v=2026-04-11" rel="stylesheet" type="text/css"/>
-<link href="../css/cookipedia.css?v=2026-04-11" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-04-12" rel="stylesheet" type="text/css"/>
 <script data-mathjax="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2026-04-11"></script>
 </head>
 <body>
@@ -16,6 +16,12 @@
 <div id="smartphone-header"></div>
 <div class="item long-title">
 <h1>Non-stationary Transformers: Rethinking the Stationarity in Time Series Forecasting</h1>
+
+<div class="categories">
+<a data-subcat="2022" href="../categories/time_series_forecasting.html">時系列予測</a> |
+<a data-subcat="2022" href="../categories/neurips.html">NeurIPS</a>
+</div>
+
 <p>Non-stationary Transformers: Rethinking the Stationarity in Time Series Forecasting [paper] とは、Transformer を非定常な時系列の予測に対応させるべく、Transformer に下記 2 点の改修（"Series Stationarization", "De-stationary Attention"）をした研究である。<ol>
 <li>Transformer を適用させる前後に正規化・逆正規化を設置する（これによって、プレ処理で定常時系列にしておく必要がなくなり、また、スケールファクターを内部で活用できる）。</li>
 <li>正規化時のスケールファクターに応じてセルフアテンションの重みを調整する。</li>
@@ -88,12 +94,6 @@ $$
 <dt>2</dt>
 <dd>(5) 式は近似的にではなく厳密に成り立っている式なので、律儀にこれを学習すると Outlier 問題から解放されないはずである。定常化された系列間の依存性を $Q', K'$ が学習し、非定常性の分の調整を $\tau, \Delta$ に切り離すことに意味がある。</dd>
 </dl>
-
-
-<div class="categories">
-<a data-subcat="2022" href="../categories/time_series_forecasting.html">時系列予測</a> |
-<a data-subcat="2022" href="../categories/neurips.html">NeurIPS</a>
-</div>
 
 </div>
 </main>
