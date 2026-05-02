@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Gateformer: Advancing Multivariate Time Series Forecasting through Temporal and Variate-Wise Attention with Gated Representations - Cookipedia α-version</title>
+<link href="../css/style.css?v=2026-04-12" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-04-12" rel="stylesheet" type="text/css"/>
+<script data-mathjax="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2026-04-11"></script>
+</head>
+<body>
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item long-title">
+<h1>Gateformer: Advancing Multivariate Time Series Forecasting through Temporal and Variate-Wise Attention with Gated Representations</h1>
+
+<div class="categories">
+<a data-subcat="2025" href="../categories/time_series_forecasting.html">時系列予測</a>
+</div>
+
+<p>Gateformer: Advancing Multivariate Time Series Forecasting through Temporal and Variate-Wise Attention with Gated Representations [paper] は、各変量の系列から「時間依存性埋め込み」と「グローバル時間埋め込み」をゲート結合して「変量埋め込み」を構築し、変量間セルフアテンション層の出力と「変量埋め込み」を再びゲートで結合して予測を生成する多変量時系列予測モデル Gateformer を提案する論文である。New York University (ニューヨーク大学) の Yu-Hsiang Lan らによって著された (他に同大学 Department of Neurosurgery 所属の著者も)。2025 年の FMSD @ ICML に採択された。</p>
+<p>各変量の系列を RevIN で正規化し、2 つの経路で独立に処理する。(1) 系列をパッチ列に分割し線形変換で埋め込んだ後、パッチ間セルフアテンション層と FFN を適用して「時間依存性埋め込み」を得る。(2) 系列全体を共有 MLP で変換して「グローバル時間埋め込み」を得る。2 つの埋め込みをシグモイド関数を用いたゲートで凸結合することで「変量埋め込み」を生成する。次に、全変量の「変量埋め込み」を積み上げた行列に変量間セルフアテンション層を適用して「変量交互作用埋め込み」を得、同様のゲート機構で「変量埋め込み」(交互作用なし) と結合する。最後に線形層で予測を出力する。</p>
+<p>13 の実世界ベンチマークデータセットで最先端の性能を達成し、130 設定中 91 設定で 1 位、122 設定で 2 位以内の性能を示した。他の Transformer ベースおよび LLM ベースの予測モデルに組み込んだ場合、元のモデルに対して最大 20.7% の性能向上をもたらした。</p>
+<p>著者らは、多変量時系列予測において時間方向 (系列内) と変量間 (系列間) の両依存性を Transformer アーキテクチャで効果的に統合する方法が不明確であるという問題意識をもっている。点ごとのトークンを用いる先行手法は意味情報を欠き単純な線形モデルに劣ることが示されており、PatchTST はパッチ単位で時間方向依存性のみを捉え変量間依存性を無視し、iTransformer は変量全体を 1 ベクトルに線形変換して変量間依存性のみを捉え時間方向依存性を無視する。</p>
+
+
+<h2>参考文献</h2>
+<dl class="ref small">
+<dt>paper</dt>
+<dd>
+Yu-Hsiang Lan, Eric K. Oermann. Gateformer: Advancing multivariate time series forecasting through temporal and variate-wise attention with gated representations. <i>Workshop on Foundation Models for Structured Data (FMSD) at ICML 2025,</i> 2025.
+<ul>
+<li><a class="asis" href="https://openreview.net/forum?id=wufwo0hkWr"></a></li>
+<li><a class="asis" href="https://arxiv.org/abs/2505.00307"></a></li>
+<li><a class="asis" href="https://github.com/nyuolab/gateformer"></a></li>
+</ul>
+</dd>
+</dl>
+
+
+<h2>Gateformer の構造</h2>
+<div class="gray">
+以下の記述は 2025 年 5 月 2 日時点での最新リビジョン (<a class="break-all" href="https://github.com/nyuolab/gateformer/blob/298fd10db4af8ddab67e9d0044481279a2b11241/">298fd10</a>) に基づく。主要なモジュールは以下である。
+<ul>
+<li><a class="break-all" href="https://github.com/nyuolab/gateformer/blob/298fd10db4af8ddab67e9d0044481279a2b11241/models/Gateformer.py">models/Gateformer.py::Model</a></li>
+<li><a class="break-all" href="https://github.com/nyuolab/gateformer/blob/298fd10db4af8ddab67e9d0044481279a2b11241/layers/Embed.py">layers/Embed.py::DataEmbedding_inverted, PatchEmbedding</a></li>
+</ul>
+</div>
+<p>「グローバル時間埋め込み」層は (C, L_in) 次元の入力を受け取り、チャネルごとに Linear(L_in → d_model) で変換し、ドロップアウトして (C, d_model) を出力する。</p>
+<p>「パッチ埋め込み」層は (C, L_in) 次元の入力を受け取り、右端に stride ステップ分の複製パディングを施した後、サイズ patch_len、ストライド stride の窓で unfold してパッチ列 (C, P, patch_len) を作り、バッチ次元と C 次元を統合して (C×P, patch_len) とし、Linear(patch_len → d_model) と正弦コサイン位置符号化を加算して d_model 次元に変換し、ドロップアウトして (C×P, d_model) を出力する。パッチ数 P = (L_in − patch_len) / stride + 2 である。</p>
+<p>ハイパーパラメータ規定値は d_model = 512、FFN 中間次元数 2048、ヘッド数 8 (各ヘッド次元 64)、TransformerEncoder 層数 e_layers = 2、patch_len = 8、stride = 8、ドロップアウト率 0.1 である。</p>
+
+<h3>Gateformer 全体</h3>
+<ul>
+<li>(L_in, C) 次元の入力時系列を受け取る。</li>
+<li>チャネルごとに時間方向の平均と標準偏差を計算し、入力を正規化する (ア)。</li>
+<li>「グローバル時間埋め込み」層を適用して (C, 512) 次元の v<sub>G</sub> を得る (イ)。</li>
+<li>チャネル次元と時間次元を転置して (C, L_in) とし、「パッチ埋め込み」層を適用して (C×P, 512) のパッチ系列を得る。</li>
+<li>時間方向 TransformerEncoder (以下) を適用して (C×P, 512) を得る。</li>
+<li>(C, P, 512) に reshape し最後の 2 次元を転置して (C, 512, P) とし、以下を適用して (C, 512) 次元の v<sub>T</sub> を得る (ウ)。</li>
+<ul>
+<li>最後の 2 次元を平坦化して (C, 512×P) とする。</li>
+<li>Linear(512×P → 512) を適用して (C, 512) とする。</li>
+<li>ドロップアウトする。</li>
+</ul>
+<li>gate = σ(gate_w1(v<sub>G</sub>) + gate_w2(v<sub>T</sub>)) を計算する。</li>
+<li>「変量埋め込み」s = gate ⊙ v<sub>G</sub> + (1−gate) ⊙ v<sub>T</sub> を得る (エ)。</li>
+<li>変量間 TransformerEncoder (以下) を適用して O<sub>cv</sub> (C, 512) を得る (オ)。</li>
+<li>gate = σ(gate_w3(s) + gate_w4(O<sub>cv</sub>)) を計算する。</li>
+<li>enc_out = gate ⊙ s + (1−gate) ⊙ O<sub>cv</sub> を得る。</li>
+<li>Linear(512 → L_out) を適用して (C, L_out) とし、転置して (L_out, C) とする。</li>
+<li>(ア) で計算した平均・標準偏差で逆正規化し、最終出力 (L_out, C) とする。</li>
+</ul>
+
+<h3>TransformerEncoder 層</h3>
+<ul>
+<li>TransformerEncoderLayer (Pre-LN、以下) を 2 層積み重ねる。時間方向では (C×P, 512)、変量間では (C, 512) に適用する。</li>
+<ul>
+<li>(N, 512) 次元の入力を受け取る (ア)。</li>
+<li>層正規化を適用する。</li>
+<li>8 ヘッドマルチヘッドアテンション (ヘッド次元 64) を適用する。</li>
+<li>ドロップアウトする。</li>
+<li>(ア) から残差接続する (イ)。</li>
+<li>層正規化を適用する。</li>
+<li>2048 次元に線形変換し、ReLU 活性化する。</li>
+<li>ドロップアウトする。</li>
+<li>再び 512 次元に線形変換する。</li>
+<li>ドロップアウトする。</li>
+<li>(イ) から残差接続する。</li>
+</ul>
+</ul>
+
+</div>
+</main>
+</div>
+</body>
+</html>

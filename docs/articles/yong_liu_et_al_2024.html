@@ -5,7 +5,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>iTransformer: Inverted Transformers Are Effective for Time Series Forecasting - Cookipedia α-version</title>
-<link href="../css/style.css?v=2026-04-11" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css?v=2026-04-12" rel="stylesheet" type="text/css"/>
 <link href="../css/cookipedia.css?v=2026-04-12" rel="stylesheet" type="text/css"/>
 <script data-mathjax="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2026-04-11"></script>
 </head>
@@ -84,31 +84,11 @@ Yong Liu, Tengge Hu, Haoran Zhang, Haixu Wu, Shiyu Wang, Lintao Ma, Mingsheng Lo
 </ul>
 <li>エンコーダを適用する。</li>
 <ul>
-<li>エンコーダ層 (後述) を 2 層適用する。</li>
-<li>層正規化を適用する (ここでは各トークンが各チャネルの時系列なので、系列が標準化されることになる)。</li>
+<li>エンコーダ層 (リポジトリ内で実装されているが通常の torch.nn.TransformerEncoderLayer と同様であり、正規化も torch.nn.LayerNorm で、活性化は GELU であり、前層のアテンションスコアからの接続はない) を 2 層適用する (ここでは各トークンが各チャネルの時系列なので、正規化では各時系列が標準化されることになる)。</li>
+<li>層正規化を適用する [脚注LayerNorm]。</li>
 </ul>
-<li>エンコーダ出力の (C + n_feat, d_model) 各トークンに共有重みの Linear(d_model, L_out) を適用し、(C + n_feat, L_out) 次元にし、転置して (L_out, C + n_feat) 次元にし、末尾 n_feat ステップを捨てて (L_out, C) 次元にする。</li>
+<li>エンコーダ出力の (C + n_feat, d_model) 各トークンに共有重みの Linear(d_model, L_out, bias=True) を適用して (C + n_feat, L_out) 次元にし、転置して (L_out, C + n_feat) 次元にし、1 階の末尾 n_feat 次元を捨てて (L_out, C) 次元にする。</li>
 <li>保持しておいた時間平均と時間標準偏差で標準化の逆変換をする。</li>
-</ul>
-
-<h3>エンコーダ層</h3>
-<ul>
-<li>(C + n_feat, d_model) 次元の入力を受け取る (ア)。</li>
-<li>MultiheadAttention 層 (以下) を適用する。</li>
-<ul>
-<li>Q, K, V それぞれに Linear(512 → 8×64) を適用し、[B, N', 8, 64] に reshape して 8 ヘッドに分割する。</li>
-<li>各ヘッドで Q と K のスコア行列 [B, 8, N', N'] を計算し、sqrt(64)=8 で割って softmax し、softmax 後の重みに Dropout(p=0.1) を掛ける。</li>
-<li>この重みと V の積を取り、形 [B, N', 8, 64] に戻してから [B, N', 512] に連結する。</li>
-<li>Linear(512 → 512) で出力を射影する。</li>
-</ul>
-<li>Dropout(p=0.1) する。</li>
-<li>(ア) から残差接続する。</li>
-<li>nn.LayerNorm(512) を適用する (イ)。</li>
-<li>(イ) に kernel_size=1 の Conv1d (512 → 2048) を適用する (各トークンごとの Linear と等価)。GELU 活性化、Dropout(p=0.1) する。</li>
-<li>kernel_size=1 の Conv1d (2048 → 512) を適用し、Dropout(p=0.1) する。</li>
-<li>(イ) から残差接続する。</li>
-<li>nn.LayerNorm(512) を適用する。</li>
-<li>これがこの層の出力 [B, N', 512] である。</li>
 </ul>
 
 
@@ -121,7 +101,9 @@ Yong Liu, Tengge Hu, Haoran Zhang, Haixu Wu, Shiyu Wang, Lintao Ma, Mingsheng Lo
 <dt>RLinear</dt>
 <dd><a class="asis break-all" href="https://arxiv.org/abs/2305.10721"></a></dd>
 <dt>emb</dt>
-<dd>DataEmbedding_inverted 層のコンストラクタの仮引数が c_in となっているが、系列長を渡すべき仮引数なので注意。</dd>
+<dd>DataEmbedding_inverted 層のコンストラクタの仮引数が c_in だが、系列長を渡すので注意。</dd>
+<dt>LayerNorm</dt>
+<dd>最後のエンコーダ層の出口で層正規化されているので、実際には不要と考えられる。</dd>
 </dl>
 
 </div>

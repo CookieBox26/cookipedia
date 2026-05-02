@@ -27,6 +27,7 @@ c6998b81a06f60570baa 2025-12-24 uv でパッケージのソースをオプショ
 ce3580653ebb9a59831d 2025-10-14 【Python, uv】単一ファイルスクリプトだけで GitHub 上モジュールへの依存性を管理する
 """
 "PyTorch" = """
+d1c8c1b04fe382606db5 2026-05-01 【PyTorch】学習率スケジューラごとの学習率の推移をプロットするだけ
 6c0cb7872ed4584ef134 2026-04-20 個包装だんごとしてみる torch.Tensor ― #0. 約束と目次 (兼チートシート)
 a8771d0c02e1de8319d2 2026-04-20 個包装だんごとしてみる torch.Tensor ― #3. 「だんごを選り好みする」torch.take と torch.take_along_dim と torch.index_select と torch.gather
 681d629feefcf6d96121 2026-04-15 個包装だんごとしてみる torch.Tensor ― #2. torch.cat と torch.stack と x.repeat と x.unfold
@@ -73,6 +74,9 @@ c90ed6d281b169c29b3f 2026-02-09 Claude Code で事前定義プロンプトを扱
 b444ad45768be766df56 2026-01-07 Windows で音を鳴らすコマンド集 (Claude Code 完了通知音向け)
 """
 "すべての記事" = """
+d1c8c1b04fe382606db5 2026-05-01 【PyTorch】学習率スケジューラごとの学習率の推移をプロットするだけ
+81d857b30d670b22f3e0 2026-04-30 toml==0.10.2 で str 派生型が1文字ずつの配列として dump される
+903122eaaf92e977baae 2026-04-29 意図しないディレクトリでの Claude Code 起動を防ぐラッパー関数 (Bash / zsh)
 9eb4f04e3b0eab43876f 2026-04-25 最近の自分の GitHub コミット数を可視化する Python スクリプト (標準ライブラリのみ)
 d6c2fc16f111e45303ed 2026-04-25 端末に色付き文字を表示する ANSI エスケープシーケンスのスニペット (bash / zsh と python)
 fe587c45bff55d798def 2026-04-21 ChatGPT のサイドバー内のチャットタイトルをダミータイトルで覆い隠す CSS
