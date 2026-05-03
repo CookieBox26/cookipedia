@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>UniTST: Effectively Modeling Inter-Series and Intra-Series Dependencies for Multivariate Time Series Forecasting - Cookipedia α-version</title>
+<link href="../css/style.css?v=2026-04-12" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-04-12" rel="stylesheet" type="text/css"/>
+<script data-mathjax="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2026-04-11"></script>
+</head>
+<body>
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item long-title">
+<h1>UniTST: Effectively Modeling Inter-Series and Intra-Series Dependencies for Multivariate Time Series Forecasting</h1>
+
+<div class="categories">
+<a data-subcat="2025" href="../categories/time_series_forecasting.html">時系列予測</a>
+</div>
+
+<p>UniTST: Effectively Modeling Inter-Series and Intra-Series Dependencies for Multivariate Time Series Forecasting [paper] は、全変数のパッチトークンを一つの系列に平坦化して Transformer Encoder の「統一アテンション」に入力するモデルと、その計算量を削減する「ディスパッチャー」モジュールを提案する論文である。Salesforce の Juncheng Liu らによって著された (他に University of California, Los Angeles、National University of Singapore 所属の著者も)。2024 年に arXiv にプレプリントが発表され、2025 年の Transactions on Machine Learning Research (TMLR) に採択された。</p>
+<p>「統一アテンション」は、C 変数それぞれを p 個のパッチに分割して得られる C×p 個のパッチトークン全体を一括入力とするセルフアテンションであり、クロス時間・クロス変数の依存関係を直接捉える。この入力系列長 C×p に由来する O(C²p²) の計算量を、「ディスパッチャー」は k 個の学習可能な埋め込みへの集約と分配を挟むことで O(kCp) に削減する。</p>
+<p>ロングターム予測の評価では 9 データセット中 7 データセットで MSE 最小、8 データセットで MAE 最小を達成した。ショートターム予測では PEMS 系の全データセットで最良の結果を示した。13 データセット・11 ベースラインとの比較で最大 13% の改善が報告されている。</p>
+<p>著者らは、多変量時系列に含まれるクロス時間・クロス変数依存 (異なる変数の異なる時間帯パッチ間の相関) を既存の Transformer ベースモデルが直接捉えられていないという問題意識をもっている。PatchTST はチャネル独立性の仮定によりクロス変数依存を無視し、iTransformer は変数単位のトークン化によりパッチレベルのクロス時間依存を無視する。直列・並列の二段階アテンション (Crossformer 等) も、両依存を同時に直接モデル化できない。この主張は、論文が定義した「クロス時間・クロス変数相関係数」を Solar データセットに適用した定量分析によって裏付けられており、ある変数の第 20 パッチが別の変数のパッチ 3・5・11・20・24 番とのみ強く相関し他とは相関しないといった、パッチ間で相関パターンが非一様に存在することが示されている。</p>
+
+
+<h2>参考文献</h2>
+<dl class="ref small">
+<dt>paper</dt>
+<dd>
+Juncheng Liu, Chenghao Liu, Gerald Woo, Yiwei Wang, Bryan Hooi, Caiming Xiong, Doyen Sahoo. UniTST: Effectively modeling inter-series and intra-series dependencies for multivariate time series forecasting. <i>Transactions on Machine Learning Research (TMLR),</i> 2025.
+<ul>
+<li><a class="asis" href="https://openreview.net/forum?id=p3y5q4cvzV"></a></li>
+<li><a class="asis" href="https://arxiv.org/abs/2406.04975"></a></li>
+</ul>
+</dd>
+</dl>
+
+
+<h2>UniTST の構造</h2>
+<p>ソースコードが公開されていないため、以下の記述は原論文のみに基づく。活性化関数・ドロップアウトの詳細は論文中に明記されていない。</p>
+<p>UniTST では各変量の時系列をパッチに分割し、全変量・全パッチのトークンをひとつの系列に結合した (C×p)×d 次元のトークン列を Transformer Encoder に入力する。これにより系列内・系列間の依存関係をひとつのアテンションで直接モデル化できる。セルフアテンションを直接適用すると計算量が O(C²p²) となるため、かわりに k 個の学習可能な埋め込みベクトルからなる「ディスパッチャー」D ∈ R^{k×d} (k ≪ Cp) を媒介とする 2 段階のクロスアテンション (計算量 O(kCp)) を用いる。</p>
+<p>ハイパーパラメータとして、パッチ長 l (規定値 16)、パッチ数 p (l と L_in により決まる)、モデル次元 d ∈ {128, 256, 512}、Transformer ブロック数 M ∈ {2, 3, 4}、ディスパッチャー数 k がある。</p>
+
+<h3>UniTST 全体</h3>
+<ul>
+<li>各変量の時系列を長さ l のパッチ p 個に分割して X_p ∈ R^{C×p×l} を得る。</li>
+<li>各パッチを d 次元に線形変換して学習可能な 2D 位置エンコーディングを加算し、H ∈ R^{C×p×d} を得る。</li>
+<li>(C×p)×d 次元に変形して X' とする。</li>
+<li>Transformer ブロック (以下) を M 回繰り返し適用する。</li>
+<li>C×p×d 次元に変形した後、各変量について p 個のトークンを結合して Z ∈ R^{C×(p×d)} を得る。</li>
+<li>各変量について p×d 次元から L_out 次元に線形変換し、予測 X̂ ∈ R^{C×L_out} を得る。</li>
+</ul>
+
+<h3>Transformer ブロック</h3>
+<ul>
+<li>(C×p)×d 次元の入力を受け取る (ア)。</li>
+<li>ディスパッチャーアテンション (以下) を適用して O' ∈ R^{(C×p)×d} を得る。</li>
+<li>(ア) から残差接続して BatchNorm を適用する (イ)。</li>
+<li>FFN を適用する。</li>
+<li>(イ) から残差接続して BatchNorm を適用する。</li>
+</ul>
+
+<h3>ディスパッチャーアテンション</h3>
+<ul>
+<li>(C×p)×d 次元のトークン X' と k×d 次元の学習可能なディスパッチャー埋め込み D を受け取る。</li>
+<li>D を Query, X' を Key・Value としてクロスアテンションを計算し、D' ∈ R^{k×d} を得る (集約ステップ)。</li>
+<li>X' を Query, D' を Key・Value としてクロスアテンションを計算し、O' ∈ R^{(C×p)×d} を得る (分配ステップ)。</li>
+</ul>
+
+</div>
+</main>
+</div>
+</body>
+</html>
