@@ -74,6 +74,11 @@ timestamp = "2024-10-27"
 count = 3291
 
 [[pages]]
+rel_path = "articles/conferences_related_to_data_science.html"
+timestamp = "2026-05-14"
+count = 3025
+
+[[pages]]
 rel_path = "articles/contiguity.html"
 timestamp = "2024-05-06"
 count = 1672
@@ -166,7 +171,7 @@ count = 1858
 [[pages]]
 rel_path = "articles/journals_related_to_data_science.html"
 timestamp = "2026-05-14"
-count = 6863
+count = 7157
 
 [[pages]]
 rel_path = "articles/juncheng_liu_et_al_2025.html"
@@ -486,5 +491,5 @@ count = 895
 [[pages]]
 rel_path = "index.html"
 timestamp = "2026-05-03"
-count = 15090
+count = 15145
 
