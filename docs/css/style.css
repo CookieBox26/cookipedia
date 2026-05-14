@@ -24,8 +24,12 @@
   --keyword: #1990b8;
   --number: #c92c2c;
   --operator: #a67f59;
-  --doughnut: #d2691e;
-  --chocolate: #83898f;
+  --gray-text: #83898f;
+  --red-text: #fc4541;
+  --yellow-surface: rgba(241, 233, 14, 0.45);
+  --yellow-border: #cac30b;
+  --blue-surface: rgba(87, 180, 219, 0.35);
+  --blue-border: #1d94c8;
 }
 :root[data-mode='dark'] {
   --surface: #2f373e;  /* #23292f */
@@ -43,8 +47,10 @@
   --keyword: #5bc0e1;
   --number: #e46c6c;
   --operator: #deb14f;
-  --doughnut: #cc8a43;
-  --chocolate: #9ba5af;
+  --gray-text: #9ba5af;
+  --red-text: #fd6c6a;
+  --yellow-surface: rgba(241, 233, 14, 0.25);
+  --blue-surface: rgba(87, 180, 219, 0.25);
 }
 .mode-btn {
   user-select: none;
@@ -323,43 +329,17 @@ dl.footnote > dd {
   overflow-y: hidden;
   max-width: 100%;
 }
-span.doughnut {
-  color: var(--doughnut);
-}
-li.doughnut {
-  position: relative;
-  list-style: none;
-  color: var(--doughnut);
-}
-li.doughnut::before {
-  position: absolute;
-  content: '\01f369 ';
-  left: -1.5em;
-}
-li.doughnut + ul {
-  color: var(--doughnut);
-}
-span.chocolate {
-  color: var(--chocolate);
-}
-li.chocolate {
-  position: relative;
-  list-style: none;
-  color: var(--chocolate);
-}
-li.chocolate::before {
-  position: absolute;
-  content: '\01f36b ';
-  left: -1.5em;
-}
-li.chocolate + ul {
-  color: var(--chocolate);
-}
 .small {
   font-size: 90%;
 }
 div.categories:before {
   content: 'カテゴリ: ';
+}
+li.red, span.red {
+  color: var(--red-text);
+}
+li.gray, span.gray {
+  color: var(--gray-text);
 }
 div.gray {
   background: var(--gray-surface);
@@ -367,9 +347,53 @@ div.gray {
   margin: 1.0em 0;
   padding: 0.75em 0.75em 0.75em;
 }
-div.gray > ul, div.gray > ol {
+div.yellow {
+  background: var(--yellow-surface);
+  border: 1px solid var(--yellow-border);
+  margin: 1.0em 0;
+  padding: 0.75em 0.75em 0.75em;
+}
+div.blue {
+  background: var(--blue-surface);
+  border: 1px solid var(--blue-border);
+  margin: 1.0em 0;
+  padding: 0.75em 0.75em 0.75em;
+}
+div.gray > ul, div.gray > ol,
+div.yellow > ul, div.yellow > ol,
+div.blue > ul, div.blue > ol {
   margin-block-start: 0.5em;
   margin-block-end: 0.25em;
+}
+div.warning {
+  position: relative;
+  padding-left: 2.5em;
+}
+div.warning::before {
+  content: "\26A0\FE0F";
+  position: absolute;
+  left: 0.75em;
+  top: 0.75em;
+}
+div.cookie {
+  position: relative;
+  padding-left: 2.5em;
+}
+div.cookie::before {
+  content: "\1F36A";
+  position: absolute;
+  left: 0.75em;
+  top: 0.75em;
+}
+div.info {
+  position: relative;
+  padding-left: 2.5em;
+}
+div.info::before {
+  content: "\2139\FE0F";
+  position: absolute;
+  left: 0.75em;
+  top: 0.75em;
 }
 span.index-ts {
   font-size: 0.8em;
@@ -474,6 +498,9 @@ span.pl-k {
 }
 span.pl-s1, span.pl-smi {
   color: var(--text) !important;
+}
+.gist .gist-meta {
+  background: var(--surface) !important;
 }
 /* Figure */
 figure {

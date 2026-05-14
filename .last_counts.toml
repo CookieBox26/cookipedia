@@ -61,7 +61,7 @@ count = 1809
 [[pages]]
 rel_path = "articles/bryan_lim_et_al_2019.html"
 timestamp = "2026-03-31"
-count = 1747
+count = 1751
 
 [[pages]]
 rel_path = "articles/chi_squared_test.html"
@@ -76,7 +76,7 @@ count = 3291
 [[pages]]
 rel_path = "articles/contiguity.html"
 timestamp = "2024-05-06"
-count = 1668
+count = 1672
 
 [[pages]]
 rel_path = "articles/css_flexible_box_layout.html"
@@ -141,7 +141,7 @@ count = 3552
 [[pages]]
 rel_path = "articles/iclr.html"
 timestamp = "2026-04-04"
-count = 1436
+count = 1440
 
 [[pages]]
 rel_path = "articles/integration_by_substitution.html"
@@ -164,6 +164,11 @@ timestamp = "2026-04-13"
 count = 1858
 
 [[pages]]
+rel_path = "articles/journals_related_to_data_science.html"
+timestamp = "2026-05-14"
+count = 6863
+
+[[pages]]
 rel_path = "articles/juncheng_liu_et_al_2025.html"
 timestamp = "2026-05-03"
 count = 3967
@@ -176,12 +181,12 @@ count = 912
 [[pages]]
 rel_path = "articles/le_cams_first_lemma.html"
 timestamp = "2023-06-13"
-count = 1693
+count = 1699
 
 [[pages]]
 rel_path = "articles/le_cams_third_lemma.html"
 timestamp = "2023-06-27"
-count = 1708
+count = 1714
 
 [[pages]]
 rel_path = "articles/lin_zheng_et_al_2022.html"
@@ -481,5 +486,5 @@ count = 895
 [[pages]]
 rel_path = "index.html"
 timestamp = "2026-05-03"
-count = 14969
+count = 15090
 
