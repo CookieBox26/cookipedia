@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Leveraging Long-Term Multivariate History Representation for Time Series Forecasting - Cookipedia α-version</title>
+<link href="../css/style.css?v=2026-04-12" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-04-12" rel="stylesheet" type="text/css"/>
+<script data-mathjax="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2026-04-11"></script>
+</head>
+<body>
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item long-title">
+<h1>Leveraging Long-Term Multivariate History Representation for Time Series Forecasting</h1>
+
+<div class="categories">
+<a data-subcat="2026" href="../categories/time_series_forecasting.html">時系列予測</a> |
+<a data-subcat="2026" href="../categories/ieee_tai.html">IEEE Transactions on Artificial Intelligence</a>
+</div>
+
+<p>Leveraging Long-Term Multivariate History Representation for Time Series Forecasting [paper] は、既存の STGNN に長期多変量時系列の符号化・階層的検索・Transformer による集約の 3 モジュール構成フレームワーク "LMHR" を付加する多変量時系列予測手法を提案する論文である。カナダの McGill University の Huiliang Zhang らによって著された (他にカナダの Hydro-Québec Research Institute 所属の著者も)。2025 年に arXiv にプレプリントが発表され、2026 年の IEEE Transactions on Artificial Intelligence に採択された。</p>
+<p>LMHR は LHEncoder・HRetriever・TAggregator の 3 モジュールで構成される。LHEncoder は各系列の長期履歴をオーバーラップするセグメントに分割し、Transformer で "コンテキスト表現" (セグメントレベルの文脈表現) を生成する。HRetriever はノンパラメトリックな階層的検索を行い、まず系列レベルで最類似上位 K_n 系列を選択し (その選択結果から GSL 用補助隣接行列 A^r を構築する)、次にそれら系列のセグメントから最類似上位 K_s 個のコンテキスト表現を取り出す。TAggregator は、予測対象系列の全セグメントのコンテキスト表現・予測セグメントの位置埋め込み・HRetriever が選択した各セグメントのコンテキスト表現 ("ランキング位置埋め込み" を加算したもの) を連結し、Transformer に入力して (P+1) 番目位置の隠れ状態を出力する。最終予測は、STGNN の短期隠れ状態・LHEncoder の直近セグメントのコンテキスト表現・TAggregator の出力をそれぞれ MLP に通じて加算し、さらに MLP で変換して得る。LMHR は任意の STGNN に付加可能な汎用フレームワークである。</p>
+<p>PEMS-BAY・PEMS04・PEMS07・PEMS08・Electricity の 5 データセットでの実験において、LMHR は代表的 STGNN を全予測ホライズン平均で 10.72% 上回り、最先端手法に対しても平均 12 ホライズンで 4.12% の改善を示した (評価指標: MAE・RMSE・MAPE)。また、急変パターン上位 10% の予測精度では 9.8% の改善が見られた。</p>
+<p>著者らは、STGNN の計算複雑度が入力長に対して線形から二乗オーダーで増大するため、ほとんどの STGNN が過去 1 時間程度の短期入力に限定されており、長期的な空間的・時間的類似性や相関が見落とされているという問題意識を持っている。また、長期履歴には時間・空間両次元にわたる大量の冗長情報が含まれるため、そのまま入力することは現実的でないとも指摘している。</p>
+
+
+<h2>参考文献</h2>
+<dl class="ref small">
+<dt>paper</dt>
+<dd>
+Huiliang Zhang, Di Wu, Arnaud Zinflou, Stephane Dellacherie, Mouhamadou Makhtar Dione, Benoit Boulet. Leveraging long-term multivariate history representation for time series forecasting. <i>IEEE Transactions on Artificial Intelligence,</i> vol. 7, no. 1, pp. 195−209, 2026.
+<ul>
+<li><a class="asis" href="https://ieeexplore.ieee.org/document/11006406/"></a></li>
+<li><a class="asis" href="https://arxiv.org/abs/2505.14737"></a></li>
+<li><a class="asis" href="https://github.com/hlhang9527/LMHR"></a></li>
+</ul>
+</dd>
+</dl>
+
+</div>
+</main>
+</div>
+</body>
+</html>
