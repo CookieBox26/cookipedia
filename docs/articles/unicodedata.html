@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>unicodedata - Cookipedia α-version</title>
+<link href="../css/style.css?v=2026-04-12" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-04-12" rel="stylesheet" type="text/css"/>
+<script data-prism-python="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2026-04-11"></script>
+</head>
+<body>
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>unicodedata</h1>
+
+<div class="categories">
+<a data-subcat="標準ライブラリ" href="../categories/python.html">Python</a>
+</div>
+
+
+<h2>参考文献</h2>
+<ol class="ref small">
+<li>unicodedata --- Unicode データベース — Python 3.14.5 ドキュメント, <a class="asis" href="https://docs.python.org/ja/3/library/unicodedata.html"></a>, 2026年5月18日参照.</li>
+</ol>
+
+
+<h2>Snippets</h2>
+
+<h3>アクセント記号を除去する</h3>
+<pre class="language-python"><code>
+import unicodedata
+
+def remove_diacritics(text):
+    text = unicodedata.normalize('NFKD', text)
+    return ''.join(c for c in text if not unicodedata.combining(c))
+
+assert remove_diacritics('Müller') == 'Muller'
+</code></pre>
+
+</div>
+</main>
+</div>
+</body>
+</html>
