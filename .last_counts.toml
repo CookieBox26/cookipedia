@@ -354,6 +354,11 @@ timestamp = "2023-06-13"
 count = 851
 
 [[pages]]
+rel_path = "articles/stochastic_gradient_descent.html"
+timestamp = "2026-06-08"
+count = 2736
+
+[[pages]]
 rel_path = "articles/stylus.html"
 timestamp = "2026-03-12"
 count = 2897
@@ -505,6 +510,6 @@ count = 895
 
 [[pages]]
 rel_path = "index.html"
-timestamp = "2026-05-03"
-count = 15455
+timestamp = "2026-06-08"
+count = 15598
 
