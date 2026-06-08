@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>確率的勾配降下法 - Cookipedia α-version</title>
+<link href="../css/style.css?v=2026-04-12" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-04-12" rel="stylesheet" type="text/css"/>
+<script data-mathjax="true" data-prism-python="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2026-04-11"></script>
+</head>
+<body>
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item">
+<h1>確率的勾配降下法</h1>
+
+
+<h2>参考文献</h2>
+<div class="yellow warning">
+本記事においては、特定の確率的勾配降下法に紐づく参考文献は各セクション内に示す。
+</div>
+<dl class="ref small">
+<dt>ieeeperiodicals</dt>
+<dd>
+<a href="https://ja.wikipedia.org/wiki/%E7%A2%BA%E7%8E%87%E7%9A%84%E5%8B%BE%E9%85%8D%E9%99%8D%E4%B8%8B%E6%B3%95">確率的勾配降下法 - Wikipedia</a>
+</dd>
+</dl>
+
+
+<h2>Adam</h2>
+Adam は、勾配そのものではなく、勾配の一次モーメント推定値 $m_t$ と二次モーメント推定値 $v_t$ を用いてパラメータを更新する最適化手法である。「ステップ $t$ の訓練サンプル (のミニバッチ) の損失の勾配」を $\nabla Q_t(w)$ とすると、Adam はまず以下を計算する ($\beta_1 = 0.9, \beta_2 = 0.999$ が推奨され、PyTorch でもその規定値になっている)。
+<div class="overflow-x-container">
+$$
+\begin{split}
+m_t &amp;= \beta_1 m_{t-1} + (1-\beta_1) \nabla Q_t(w) \\
+v_t &amp;= \beta_2 v_{t-1} + (1-\beta_2) \nabla Q_t(w) \cdot \nabla Q_t(w)
+\end{split}
+$$
+</div>
+そして、バイアス補正後の $\hat{m}_t, \ \hat{v}_t$ を用いて
+<div class="overflow-x-container">
+$$
+w_t=w_{t-1}-\alpha\frac{\hat{m}_t}{\sqrt{\hat{v}_t}+\epsilon}
+$$
+</div>
+のようにパラメータを更新する。$m_t$ は過去の勾配方向を反映するため、勾配方向が急に変化した場合には更新方向の反応が遅れる。$v_t$ は過去に勾配が大きかった成分の更新幅を小さくする。
+
+<h3>参考文献</h3>
+<ul class="small">
+<li>[1412.6980] Adam: A Method for Stochastic Optimization, <a class="asis" href="https://arxiv.org/abs/1412.6980"></a>, 2026年6月8日参照.</li>
+<li>Adam — PyTorch 2.12 documentation, <a class="asis" href="https://docs.pytorch.org/docs/2.12/generated/torch.optim.Adam.html"></a>, 2026年6月8日参照.</li>
+</ul>
+
+
+<h2>AdamW</h2>
+AdamW は、Adam における weight decay の扱いを変更した最適化手法である。通常の Adam で L2 正則化を勾配に加えると、正則化項も $m_t$ や $v_t$ の計算に含まれる。一方、AdamW では weight decay を勾配更新から分離し、パラメータを直接減衰させる。すなわち、Adam と同様に $\hat{m}_t,\ \hat{v}_t$ を計算した上で、例えば以下のように更新する。
+<div class="overflow-x-container">
+$$
+w_t
+= w_{t-1}
+-\alpha\frac{\hat{m}_t}{\sqrt{\hat{v}_t}+\epsilon}
+-\alpha\lambda w_{t-1}
+$$
+</div>
+ここで、$\lambda$ は weight decay の係数である。この形では、勾配に基づく Adam の適応的更新と、重みを小さくする weight decay が別々に作用する。そのため、AdamW における weight decay は、Adam の二次モーメント推定値 $v_t$ による座標ごとのスケーリングを受けない。Loshchilov and Hutter は、この分離により weight decay の係数を学習率からより独立に調整しやすくなることを述べている。
+
+<h3>参考文献</h3>
+<ul class="small">
+<li>[1711.05101] Decoupled Weight Decay Regularization, <a class="asis" href="https://arxiv.org/abs/1711.05101"></a>, 2026年6月8日参照.</li>
+</ul>
+
+</div>
+</main>
+</div>
+</body>
+</html>
