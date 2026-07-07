@@ -232,7 +232,7 @@ def show_conf_html_diff(cache_file, toml_file, html_file, update=False):
             print(line)
 
     # カテゴリ別の差分
-    no_suffix = {'すべての記事', '作業効率化'}
+    no_suffix = {'すべての記事', '作業効率化', '文献メモ'}
     id_to_item = {item['id']: item for item in items}
     updates = []
     for key, s in cats.items():
