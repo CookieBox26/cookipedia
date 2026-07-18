@@ -52,5 +52,7 @@ if __name__ == '__main__':
         'categories/*.html',
         'articles/*.html',
         'images/*.svg',
+        'images/*.png',
+        'images/*.py',
         'utils/*.html',
     ])
