@@ -324,6 +324,11 @@ timestamp = "2025-04-28"
 count = 6166
 
 [[pages]]
+rel_path = "articles/ruibin_xiong_et_al_2020.html"
+timestamp = "2026-07-20"
+count = 2491
+
+[[pages]]
 rel_path = "articles/schur_complement.html"
 timestamp = "2022-04-10"
 count = 7203
@@ -450,8 +455,8 @@ count = 1583
 
 [[pages]]
 rel_path = "categories/icml.html"
-timestamp = "2026-04-06"
-count = 891
+timestamp = "2026-07-20"
+count = 1075
 
 [[pages]]
 rel_path = "categories/ieee_tai.html"
@@ -485,8 +490,8 @@ count = 860
 
 [[pages]]
 rel_path = "categories/optimization.html"
-timestamp = "2026-03-31"
-count = 861
+timestamp = "2026-07-20"
+count = 1045
 
 [[pages]]
 rel_path = "categories/python.html"
@@ -510,6 +515,6 @@ count = 895
 
 [[pages]]
 rel_path = "index.html"
-timestamp = "2026-07-18"
-count = 15506
+timestamp = "2026-07-20"
+count = 15708
 
