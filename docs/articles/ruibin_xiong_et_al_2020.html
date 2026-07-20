@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>On Layer Normalization in the Transformer Architecture - Cookipedia α-version</title>
+<link href="../css/style.css?v=2026-04-12" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-04-12" rel="stylesheet" type="text/css"/>
+<script data-mathjax="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2026-04-11"></script>
+</head>
+<body>
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item long-title">
+<h1>On Layer Normalization in the Transformer Architecture</h1>
+
+<div class="categories">
+<a data-subcat="2020" href="../categories/optimization.html">最適化</a> |
+<a data-subcat="2020" href="../categories/icml.html">ICML</a>
+</div>
+
+<p>On Layer Normalization in the Transformer Architecture [paper] は、Transformer における層正規化の配置が初期化時の勾配の大きさに与える影響を平均場理論で解析する論文である。残差ブロックの間に層正規化を置く設計を Post-LN、残差ブロックの内部に層正規化を置く設計を Pre-LN と呼び、初期化時において Post-LN では出力層付近のパラメータの期待勾配ノルムが層数 L に依存せず大きい (O(d√(ln d))) のに対し、Pre-LN では期待勾配ノルムが O(d√(ln d / L)) となり層数が増えるほど小さくなることを証明する。さらに、この解析にもとづき Pre-LN では学習率のウォームアップ段階を除去して学習できることを検証する。Chinese Academy of Sciences (中国科学院) Institute of Computing Technology の Ruibin Xiong らによって著された (他に Peking University、Microsoft Research、Nankai University 所属の著者も)。2020 年の ICML に採択された。</p>
+<p>ウォームアップ段階とは、学習率を最初の一定ステップ数のあいだ小さな値から徐々に増加させる学習率スケジュールを指す。層正規化は各サブ層 (マルチヘッドアテンション層または FFN) の周りに置かれ、"Post-LN" では残差接続の加算後に、"Pre-LN" では各サブ層への入力側に適用される。平均場理論による解析は、パラメータをランダム初期化した時点での勾配の期待ノルムを層数 L と隠れ次元 d の関数として評価するものである。</p>
+<p>機械翻訳 (IWSLT14 De-En, WMT14 En-De) と BERT の事前学習の実験において、"Pre-LN" Transformer はウォームアップ段階なしでベースラインと同等の性能に到達し、学習時間とハイパーパラメータ調整を大幅に削減できることが示された。</p>
+<p>Transformer の学習には注意深く設計された学習率ウォームアップ段階が必要で、最終性能に重要である一方、最適化を遅らせハイパーパラメータ調整の手間を増やす。著者らは、ウォームアップがなぜ必須なのかという理論的な理解が欠けているという問題意識を持っている。</p>
+
+
+<h2>参考文献</h2>
+<dl class="ref small">
+<dt>paper</dt>
+<dd>
+Ruibin Xiong, Yunchang Yang, Di He, Kai Zheng, Shuxin Zheng, Chen Xing, Huishuai Zhang, Yanyan Lan, Liwei Wang, Tie-Yan Liu. On Layer Normalization in the Transformer Architecture. <i>Proceedings of the 37th International Conference on Machine Learning (ICML 2020),</i> vol. 119, pp. 10524−10533, 2020.
+<ul>
+<li><a class="asis" href="https://proceedings.mlr.press/v119/xiong20b.html"></a></li>
+<li><a class="asis" href="https://arxiv.org/abs/2002.04745"></a></li>
+</ul>
+</dd>
+</dl>
+
+</div>
+</main>
+</div>
+</body>
+</html>
