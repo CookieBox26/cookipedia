@@ -43,3 +43,28 @@ div.long-title > h1 {
   line-height: 1.2;
   padding-bottom: 0.2em;
 }
+figure.w80p {
+  width: 80%;
+}
+figure.w50p {
+  width: 50%;
+}
+figure.w40p {
+  width: 40%;
+}
+@media screen and (max-width: 900px) {
+  figure.w80p {
+    width: auto;
+  }
+  figure.w50p {
+    width: 60%;
+  }
+  figure.w40p {
+    width: 50%;
+  }
+}
+@media screen and (max-width: 540px) {
+  figure.w50p, figure.w40p {
+    width: 80%;
+  }
+}
