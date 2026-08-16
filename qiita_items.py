@@ -117,7 +117,8 @@ def get_items(cache_file, force=False, user_id='CookieBox26'):
 
 
 def item_to_line(item):
-    return f'{item["id"]} {item["created_at"][:10]} {item["title"].strip()}'
+    title = item['title'].strip().replace('\\', '__BACKSLASH__')
+    return f'{item["id"]} {item["created_at"][:10]} {title}'
 
 
 def item_to_html(item):
