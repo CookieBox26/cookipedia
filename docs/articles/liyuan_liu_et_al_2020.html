@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Understanding the Difficulty of Training Transformers - Cookipedia α-version</title>
+<link href="../css/style.css?v=2026-04-12" rel="stylesheet" type="text/css"/>
+<link href="../css/cookipedia.css?v=2026-07-31" rel="stylesheet" type="text/css"/>
+<script data-mathjax="true" data-repo="cookipedia" defer="true" id="app" src="../funcs.js?v=2026-04-11"></script>
+</head>
+<body>
+<div class="container">
+<div id="sidebar"></div>
+<main class="main">
+<div id="smartphone-header"></div>
+<div class="item long-title">
+<h1>Understanding the Difficulty of Training Transformers</h1>
+
+<div class="categories">
+<a data-subcat="2020" href="../categories/nn.html">ニューラルネットワーク</a> |
+<a data-subcat="2020" href="../categories/emnlp.html">EMNLP</a>
+</div>
+
+<p>Understanding the Difficulty of Training Transformers [paper] は、Post-LN Transformer の学習の不安定さが勾配消失によるものでないことを解析と対照実験によって示し、サブ層の出力の分散のうち残差接続の出力が占める割合が小さいと学習が不安定になり、逆に大きいと層を深くした効果が得られないことを解析し、これを調整するために残差接続に対してトークン埋め込みベクトルの成分ごとに係数をかける (初期値はデータから決める) 手法 "Admin" (Adaptive model initialization) を提案する論文である。University of Illinois at Urbana-Champaign の Liyuan Liu らによって著された (他に Microsoft Research、Microsoft Dynamics 365 AI 所属の著者も)。2020 年の EMNLP に採択された。</p>
+<p>著者らは、初期化直後に勾配消失が生じるのは Post-LN のデコーダだけで、Post-LN のエンコーダには生じないと解析によって主張した (定理 1。LayerNorm のパラメータの初期値や、勾配と各モジュールの微分の独立性などを仮定している)。そのうえで、Post-LN エンコーダと Pre-LN デコーダを組み合わせて勾配消失を取り除いても 18 層モデルの学習は発散したと報告し、勾配消失は学習の不安定さの直接の原因ではないと結論した。また、勾配の大きさが層ごとに不均衡でも、オプティマイザがパラメータごとの学習率を調整して更新量を揃えていると述べている。</p>
+<p>初期化直後、サブ層の出力の分散のうち残差接続の出力が占める割合は、Post-LN では層によらずほぼ一定なのに対し、Pre-LN では上の層ほど大きい。Pre-LN でこの割合が上の層ほど大きくなるのは、層の出力が正規化されないまま足し合わされ、上の層ほど層の出力の分散が大きくなるためである。著者らは、このために Pre-LN の各サブ層は自分の変換部分に強く依存できず、層 i と層 i+1 の出力がほとんど区別できなくなるため、層を 1 つ足しても、同じ入力に並列な変換を足すこと、つまり最終層の幅を 2 倍にすることと変わらないと論じ、これが Pre-LN の到達性能を制限していると説明した。実測でも、この割合は学習が進むにつれて小さくなるものの、学習後の Pre-LN では Post-LN より大きいままであった。また、残差接続の出力への依存をさらに強める ReZero を 6 層モデルに適用すると、IWSLT'14 De-En の BLEU が 1〜2 下がった。</p>
+<p>他方、割合がほぼ一定に保たれる Post-LN の側には別の難点がある。パラメータをわずかに変化させたときの最終出力の変化は、Post-LN では層数に比例して大きくなり、Pre-LN では層数の対数程度にとどまる (定理 2)。(実験でも、この関係は決定係数 0.99 で成り立っていた。) Post-LN の最終出力の変化を抑えたい。そこで Admin では、Post-LN の残差接続の出力に係数をかけて、最終出力の変化を Pre-LN と同じ層数の対数程度に抑える。係数の決め方は 2 段階に分かれる。まず標準的な初期化のもとで最初の 1 バッチを順伝播し、各サブ層で残差接続される部分の出力の分散を測る ("Profiling")。次に各サブ層の係数を、それ以前のサブ層について測った分散の総和の平方根に設定する ("Initialization")。係数は学習後に他のパラメータへ吸収でき、通常の Post-LN に戻せる。実験の結果、Admin は WMT'14 En-De の 6・12・18 層すべてで Post-LN・Pre-LN を上回り (12 層・18 層の Post-LN は発散)、60 層エンコーダ + 12 層デコーダの構成で WMT'14 En-Fr の BLEU 43.8 を達成した。</p>
+<p>研究背景として、Transformer の学習にはオプティマイザや学習率スケジューラの注意深い設計が必要で、Post-LN を Pre-LN に替えると安定するものの到達する性能は劣ると指摘されていた。具体的に、IWSLT'14 De-En で、オプティマイザ RAdam の 2 次モーメントの減衰率と学習率の組み合わせを 15 通り試すと、Pre-LN は 15 通りすべてで収束する一方 Post-LN は 7 通りで発散し、収束した場合は 8 通り中 7 通りで Pre-LN を上回っていた。著者らは、Post-LN の学習を不安定にし、かつ Pre-LN の性能を制限している要因を明らかにすることを目的としている。</p>
+
+
+<h2>参考文献</h2>
+<dl class="ref small">
+<dt>paper</dt>
+<dd>
+Liyuan Liu, Xiaodong Liu, Jianfeng Gao, Weizhu Chen, Jiawei Han. Understanding the Difficulty of Training Transformers. <i>Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP 2020),</i> 2020.
+<ul>
+<li><a class="asis" href="https://arxiv.org/abs/2004.08249"></a></li>
+</ul>
+</dd>
+</dl>
+
+</div>
+</main>
+</div>
+</body>
+</html>
