@@ -184,6 +184,22 @@ def show_cache_conf_diff(cache_file, toml_file, force=False, update=False):
                     cat_changed = True
                 else:
                     lines_.append(line)
+
+            # タイトルにマーカーがある未登録記事を自動でカテゴリに追加
+            auto_cats = {'Claude Code': '【Claude Code】', '文献メモ': '【文献メモ】'}
+            marker = auto_cats.get(key)
+            if marker is not None:
+                cat_ids = {line.split(' ', 1)[0] for line in lines}
+                new_lines = []
+                for item in items:
+                    if marker in item['title'] and item['id'] not in cat_ids:
+                        print(f'[{key}] 未カテゴライズ:' + Fore.GREEN)
+                        print(f'+ {item_to_line(item)}' + Fore.RESET)
+                        new_lines.append(item_to_line(item))
+                if new_lines:
+                    lines_ = new_lines + lines_
+                    cat_changed = True
+
             if update and cat_changed:
                 updates[key] = '\n'.join(lines_) + '\n'
     if updates:
