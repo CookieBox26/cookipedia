@@ -97,6 +97,7 @@ c7fd251b3cf6800569f1 2026-05-18 複数の Git リポジトリの状態を一括�
 b444ad45768be766df56 2026-01-07 Windows で音を鳴らすコマンド集 (Claude Code 完了通知音向け)
 """
 "文献メモ" = """
+48b302211800bb458a1b 2026-10-26 【文献メモ】A Fix for Softmax and Cross-Entropy: softmax の分母の情報落ちと、ソフトラベルの交差エントロピーの勾配の丸め誤差のずれの修正 (arXiv 2026)
 d60a57489a60a52cb6e1 2026-10-12 【文献メモ】Peri-LN: 各サブ層の入力でも出力でも正規化して学習が進んでも安定させる (ICML 2025)
 ce52870116dd6f019cef 2026-10-08 【文献メモ】DeepNet: 残差接続を定数倍し初期値を縮小して 1000 層の Post-LN Transformer を学習する (IEEE TPAMI 2024)
 1ecf449f65a8acdff39c 2026-09-21 【文献メモ】Admin: 残差接続への係数で Post-LN Transformer を安定化する初期化 (EMNLP 2020)
@@ -109,6 +110,7 @@ ce52870116dd6f019cef 2026-10-08 【文献メモ】DeepNet: 残差接続を定数
 f6879212f1c1cd9dba56 2026-06-20 【文献メモ】Coupled Adam によるよりよい埋め込み (ACL 2025)
 """
 "すべての記事" = """
+48b302211800bb458a1b 2026-10-26 【文献メモ】A Fix for Softmax and Cross-Entropy: softmax の分母の情報落ちと、ソフトラベルの交差エントロピーの勾配の丸め誤差のずれの修正 (arXiv 2026)
 80efca20d3283fc81bba 2026-10-21 Claude Code での圧縮の運用の話 + 2026年10月に放置圧縮が導入された件
 06ba7e0e1a633b8a240b 2026-10-14 【CSS】ゲーミングChatGPT
 1a9eadc66114d75e1c88 2026-10-13 Python 実行中に関数の変更を自動反映する
